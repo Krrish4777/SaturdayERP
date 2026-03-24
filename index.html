@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saturday ERP+ — Built for Every Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --indigo:#4f46e5;--indigo-light:#818cf8;--indigo-dim:rgba(99,102,241,0.15);
+  --amber:#f59e0b;--amber-dim:rgba(245,158,11,0.13);
+  --green:#22c55e;--red:#ef4444;
+  --bg:#080810;--bg2:#0f0f18;--bg3:#141420;
+  --text:#e8e8ff;--text2:rgba(232,232,255,0.6);--text3:rgba(232,232,255,0.3);
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
+h1,h2,h3,h4,.logo{font-family:'Syne',sans-serif;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(8,8,16,0.85);backdrop-filter:blur(14px);border-bottom:0.5px solid var(--border);padding:0 5%;}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px;}
+.logo{font-size:20px;font-weight:800;color:var(--text);letter-spacing:-0.5px;}
+.logo span{color:var(--indigo-light);}
+.nav-links{display:flex;align-items:center;gap:28px;}
+.nav-links a{font-size:14px;color:var(--text2);text-decoration:none;transition:color 0.2s;}
+.nav-links a:hover{color:var(--text);}
+.nav-cta{background:var(--indigo);color:white;padding:9px 22px;border-radius:9px;font-size:14px;font-weight:500;text-decoration:none;transition:all 0.2s;}
+.nav-cta:hover{background:#4338ca;color:white;}
+.nav-login{font-size:14px;color:var(--indigo-light);text-decoration:none;margin-right:4px;}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:100px 5% 80px;position:relative;overflow:hidden;}
+.hero-glow{position:absolute;top:20%;left:50%;transform:translateX(-50%);width:700px;height:400px;background:radial-gradient(ellipse,rgba(99,102,241,0.12) 0%,transparent 70%);pointer-events:none;}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(99,102,241,0.1);border:0.5px solid rgba(99,102,241,0.3);border-radius:20px;padding:6px 16px;font-size:12px;color:var(--indigo-light);margin-bottom:28px;}
+.hero-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.hero h1{font-size:clamp(40px,6vw,72px);font-weight:800;line-height:1.08;letter-spacing:-1.5px;margin-bottom:22px;max-width:820px;margin-left:auto;margin-right:auto;}
+.hero h1 .accent{color:var(--indigo-light);}
+.hero p{font-size:18px;color:var(--text2);line-height:1.7;max-width:580px;margin:0 auto 38px;}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-primary{background:var(--indigo);color:white;padding:14px 32px;border-radius:12px;font-size:15px;font-weight:500;text-decoration:none;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.btn-primary:hover{background:#4338ca;transform:translateY(-1px);}
+.btn-secondary{background:transparent;color:var(--text);padding:14px 32px;border-radius:12px;font-size:15px;font-weight:500;text-decoration:none;border:0.5px solid var(--border2);transition:all 0.2s;}
+.btn-secondary:hover{background:rgba(255,255,255,0.05);}
+.hero-stat-row{display:flex;justify-content:center;gap:40px;margin-top:56px;flex-wrap:wrap;}
+.hero-stat{text-align:center;}
+.hero-stat-num{font-family:'Syne',sans-serif;font-size:28px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.hero-stat-lbl{font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;}
+
+/* MARQUEE */
+.marquee-wrap{border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border);padding:14px 0;overflow:hidden;background:var(--bg2);}
+.marquee{display:flex;gap:48px;animation:scroll 25s linear infinite;white-space:nowrap;}
+.marquee-item{font-size:12px;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.marquee-item::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--indigo-light);}
+@keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* SECTION */
+section{padding:80px 5%;}
+.section-inner{max-width:1200px;margin:0 auto;}
+.section-tag{font-size:11px;color:var(--indigo-light);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;}
+.section-title{font-size:clamp(28px,4vw,44px);font-weight:700;letter-spacing:-0.8px;margin-bottom:16px;line-height:1.15;}
+.section-sub{font-size:16px;color:var(--text2);line-height:1.7;max-width:520px;}
+
+/* SATURDAY FEATURE */
+.sat-section{background:var(--bg2);border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border);}
+.sat-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;}
+.sat-visual{background:var(--bg3);border:0.5px solid rgba(99,102,241,0.2);border-radius:20px;padding:28px;position:relative;}
+.sat-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(99,102,241,0.1);border:0.5px solid rgba(99,102,241,0.3);border-radius:8px;padding:5px 12px;font-size:11px;color:var(--indigo-light);margin-bottom:18px;}
+.sat-pulse{width:7px;height:7px;border-radius:50%;background:var(--indigo-light);animation:blink 1.5s infinite;}
+.sat-task{background:rgba(15,15,28,0.8);border:0.5px solid var(--border);border-radius:10px;padding:11px 14px;margin-bottom:8px;}
+.sat-task-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.sat-task-name{font-size:12px;font-weight:500;color:var(--text);}
+.sat-chip{font-size:10px;padding:2px 8px;border-radius:5px;font-weight:600;}
+.chip-done{background:rgba(34,197,94,0.13);color:#4ade80;}
+.chip-run{background:rgba(99,102,241,0.15);color:#818cf8;}
+.chip-wait{background:rgba(245,158,11,0.13);color:#fbbf24;}
+.sat-task-sub{font-size:11px;color:var(--text3);}
+.sat-features{display:flex;flex-direction:column;gap:22px;}
+.sat-feat{display:flex;gap:16px;align-items:flex-start;}
+.sat-feat-icon{width:40px;height:40px;background:var(--indigo-dim);border:0.5px solid rgba(99,102,241,0.3);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.sat-feat-title{font-size:15px;font-weight:500;margin-bottom:4px;}
+.sat-feat-sub{font-size:13px;color:var(--text2);line-height:1.6;}
+
+/* FEATURES GRID */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:48px;}
+.feat-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:16px;padding:24px;transition:border-color 0.2s;}
+.feat-card:hover{border-color:rgba(99,102,241,0.35);}
+.feat-card-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:20px;}
+.feat-card-title{font-size:16px;font-weight:600;margin-bottom:8px;font-family:'Syne',sans-serif;}
+.feat-card-sub{font-size:13px;color:var(--text2);line-height:1.6;}
+
+/* PRICING */
+.pricing-section{background:var(--bg2);border-top:0.5px solid var(--border);}
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:48px;}
+.price-card{background:var(--bg);border:0.5px solid var(--border);border-radius:18px;padding:28px;position:relative;transition:all 0.2s;}
+.price-card:hover{transform:translateY(-3px);}
+.price-card.featured{border:1.5px solid var(--indigo);background:#0a0a1a;}
+.price-card-tag{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--indigo);color:white;font-size:11px;font-weight:600;padding:4px 16px;border-radius:20px;white-space:nowrap;}
+.price-tier{font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;}
+.tier-basic{color:var(--text2);}
+.tier-pro{color:var(--indigo-light);}
+.tier-max{color:var(--amber);}
+.price-tagline{font-size:13px;color:var(--text3);margin-bottom:18px;line-height:1.5;}
+.price-num{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;margin-bottom:4px;}
+.price-num span{font-size:16px;font-weight:400;color:var(--text2);}
+.price-meta{font-size:12px;color:var(--text3);margin-bottom:22px;}
+.price-divider{height:0.5px;background:var(--border);margin-bottom:18px;}
+.price-feat{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;font-size:13px;color:var(--text2);}
+.price-feat-dot{width:5px;height:5px;border-radius:50%;margin-top:7px;flex-shrink:0;}
+.dot-basic{background:rgba(255,255,255,0.3);}
+.dot-pro{background:var(--indigo-light);}
+.dot-max{background:var(--amber);}
+.price-btn{width:100%;padding:12px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;border:none;margin-top:20px;font-family:'DM Sans',sans-serif;transition:all 0.2s;text-decoration:none;display:block;text-align:center;}
+.btn-basic{background:rgba(255,255,255,0.07);color:var(--text);border:0.5px solid var(--border2);}
+.btn-pro{background:var(--indigo);color:white;}
+.btn-max{background:var(--amber-dim);color:var(--amber);border:0.5px solid rgba(245,158,11,0.35);}
+.price-btn:hover{opacity:0.88;transform:translateY(-1px);}
+
+/* HIERARCHY PREVIEW */
+.hier-wrap{background:var(--bg3);border:0.5px solid var(--border);border-radius:20px;padding:28px;margin-top:48px;overflow-x:auto;}
+.hier-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:22px;}
+.hier-levels{display:flex;flex-direction:column;gap:8px;min-width:700px;}
+.hier-row{display:flex;align-items:center;gap:12px;}
+.hier-indent{flex-shrink:0;}
+.hier-node{display:flex;align-items:center;gap:10px;background:rgba(15,15,28,0.7);border:0.5px solid var(--border);border-radius:9px;padding:8px 14px;flex:1;}
+.hier-role{font-size:13px;font-weight:600;color:var(--text);}
+.hier-desc{font-size:11px;color:var(--text3);}
+.hier-badge{font-size:10px;padding:2px 8px;border-radius:4px;margin-left:auto;flex-shrink:0;}
+
+/* CTA */
+.cta-section{text-align:center;padding:100px 5%;}
+.cta-box{background:var(--bg2);border:0.5px solid rgba(99,102,241,0.3);border-radius:24px;padding:64px 40px;max-width:700px;margin:0 auto;position:relative;overflow:hidden;}
+.cta-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:400px;height:200px;background:radial-gradient(ellipse,rgba(99,102,241,0.1),transparent 70%);pointer-events:none;}
+.cta-box h2{font-size:clamp(26px,4vw,40px);font-weight:800;margin-bottom:14px;letter-spacing:-0.8px;}
+.cta-box p{font-size:16px;color:var(--text2);margin-bottom:32px;line-height:1.7;}
+.cta-note{font-size:12px;color:var(--text3);margin-top:16px;}
+
+/* FOOTER */
+footer{border-top:0.5px solid var(--border);padding:40px 5%;background:var(--bg);}
+.footer-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;}
+.footer-logo{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;}
+.footer-logo span{color:var(--indigo-light);}
+.footer-links{display:flex;gap:24px;flex-wrap:wrap;}
+.footer-links a{font-size:13px;color:var(--text3);text-decoration:none;transition:color 0.2s;}
+.footer-links a:hover{color:var(--text2);}
+.footer-copy{font-size:12px;color:var(--text3);}
+
+/* MOBILE */
+@media(max-width:768px){
+  .nav-links{display:none;}
+  .sat-grid{grid-template-columns:1fr;}
+  .hero h1{font-size:36px;}
+  .hero p{font-size:16px;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="logo">saturday<span>ERP+</span></div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#saturday">SATURDAY AI</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#hierarchy">Roles</a>
+      <a href="app.html" class="nav-login">Login</a>
+      <a href="app.html#signup" class="nav-cta">Start Free Trial</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-glow"></div>
+  <div>
+    <div class="hero-tag"><div class="hero-dot"></div>SATURDAY AI Financial Engine — Now Live</div>
+    <h1>The Construction ERP+<br>Built for <span class="accent">Every Builder</span></h1>
+    <p>From ₹10 crore contractors to ₹500 crore enterprises — automate your finances, projects, materials, and compliance in one intelligent platform.</p>
+    <div class="hero-btns">
+      <a href="app.html#signup" class="btn-primary">Start 14-Day Free Trial</a>
+      <a href="#features" class="btn-secondary">See How It Works</a>
+    </div>
+    <div class="hero-stat-row">
+      <div class="hero-stat"><div class="hero-stat-num">3×</div><div class="hero-stat-lbl">Less Office Staff</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">₹0</div><div class="hero-stat-lbl">Setup Cost</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">15 min</div><div class="hero-stat-lbl">To Onboard</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">100%</div><div class="hero-stat-lbl">India GST Ready</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee">
+    <span class="marquee-item">GST Auto-Filing</span>
+    <span class="marquee-item">TDS Engine</span>
+    <span class="marquee-item">RA Bill Automation</span>
+    <span class="marquee-item">BBS Generation</span>
+    <span class="marquee-item">Daily P&L Dashboard</span>
+    <span class="marquee-item">Cash Flow Forecast</span>
+    <span class="marquee-item">Client Live Portal</span>
+    <span class="marquee-item">SATURDAY AI</span>
+    <span class="marquee-item">Material Tracking</span>
+    <span class="marquee-item">Subcontractor WOs</span>
+    <span class="marquee-item">Project Planning</span>
+    <span class="marquee-item">Role Based Access</span>
+    <span class="marquee-item">GST Auto-Filing</span>
+    <span class="marquee-item">TDS Engine</span>
+    <span class="marquee-item">RA Bill Automation</span>
+    <span class="marquee-item">BBS Generation</span>
+    <span class="marquee-item">Daily P&L Dashboard</span>
+    <span class="marquee-item">Cash Flow Forecast</span>
+    <span class="marquee-item">Client Live Portal</span>
+    <span class="marquee-item">SATURDAY AI</span>
+  </div>
+</div>
+
+<!-- SATURDAY SECTION -->
+<section class="sat-section" id="saturday">
+  <div class="section-inner">
+    <div class="sat-grid">
+      <div>
+        <div class="section-tag">SATURDAY AI Engine</div>
+        <h2 class="section-title">Your Autonomous<br>Financial Brain</h2>
+        <p class="section-sub" style="margin-bottom:32px;">SATURDAY doesn't just record transactions — it autonomously executes your entire financial workflow while you focus on building.</p>
+        <div class="sat-features">
+          <div class="sat-feat">
+            <div class="sat-feat-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" stroke="#818cf8" stroke-width="2"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="#818cf8" stroke-width="2"/></svg>
+            </div>
+            <div><div class="sat-feat-title">Zero Manual Accounting</div><div class="sat-feat-sub">Every transaction captured, classified, and posted automatically. No journal entries needed.</div></div>
+          </div>
+          <div class="sat-feat">
+            <div class="sat-feat-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" stroke="#818cf8" stroke-width="2" rx="1"/><rect x="14" y="3" width="7" height="7" stroke="#818cf8" stroke-width="2" rx="1"/><rect x="3" y="14" width="7" height="7" stroke="#818cf8" stroke-width="2" rx="1"/><path d="M14 17h7M17 14v7" stroke="#818cf8" stroke-width="2"/></svg>
+            </div>
+            <div><div class="sat-feat-title">GST + TDS Fully Automated</div><div class="sat-feat-sub">GSTR-1, GSTR-3B, Form 26Q — auto-prepared and ready for one-click filing. Works contract 12% applied natively.</div></div>
+          </div>
+          <div class="sat-feat">
+            <div class="sat-feat-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke="#818cf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div><div class="sat-feat-title">Predictive Cash Flow</div><div class="sat-feat-sub">90-day forecast updated daily. SATURDAY alerts you 30 days before a cash crunch — before it becomes a crisis.</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="sat-visual">
+        <div class="sat-badge"><div class="sat-pulse"></div>SATURDAY — Live</div>
+        <div class="sat-task">
+          <div class="sat-task-top"><span class="sat-task-name">GSTR-1 March 2025</span><span class="sat-chip chip-run">Processing</span></div>
+          <div class="sat-task-sub">47 outward supplies · Works contract 12% · E-invoices linked</div>
+        </div>
+        <div class="sat-task">
+          <div class="sat-task-top"><span class="sat-task-name">TDS u/s 194C — 3 payments</span><span class="sat-chip chip-done">Completed</span></div>
+          <div class="sat-task-sub">₹4,05,000 deducted · Challans generated · Form 26Q ready</div>
+        </div>
+        <div class="sat-task">
+          <div class="sat-task-top"><span class="sat-task-name">RA Bill #5 — YIIRS Pkg 05</span><span class="sat-chip chip-wait">Awaiting Approval</span></div>
+          <div class="sat-task-sub">₹38.2L drafted · Retention auto-deducted · Pending CMD</div>
+        </div>
+        <div class="sat-task">
+          <div class="sat-task-top"><span class="sat-task-name">Cash flow alert — Apr 15</span><span class="sat-chip chip-done">Alert Sent</span></div>
+          <div class="sat-task-sub">₹23L shortfall predicted · Submit RA bill by Mar 28</div>
+        </div>
+        <div style="margin-top:16px;background:rgba(99,102,241,0.07);border:0.5px solid rgba(99,102,241,0.2);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px;">
+          <div style="width:28px;height:28px;background:rgba(99,102,241,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="#818cf8" stroke-width="2"/></svg>
+          </div>
+          <div style="font-size:12px;color:rgba(232,232,255,0.5);">Ask SATURDAY: "What is our net profit this month across all projects?"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-inner">
+    <div class="section-tag">Complete Platform</div>
+    <h2 class="section-title">Everything Your Construction<br>Business Needs</h2>
+    <p class="section-sub">Upload your BOQ and drawings once — ERP+ runs the rest. From quantities to compliance, from site to CMD's dashboard.</p>
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="feat-card-icon" style="background:rgba(99,102,241,0.13);">📐</div>
+        <div class="feat-card-title">Auto Quantity Engine</div>
+        <div class="feat-card-sub">Upload BOQ + structural drawings → BBS, shuttering, concrete, masonry, plaster — all quantities auto-derived in minutes.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-card-icon" style="background:rgba(245,158,11,0.13);">📊</div>
+        <div class="feat-card-title">CMD Live Dashboard</div>
+        <div class="feat-card-sub">Daily P&L, P&L index, work done value, upcoming expenses — all in one glance. Stock-market style indicators. No login maze.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-card-icon" style="background:rgba(34,197,94,0.13);">🏗️</div>
+        <div class="feat-card-title">Project Management</div>
+        <div class="feat-card-sub">WBS, Gantt charts, milestone tracking, daily progress reports, planned vs actual S-curve — all project-wise, all real-time.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-card-icon" style="background:rgba(239,68,68,0.13);">📦</div>
+        <div class="feat-card-title">Procurement & Store</div>
+        <div class="feat-card-sub">Material indent → PO → GRN → Payment — full automated chain. Theoretical vs actual consumption tracked with wastage alerts.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-card-icon" style="background:rgba(99,102,241,0.13);">👥</div>
+        <div class="feat-card-title">Role-Based Access</div>
+        <div class="feat-card-sub">CMD to APM to Store Keeper — every role has precise permissions. 12 hierarchy levels. No one sees what they shouldn't.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-card-icon" style="background:rgba(245,158,11,0.13);">🌐</div>
+        <div class="feat-card-title">Client Live Portal</div>
+        <div class="feat-card-sub">Your client sees real-time site progress, photos, billing status — without calling you. Raises requirements directly through portal.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HIERARCHY PREVIEW -->
+<section id="hierarchy" style="background:var(--bg2);border-top:0.5px solid var(--border);">
+  <div class="section-inner">
+    <div class="section-tag">Role Hierarchy</div>
+    <h2 class="section-title">12 Levels. Precise Permissions.<br>Zero Confusion.</h2>
+    <p class="section-sub">From CMD to site supervisor — every person has exactly the access they need, nothing more, nothing less.</p>
+    <div class="hier-wrap">
+      <div class="hier-title">Organisation Hierarchy — ERP+ Role Structure</div>
+      <div class="hier-levels">
+        <div class="hier-row"><div class="hier-node" style="border-color:rgba(245,158,11,0.4);background:rgba(245,158,11,0.05);"><div><div class="hier-role">CMD / CEO / Proprietor</div><div class="hier-desc">Full platform access · All projects · All financials · Approve everything</div></div><span class="hier-badge" style="background:rgba(245,158,11,0.15);color:#f59e0b;">Level 1</span></div></div>
+        <div class="hier-row"><div style="width:20px;flex-shrink:0;"></div><div class="hier-node" style="border-color:rgba(99,102,241,0.35);background:rgba(99,102,241,0.04);"><div><div class="hier-role">CFO</div><div class="hier-desc">All financial modules · SATURDAY full access · Tax filing · No project ops</div></div><span class="hier-badge" style="background:rgba(99,102,241,0.13);color:#818cf8;">Level 2</span></div></div>
+        <div class="hier-row"><div style="width:40px;flex-shrink:0;"></div><div class="hier-node"><div><div class="hier-role">Project Director (PD)</div><div class="hier-desc">Multiple projects · Budget approval · Subcontractor WOs · Team oversight</div></div><span class="hier-badge" style="background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.5);">Level 3</span></div></div>
+        <div class="hier-row"><div style="width:60px;flex-shrink:0;"></div><div class="hier-node"><div><div class="hier-role">General Manager (GM)</div><div class="hier-desc">2–3 projects coordination · Progress review · Billing approval</div></div><span class="hier-badge" style="background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.5);">Level 4</span></div></div>
+        <div class="hier-row"><div style="width:80px;flex-shrink:0;"></div><div class="hier-node"><div><div class="hier-role">AGM / Senior PM</div><div class="hier-desc">Single project head · Local decisions · Indent approval · Bill certification</div></div><span class="hier-badge" style="background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.5);">Level 5</span></div></div>
+        <div class="hier-row"><div style="width:100px;flex-shrink:0;"></div><div class="hier-node"><div><div class="hier-role">SPM / PM</div><div class="hier-desc">Site execution · DPR entry · Material issue · Labour attendance</div></div><span class="hier-badge" style="background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.5);">Level 6–7</span></div></div>
+        <div class="hier-row"><div style="width:120px;flex-shrink:0;"></div><div class="hier-node"><div><div class="hier-role">QS Manager · Store Manager · Accountant</div><div class="hier-desc">Domain-specific access only · Quantities · Inventory · Vouchers</div></div><span class="hier-badge" style="background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.5);">Level 8+</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="section-inner">
+    <div class="section-tag">Subscription Plans</div>
+    <h2 class="section-title">Priced for Every Builder</h2>
+    <p class="section-sub">Start free. Grow at your own pace. Even our most powerful plan costs less than one office staff member.</p>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-tier tier-basic">ERP+</div>
+        <div class="price-tagline">Complete financial control for small enterprises. Your smart digital accountant.</div>
+        <div class="price-num" style="color:var(--text);">₹4,999<span>/month</span></div>
+        <div class="price-meta">Up to 10 users · 2 projects</div>
+        <div class="price-divider"></div>
+        <div class="price-feat"><div class="price-feat-dot dot-basic"></div>SATURDAY Lite — AI financial engine</div>
+        <div class="price-feat"><div class="price-feat-dot dot-basic"></div>GST, TDS auto-computation</div>
+        <div class="price-feat"><div class="price-feat-dot dot-basic"></div>RA bill preparation & tracking</div>
+        <div class="price-feat"><div class="price-feat-dot dot-basic"></div>Daily P&L dashboard</div>
+        <div class="price-feat"><div class="price-feat-dot dot-basic"></div>Material indent & basic inventory</div>
+        <a href="app.html#signup" class="price-btn btn-basic">Get Started</a>
+      </div>
+      <div class="price-card featured">
+        <div class="price-card-tag">MOST POPULAR</div>
+        <div class="price-tier tier-pro">ERP+ Pro</div>
+        <div class="price-tagline">Smart automation that cuts office manpower in half. SATURDAY fully active.</div>
+        <div class="price-num" style="color:var(--indigo-light);">₹12,999<span>/month</span></div>
+        <div class="price-meta">Up to 25 users · 10 projects</div>
+        <div class="price-divider"></div>
+        <div class="price-feat"><div class="price-feat-dot dot-pro"></div>SATURDAY Full — autonomous AI</div>
+        <div class="price-feat"><div class="price-feat-dot dot-pro"></div>GST returns auto-filed</div>
+        <div class="price-feat"><div class="price-feat-dot dot-pro"></div>BOQ upload → auto-quantities</div>
+        <div class="price-feat"><div class="price-feat-dot dot-pro"></div>Subcontractor WO automation</div>
+        <div class="price-feat"><div class="price-feat-dot dot-pro"></div>Complete project planning & Gantt</div>
+        <div class="price-feat"><div class="price-feat-dot dot-pro"></div>Ask SATURDAY — natural language AI</div>
+        <a href="app.html#signup" class="price-btn btn-pro">Start with Pro</a>
+      </div>
+      <div class="price-card">
+        <div class="price-tier tier-max">ERP+ Max</div>
+        <div class="price-tagline">Complete automation from drawing upload to client portal. Near-zero intervention.</div>
+        <div class="price-num" style="color:var(--amber);">₹24,999<span>/month</span></div>
+        <div class="price-meta">Unlimited users · Unlimited projects</div>
+        <div class="price-divider"></div>
+        <div class="price-feat"><div class="price-feat-dot dot-max"></div>Drawing → BBS auto-generation</div>
+        <div class="price-feat"><div class="price-feat-dot dot-max"></div>Client live portal</div>
+        <div class="price-feat"><div class="price-feat-dot dot-max"></div>SATURDAY Max — predictive AI</div>
+        <div class="price-feat"><div class="price-feat-dot dot-max"></div>Full quality inspection module</div>
+        <div class="price-feat"><div class="price-feat-dot dot-max"></div>White-label option available</div>
+        <a href="app.html#signup" class="price-btn btn-max">Unlock Max</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="cta-box">
+    <div class="cta-glow"></div>
+    <h2>Start Building Smarter<br>Tonight.</h2>
+    <p>Join construction companies across India that have replaced 3 office staff with one platform. 14-day free trial. No credit card. No setup fees.</p>
+    <a href="app.html#signup" class="btn-primary" style="font-size:16px;padding:16px 40px;">Start Free Trial — It Takes 15 Minutes</a>
+    <div class="cta-note">No credit card required · Cancel anytime · Data export always available</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">saturday<span>ERP+</span></div>
+      <div style="font-size:12px;color:var(--text3);margin-top:4px;">Built in India. Built for Builders.</div>
+    </div>
+    <div class="footer-links">
+      <a href="#features">Features</a>
+      <a href="#saturday">SATURDAY AI</a>
+      <a href="#pricing">Pricing</a>
+      <a href="app.html">Login</a>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+    </div>
+    <div class="footer-copy">© 2025 TTIPL · saturdayerp.com · All rights reserved</div>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const target=document.querySelector(a.getAttribute('href'));
+    if(target){e.preventDefault();target.scrollIntoView({behavior:'smooth',block:'start'});}
+  });
+});
+</script>
+</body>
+</html>

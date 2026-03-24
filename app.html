@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saturday ERP+ — App</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --indigo:#4f46e5;--indigo-l:#818cf8;--indigo-dim:rgba(99,102,241,0.15);
+  --amber:#f59e0b;--green:#22c55e;--red:#ef4444;
+  --bg:#080810;--bg2:#0f0f18;--bg3:#141420;--bg4:#1a1a28;
+  --text:#e8e8ff;--text2:rgba(232,232,255,0.55);--text3:rgba(232,232,255,0.28);
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+h1,h2,h3,.logo{font-family:'Syne',sans-serif;}
+input,select,textarea{font-family:'DM Sans',sans-serif;}
+.page{display:none;min-height:100vh;}
+.page.active{display:flex;}
+button{cursor:pointer;font-family:'DM Sans',sans-serif;}
+
+/* ===== AUTH PAGES ===== */
+.auth-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:24px;position:relative;overflow:hidden;}
+.auth-glow{position:absolute;top:30%;left:50%;transform:translateX(-50%);width:500px;height:300px;background:radial-gradient(ellipse,rgba(99,102,241,0.1),transparent 70%);pointer-events:none;}
+.auth-card{background:var(--bg2);border:0.5px solid rgba(99,102,241,0.25);border-radius:22px;padding:40px 36px;width:100%;max-width:440px;position:relative;z-index:1;}
+.auth-logo{font-size:22px;font-weight:800;margin-bottom:6px;text-align:center;}
+.auth-logo span{color:var(--indigo-l);}
+.auth-sub{font-size:13px;color:var(--text2);text-align:center;margin-bottom:30px;}
+.auth-tabs{display:flex;background:rgba(255,255,255,0.04);border-radius:10px;padding:3px;margin-bottom:28px;}
+.auth-tab{flex:1;padding:9px;text-align:center;font-size:13px;border-radius:8px;border:none;background:transparent;color:var(--text2);transition:all 0.2s;}
+.auth-tab.active{background:var(--indigo);color:white;font-weight:500;}
+.field{margin-bottom:16px;}
+.field label{display:block;font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:7px;}
+.field input,.field select{width:100%;background:rgba(255,255,255,0.05);border:0.5px solid var(--border2);border-radius:10px;padding:12px 14px;color:var(--text);font-size:14px;outline:none;transition:border-color 0.2s;}
+.field input:focus,.field select:focus{border-color:rgba(99,102,241,0.5);}
+.field input::placeholder{color:var(--text3);}
+.field select option{background:#1a1a28;}
+.btn-auth{width:100%;background:var(--indigo);color:white;border:none;padding:14px;border-radius:11px;font-size:15px;font-weight:500;transition:all 0.2s;margin-top:6px;}
+.btn-auth:hover{background:#4338ca;}
+.auth-divider{display:flex;align-items:center;gap:12px;margin:20px 0;}
+.auth-divider span{font-size:12px;color:var(--text3);}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:0.5px;background:var(--border);}
+.auth-note{font-size:12px;color:var(--text3);text-align:center;margin-top:16px;}
+.auth-note a{color:var(--indigo-l);text-decoration:none;}
+.err-msg{background:rgba(239,68,68,0.1);border:0.5px solid rgba(239,68,68,0.3);border-radius:8px;padding:10px 14px;font-size:13px;color:#f87171;margin-bottom:14px;display:none;}
+
+/* ===== SETUP WIZARD ===== */
+.setup-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;position:relative;overflow:hidden;}
+.setup-glow{position:absolute;top:20%;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(99,102,241,0.08),transparent 70%);pointer-events:none;}
+.setup-card{background:var(--bg2);border:0.5px solid rgba(99,102,241,0.2);border-radius:24px;padding:40px;width:100%;max-width:560px;position:relative;z-index:1;}
+.setup-steps{display:flex;align-items:center;gap:0;margin-bottom:36px;}
+.step-item{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;}
+.step-item:not(:last-child)::after{content:'';position:absolute;top:16px;left:50%;width:100%;height:0.5px;background:var(--border2);}
+.step-circle{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--text3);background:var(--bg);z-index:1;transition:all 0.3s;}
+.step-circle.done{background:var(--indigo);border-color:var(--indigo);color:white;}
+.step-circle.active{background:transparent;border-color:var(--indigo-l);color:var(--indigo-l);}
+.step-label{font-size:10px;color:var(--text3);margin-top:6px;text-align:center;}
+.step-label.active{color:var(--indigo-l);}
+.setup-title{font-size:22px;font-weight:700;margin-bottom:8px;}
+.setup-sub{font-size:14px;color:var(--text2);margin-bottom:28px;line-height:1.6;}
+.setup-step{display:none;}
+.setup-step.active{display:block;}
+.logo-upload{border:1.5px dashed var(--border2);border-radius:14px;padding:32px;text-align:center;margin-bottom:16px;cursor:pointer;transition:all 0.2s;}
+.logo-upload:hover{border-color:rgba(99,102,241,0.4);background:var(--indigo-dim);}
+.logo-upload-icon{font-size:32px;margin-bottom:10px;}
+.logo-upload p{font-size:13px;color:var(--text2);}
+.logo-upload small{font-size:11px;color:var(--text3);}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.btn-row{display:flex;gap:12px;margin-top:28px;}
+.btn-back{flex:1;background:transparent;border:0.5px solid var(--border2);color:var(--text2);padding:13px;border-radius:10px;font-size:14px;transition:all 0.2s;}
+.btn-back:hover{background:rgba(255,255,255,0.05);}
+.btn-next{flex:2;background:var(--indigo);color:white;border:none;padding:13px;border-radius:10px;font-size:14px;font-weight:500;transition:all 0.2s;}
+.btn-next:hover{background:#4338ca;}
+.subscription-cards{display:flex;flex-direction:column;gap:10px;margin-bottom:8px;}
+.sub-card{background:var(--bg);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:space-between;}
+.sub-card.selected-basic{border-color:rgba(255,255,255,0.35);}
+.sub-card.selected-pro{border-color:var(--indigo);}
+.sub-card.selected-max{border-color:var(--amber);}
+.sub-card:hover{background:var(--bg3);}
+.sub-card-left{display:flex;align-items:center;gap:14px;}
+.sub-card-radio{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.sub-card-radio.checked{background:var(--indigo);border-color:var(--indigo);}
+.radio-dot{width:7px;height:7px;border-radius:50%;background:white;}
+.sub-name{font-size:14px;font-weight:600;}
+.sub-desc{font-size:11px;color:var(--text3);}
+.sub-price{font-size:14px;font-weight:700;font-family:'DM Mono',monospace;}
+
+/* ===== MAIN APP ===== */
+.app-layout{flex:1;display:flex;min-height:100vh;}
+.sidebar{width:240px;background:var(--bg2);border-right:0.5px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;}
+.sidebar-logo{padding:22px 20px 16px;border-bottom:0.5px solid var(--border);}
+.sidebar-logo .logo{font-size:17px;font-weight:800;}
+.sidebar-logo .logo span{color:var(--indigo-l);}
+.sidebar-company{font-size:11px;color:var(--text3);margin-top:3px;}
+.sidebar-nav{flex:1;padding:12px 10px;overflow-y:auto;}
+.nav-section-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;padding:12px 10px 6px;}
+.nav-item{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:9px;font-size:13px;color:var(--text2);cursor:pointer;transition:all 0.18s;margin-bottom:2px;border:none;background:transparent;width:100%;text-align:left;}
+.nav-item:hover{background:rgba(255,255,255,0.05);color:var(--text);}
+.nav-item.active{background:var(--indigo-dim);color:var(--indigo-l);}
+.nav-item svg{flex-shrink:0;opacity:0.7;}
+.nav-item.active svg{opacity:1;}
+.sidebar-user{padding:14px 16px;border-top:0.5px solid var(--border);}
+.user-row{display:flex;align-items:center;gap:10px;}
+.user-avatar{width:32px;height:32px;border-radius:50%;background:var(--indigo-dim);border:1px solid rgba(99,102,241,0.3);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--indigo-l);flex-shrink:0;}
+.user-name{font-size:13px;font-weight:500;color:var(--text);}
+.user-role{font-size:11px;color:var(--text3);}
+.main-content{flex:1;overflow-y:auto;background:var(--bg);}
+.content-header{padding:24px 28px 0;border-bottom:0.5px solid var(--border);background:var(--bg2);}
+.content-title{font-size:20px;font-weight:700;margin-bottom:4px;}
+.content-sub{font-size:13px;color:var(--text3);padding-bottom:18px;}
+.content-body{padding:28px;}
+.module{display:none;}
+.module.active{display:block;}
+
+/* DASHBOARD MODULE */
+.dash-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:24px;}
+.dash-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:14px;padding:18px;}
+.dash-card-lbl{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;}
+.dash-card-val{font-size:22px;font-weight:700;font-family:'DM Mono',monospace;margin-bottom:4px;}
+.dash-card-delta{font-size:12px;}
+
+/* HIERARCHY MODULE */
+.hier-module{max-width:960px;}
+.hier-module-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;}
+.btn-add-user{background:var(--indigo);color:white;border:none;padding:10px 20px;border-radius:9px;font-size:13px;font-weight:500;transition:all 0.2s;}
+.btn-add-user:hover{background:#4338ca;}
+.role-tabs{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap;}
+.role-tab{background:var(--bg2);border:0.5px solid var(--border);border-radius:8px;padding:7px 16px;font-size:12px;color:var(--text2);cursor:pointer;transition:all 0.2s;}
+.role-tab.active{background:var(--indigo-dim);border-color:rgba(99,102,241,0.4);color:var(--indigo-l);}
+.role-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:16px;margin-bottom:14px;overflow:hidden;}
+.role-card-header{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background 0.2s;}
+.role-card-header:hover{background:rgba(255,255,255,0.02);}
+.role-card-left{display:flex;align-items:center;gap:14px;}
+.role-level-badge{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
+.role-name{font-size:15px;font-weight:600;margin-bottom:2px;}
+.role-sub{font-size:12px;color:var(--text3);}
+.role-card-right{display:flex;align-items:center;gap:10px;}
+.user-count{font-size:12px;color:var(--text3);}
+.expand-icon{width:24px;height:24px;background:rgba(255,255,255,0.06);border-radius:6px;display:flex;align-items:center;justify-content:center;transition:transform 0.2s;}
+.expand-icon.open{transform:rotate(180deg);}
+.role-card-body{padding:0 20px 18px;display:none;}
+.role-card-body.open{display:block;}
+.perm-section{margin-bottom:18px;}
+.perm-section-title{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+.perm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;}
+.perm-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);}
+.perm-check{width:18px;height:18px;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.perm-yes{background:rgba(34,197,94,0.15);border:0.5px solid rgba(34,197,94,0.3);}
+.perm-no{background:rgba(255,255,255,0.04);border:0.5px solid var(--border);}
+.perm-partial{background:rgba(245,158,11,0.13);border:0.5px solid rgba(245,158,11,0.3);}
+.users-in-role{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+.user-chip{background:rgba(99,102,241,0.08);border:0.5px solid rgba(99,102,241,0.2);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--indigo-l);display:flex;align-items:center;gap:6px;}
+.divider-line{height:0.5px;background:var(--border);margin:14px 0;}
+.add-user-panel{background:var(--bg3);border:0.5px solid rgba(99,102,241,0.2);border-radius:14px;padding:24px;margin-top:22px;}
+.add-user-title{font-size:15px;font-weight:600;margin-bottom:18px;}
+.add-user-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;}
+.role-select-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px;margin-top:10px;}
+.role-select-item{background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:9px 12px;cursor:pointer;transition:all 0.2s;font-size:12px;color:var(--text2);}
+.role-select-item:hover{background:var(--bg3);}
+.role-select-item.picked{border-color:var(--indigo);background:var(--indigo-dim);color:var(--indigo-l);}
+.btn-save-user{background:var(--indigo);color:white;border:none;padding:12px 28px;border-radius:9px;font-size:14px;font-weight:500;margin-top:20px;transition:all 0.2s;}
+.btn-save-user:hover{background:#4338ca;}
+.success-toast{position:fixed;bottom:24px;right:24px;background:#1a2a1a;border:0.5px solid rgba(34,197,94,0.4);border-radius:12px;padding:14px 20px;font-size:13px;color:#4ade80;z-index:999;transform:translateY(80px);opacity:0;transition:all 0.35s;}
+.success-toast.show{transform:translateY(0);opacity:1;}
+</style>
+</head>
+<body>
+
+<!-- ======================== LOGIN PAGE ======================== -->
+<div class="page active" id="page-login">
+  <div class="auth-wrap">
+    <div class="auth-glow"></div>
+    <div class="auth-card">
+      <div class="auth-logo">saturday<span>ERP+</span></div>
+      <div class="auth-sub">Construction Intelligence Platform</div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchAuthTab('login',this)">Sign In</button>
+        <button class="auth-tab" onclick="switchAuthTab('signup',this)">Create Account</button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <div id="login-form">
+        <div class="err-msg" id="login-err">Invalid email or password. Please try again.</div>
+        <div class="field"><label>Email Address</label><input type="email" id="login-email" placeholder="you@company.com"/></div>
+        <div class="field"><label>Password</label><input type="password" id="login-pass" placeholder="Enter your password"/></div>
+        <button class="btn-auth" onclick="doLogin()">Sign In to ERP+</button>
+        <div class="auth-note" style="margin-top:14px;"><a href="#" onclick="demoLogin()">Sign in with demo account →</a></div>
+      </div>
+
+      <!-- SIGNUP FORM -->
+      <div id="signup-form" style="display:none;">
+        <div class="err-msg" id="signup-err">Please fill all fields.</div>
+        <div class="two-col">
+          <div class="field"><label>First Name</label><input type="text" id="su-first" placeholder="Krishna"/></div>
+          <div class="field"><label>Last Name</label><input type="text" id="su-last" placeholder="Teja"/></div>
+        </div>
+        <div class="field"><label>Work Email</label><input type="email" id="su-email" placeholder="krishna@company.com"/></div>
+        <div class="field"><label>Mobile Number</label><input type="tel" id="su-mobile" placeholder="+91 98765 43210"/></div>
+        <div class="field"><label>Password</label><input type="password" id="su-pass" placeholder="Min 8 characters"/></div>
+        <button class="btn-auth" onclick="doSignup()">Create Account & Setup Company</button>
+      </div>
+
+      <div class="auth-note"><a href="index.html">← Back to saturdayerp.com</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================== SETUP WIZARD ======================== -->
+<div class="page" id="page-setup">
+  <div class="setup-wrap">
+    <div class="setup-glow"></div>
+    <div class="setup-card">
+      <div class="setup-steps" id="setup-steps">
+        <div class="step-item"><div class="step-circle active" id="sc1">1</div><div class="step-label active" id="sl1">Company</div></div>
+        <div class="step-item"><div class="step-circle" id="sc2">2</div><div class="step-label" id="sl2">Details</div></div>
+        <div class="step-item"><div class="step-circle" id="sc3">3</div><div class="step-label" id="sl3">Subscription</div></div>
+        <div class="step-item"><div class="step-circle" id="sc4">4</div><div class="step-label" id="sl4">Done</div></div>
+      </div>
+
+      <!-- STEP 1 — Company Identity -->
+      <div class="setup-step active" id="step1">
+        <div class="setup-title">Set Up Your Company</div>
+        <div class="setup-sub">This is how your company will appear across ERP+ — on dashboards, documents, and the client portal.</div>
+        <div class="logo-upload" id="logo-upload-area" onclick="document.getElementById('logo-file').click()">
+          <div id="logo-preview" style="display:none;margin-bottom:10px;"><img id="logo-img" style="height:60px;object-fit:contain;" /></div>
+          <div class="logo-upload-icon" id="upload-icon">🏢</div>
+          <p>Click to upload company logo</p>
+          <small>PNG, JPG, SVG · Max 2MB</small>
+        </div>
+        <input type="file" id="logo-file" accept="image/*" style="display:none" onchange="previewLogo(event)">
+        <div class="field"><label>Company Name</label><input type="text" id="s1-name" placeholder="e.g. TTIPL Construction Pvt. Ltd." /></div>
+        <div class="field"><label>Short Name / Abbreviation</label><input type="text" id="s1-short" placeholder="e.g. TTIPL" /></div>
+        <div class="two-col">
+          <div class="field"><label>Industry</label>
+            <select id="s1-industry">
+              <option value="">Select industry</option>
+              <option value="civil" selected>Civil Construction</option>
+              <option value="infra">Infrastructure / EPC</option>
+              <option value="real">Real Estate Developer</option>
+              <option value="industrial">Industrial Construction</option>
+              <option value="roads">Roads & Highways</option>
+            </select>
+          </div>
+          <div class="field"><label>Company Type</label>
+            <select id="s1-type">
+              <option value="">Select type</option>
+              <option value="pvt">Private Limited</option>
+              <option value="prop">Proprietorship</option>
+              <option value="partner">Partnership</option>
+              <option value="llp">LLP</option>
+              <option value="pub">Public Limited</option>
+            </select>
+          </div>
+        </div>
+        <div class="btn-row"><button class="btn-next" onclick="goStep(2)">Continue →</button></div>
+      </div>
+
+      <!-- STEP 2 — Company Details -->
+      <div class="setup-step" id="step2">
+        <div class="setup-title">Company Details</div>
+        <div class="setup-sub">Statutory and contact details — used in RA bills, GST returns, and official documents.</div>
+        <div class="two-col">
+          <div class="field"><label>GSTIN</label><input type="text" id="s2-gst" placeholder="36XXXXXXXXXXXXX" maxlength="15"/></div>
+          <div class="field"><label>PAN Number</label><input type="text" id="s2-pan" placeholder="AAAAA0000A" maxlength="10"/></div>
+        </div>
+        <div class="field"><label>Registered Address</label><input type="text" id="s2-addr" placeholder="Plot No., Street, Area"/></div>
+        <div class="two-col">
+          <div class="field"><label>City</label><input type="text" id="s2-city" placeholder="Hyderabad"/></div>
+          <div class="field"><label>State</label>
+            <select id="s2-state">
+              <option value="">Select state</option>
+              <option value="TG" selected>Telangana</option>
+              <option value="AP">Andhra Pradesh</option>
+              <option value="MH">Maharashtra</option>
+              <option value="KA">Karnataka</option>
+              <option value="TN">Tamil Nadu</option>
+              <option value="DL">Delhi</option>
+              <option value="UP">Uttar Pradesh</option>
+              <option value="GJ">Gujarat</option>
+            </select>
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="field"><label>Contact Number</label><input type="tel" id="s2-phone" placeholder="+91 40 XXXX XXXX"/></div>
+          <div class="field"><label>Company Email</label><input type="email" id="s2-email" placeholder="info@company.com"/></div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-back" onclick="goStep(1)">← Back</button>
+          <button class="btn-next" onclick="goStep(3)">Continue →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3 — Subscription -->
+      <div class="setup-step" id="step3">
+        <div class="setup-title">Choose Your Plan</div>
+        <div class="setup-sub">Start with a 14-day free trial on any plan. No credit card required.</div>
+        <div class="subscription-cards">
+          <div class="sub-card" id="sub-basic" onclick="selectPlan('basic')">
+            <div class="sub-card-left">
+              <div class="sub-card-radio" id="r-basic"><div class="radio-dot" style="display:none;"></div></div>
+              <div><div class="sub-name" style="color:var(--text2);">ERP+</div><div class="sub-desc">Finance · Basic inventory · 10 users · 2 projects</div></div>
+            </div>
+            <div class="sub-price" style="color:var(--text2);">₹4,999<span style="font-size:11px;font-weight:400;color:var(--text3);">/mo</span></div>
+          </div>
+          <div class="sub-card selected-pro" id="sub-pro" onclick="selectPlan('pro')">
+            <div class="sub-card-left">
+              <div class="sub-card-radio checked" id="r-pro"><div class="radio-dot"></div></div>
+              <div><div class="sub-name" style="color:var(--indigo-l);">ERP+ Pro</div><div class="sub-desc">Full automation · GST filing · 25 users · 10 projects</div></div>
+            </div>
+            <div class="sub-price" style="color:var(--indigo-l);">₹12,999<span style="font-size:11px;font-weight:400;color:var(--text3);">/mo</span></div>
+          </div>
+          <div class="sub-card" id="sub-max" onclick="selectPlan('max')">
+            <div class="sub-card-left">
+              <div class="sub-card-radio" id="r-max"><div class="radio-dot" style="display:none;"></div></div>
+              <div><div class="sub-name" style="color:var(--amber);">ERP+ Max</div><div class="sub-desc">BBS · Client portal · Unlimited users & projects</div></div>
+            </div>
+            <div class="sub-price" style="color:var(--amber);">₹24,999<span style="font-size:11px;font-weight:400;color:var(--text3);">/mo</span></div>
+          </div>
+        </div>
+        <div style="background:rgba(34,197,94,0.08);border:0.5px solid rgba(34,197,94,0.25);border-radius:10px;padding:10px 14px;margin-top:14px;font-size:12px;color:#4ade80;">✓ 14-day free trial on all plans · No credit card required</div>
+        <div class="btn-row">
+          <button class="btn-back" onclick="goStep(2)">← Back</button>
+          <button class="btn-next" onclick="goStep(4)">Launch ERP+ →</button>
+        </div>
+      </div>
+
+      <!-- STEP 4 — Complete -->
+      <div class="setup-step" id="step4">
+        <div style="text-align:center;padding:10px 0;">
+          <div style="width:64px;height:64px;background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.4);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><polyline points="20,6 9,17 4,12" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="setup-title" id="setup-done-title">TTIPL is Ready!</div>
+          <div class="setup-sub" style="margin:10px auto 28px;max-width:340px;">Your ERP+ platform is configured and SATURDAY is initialising. Let's build your command centre.</div>
+          <button class="btn-next" style="max-width:280px;margin:0 auto;display:block;" onclick="launchApp()">Open ERP+ Dashboard →</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ======================== MAIN APP ======================== -->
+<div class="page" id="page-app">
+  <div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <div class="logo">saturday<span>ERP+</span></div>
+        <div class="sidebar-company" id="sidebar-company-name">TTIPL</div>
+      </div>
+      <div class="sidebar-nav">
+        <div class="nav-section-label">Overview</div>
+        <button class="nav-item active" onclick="openModule('dashboard',this)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" stroke="currentColor" stroke-width="2" rx="1"/><rect x="14" y="3" width="7" height="7" stroke="currentColor" stroke-width="2" rx="1"/><rect x="3" y="14" width="7" height="7" stroke="currentColor" stroke-width="2" rx="1"/><rect x="14" y="14" width="7" height="7" stroke="currentColor" stroke-width="2" rx="1"/></svg>
+          Dashboard
+        </button>
+        <button class="nav-item" onclick="openModule('saturday',this)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          SATURDAY AI
+        </button>
+        <div class="nav-section-label">Projects</div>
+        <button class="nav-item" onclick="openModule('projects',this)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="2"/></svg>
+          Projects
+        </button>
+        <button class="nav-item" onclick="openModule('planning',this)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2"/><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2"/><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2"/><line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2"/></svg>
+          Planning & Gantt
+        </button>
+        <div class="nav-section-label">Finance</div>
+        <button class="nav-item" onclick="openModule('finance',this)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><line x1="12" y1="1" x2="12" y2="23" stroke="currentColor" stroke-width="2"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke="currentColor" stroke-width="2"/></svg>
+          Financials
+        </button>
+        <button class="nav-item" onclick="openModule('tax',this)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2"/><polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2"/></svg>
+          GST & TDS
+        </button>
+        <div class="nav-section-label">Operations</div>
+        <button class="nav-item" onclick="openModule('materials',this)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" stroke="currentColor" stroke-width="2"/></svg>
+          Materials & Store
+        </button>
+        <button class="nav-item" onclick="openModule('labour',this)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/></svg>
+          Labour & HR
+        </button>
+        <div class="nav-section-label">Admin</div>
+        <button class="nav-item active-here" onclick="openModule('hierarchy',this)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M17 20h5v-2a3 3 0 0 0-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 0 1 5.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 0 1 9.288 0M15 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" stroke="currentColor" stroke-width="2"/></svg>
+          Roles & Users
+        </button>
+        <button class="nav-item" onclick="openModule('settings',this)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" stroke-width="2"/></svg>
+          Settings
+        </button>
+      </div>
+      <div class="sidebar-user">
+        <div class="user-row">
+          <div class="user-avatar" id="user-avatar-sidebar">K</div>
+          <div>
+            <div class="user-name" id="sidebar-user-name">Krishna Teja</div>
+            <div class="user-role" id="sidebar-user-role">CMD / Proprietor</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+      <!-- DASHBOARD MODULE -->
+      <div class="module active" id="module-dashboard">
+        <div class="content-header">
+          <div class="content-title">Command Dashboard</div>
+          <div class="content-sub">Real-time overview across all projects · Powered by SATURDAY AI</div>
+        </div>
+        <div class="content-body">
+          <div class="dash-grid">
+            <div class="dash-card"><div class="dash-card-lbl">Today's Net P&L</div><div class="dash-card-val" style="color:var(--green);">+₹1,74,150</div><div class="dash-card-delta" style="color:var(--green);">↑ 32.7% vs yesterday</div></div>
+            <div class="dash-card"><div class="dash-card-lbl">Work Done (unbilled)</div><div class="dash-card-val" style="color:var(--text);">₹47.8L</div><div class="dash-card-delta" style="color:var(--text3);">Day 23 of billing cycle</div></div>
+            <div class="dash-card"><div class="dash-card-lbl">Upcoming Expenses</div><div class="dash-card-val" style="color:var(--red);">₹18.45L</div><div class="dash-card-delta" style="color:var(--text3);">Next 7 days</div></div>
+            <div class="dash-card"><div class="dash-card-lbl">Pending Approvals</div><div class="dash-card-val" style="color:var(--amber);">7</div><div class="dash-card-delta" style="color:var(--text3);">₹32.45L value</div></div>
+          </div>
+          <div style="background:var(--bg2);border:0.5px solid var(--border);border-radius:14px;padding:20px;">
+            <div style="font-size:14px;font-weight:600;margin-bottom:14px;">Active Projects</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;">
+              <div style="background:var(--bg3);border:0.5px solid var(--border);border-radius:11px;padding:14px;">
+                <div style="font-size:12px;color:var(--text3);margin-bottom:4px;">TGEWIDC · Nizamabad</div>
+                <div style="font-size:14px;font-weight:600;margin-bottom:10px;">YIIRS Package 05</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                  <div><div style="font-size:10px;color:var(--text3);">P&L Today</div><div style="font-size:14px;font-weight:600;color:var(--green);">+₹1.24L</div></div>
+                  <div><div style="font-size:10px;color:var(--text3);">Balance</div><div style="font-size:14px;font-weight:600;">₹8.23Cr</div></div>
+                </div>
+              </div>
+              <div style="background:var(--bg3);border:0.5px solid var(--border);border-radius:11px;padding:14px;">
+                <div style="font-size:12px;color:var(--text3);margin-bottom:4px;">Private · Bodhan</div>
+                <div style="font-size:14px;font-weight:600;margin-bottom:10px;">Residential Complex</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                  <div><div style="font-size:10px;color:var(--text3);">P&L Today</div><div style="font-size:14px;font-weight:600;color:var(--red);">-₹18.2K</div></div>
+                  <div><div style="font-size:10px;color:var(--text3);">Balance</div><div style="font-size:14px;font-weight:600;">₹1.45Cr</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SATURDAY MODULE -->
+      <div class="module" id="module-saturday">
+        <div class="content-header"><div class="content-title">SATURDAY AI Engine</div><div class="content-sub">Autonomous financial intelligence · All tasks running live</div></div>
+        <div class="content-body"><div style="background:var(--bg2);border:0.5px solid rgba(99,102,241,0.25);border-radius:14px;padding:24px;text-align:center;"><div style="font-size:14px;color:var(--text2);margin-bottom:12px;">SATURDAY module is embedded — launch the full SATURDAY interface</div><button class="btn-add-user" onclick="alert('SATURDAY full module — brick being laid! Coming soon in next session.')">Open SATURDAY Interface →</button></div></div>
+      </div>
+
+      <!-- PLACEHOLDER MODULES -->
+      <div class="module" id="module-projects"><div class="content-header"><div class="content-title">Projects</div><div class="content-sub">All active and completed projects</div></div><div class="content-body"><div style="background:var(--bg2);border:0.5px solid var(--border);border-radius:14px;padding:40px;text-align:center;color:var(--text3);">Projects module — next brick in queue 🧱</div></div></div>
+      <div class="module" id="module-planning"><div class="content-header"><div class="content-title">Planning & Gantt</div><div class="content-sub">Project timelines, milestones, critical path</div></div><div class="content-body"><div style="background:var(--bg2);border:0.5px solid var(--border);border-radius:14px;padding:40px;text-align:center;color:var(--text3);">Planning module — next brick in queue 🧱</div></div></div>
+      <div class="module" id="module-finance"><div class="content-header"><div class="content-title">Financials</div><div class="content-sub">P&L, cash flow, RA bills, vendor payments</div></div><div class="content-body"><div style="background:var(--bg2);border:0.5px solid var(--border);border-radius:14px;padding:40px;text-align:center;color:var(--text3);">Finance module — powered by SATURDAY 🧱</div></div></div>
+      <div class="module" id="module-tax"><div class="content-header"><div class="content-title">GST & TDS</div><div class="content-sub">Tax computation, returns, compliance</div></div><div class="content-body"><div style="background:var(--bg2);border:0.5px solid var(--border);border-radius:14px;padding:40px;text-align:center;color:var(--text3);">GST/TDS module — powered by SATURDAY 🧱</div></div></div>
+      <div class="module" id="module-materials"><div class="content-header"><div class="content-title">Materials & Store</div><div class="content-sub">Indent, procurement, inventory, GRN</div></div><div class="content-body"><div style="background:var(--bg2);border:0.5px solid var(--border);border-radius:14px;padding:40px;text-align:center;color:var(--text3);">Materials module — next brick in queue 🧱</div></div></div>
+      <div class="module" id="module-labour"><div class="content-header"><div class="content-title">Labour & HR</div><div class="content-sub">Attendance, wages, PF, ESI</div></div><div class="content-body"><div style="background:var(--bg2);border:0.5px solid var(--border);border-radius:14px;padding:40px;text-align:center;color:var(--text3);">Labour module — next brick in queue 🧱</div></div></div>
+      <div class="module" id="module-settings"><div class="content-header"><div class="content-title">Settings</div><div class="content-sub">Company profile, subscription, integrations</div></div><div class="content-body"><div style="background:var(--bg2);border:0.5px solid var(--border);border-radius:14px;padding:40px;text-align:center;color:var(--text3);">Settings module — next brick in queue 🧱</div></div></div>
+
+      <!-- HIERARCHY MODULE -->
+      <div class="module" id="module-hierarchy">
+        <div class="content-header"><div class="content-title">Roles & Users</div><div class="content-sub">Organisation hierarchy · Permission management · User access control</div></div>
+        <div class="content-body">
+          <div class="hier-module">
+            <div class="hier-module-header">
+              <div style="font-size:14px;color:var(--text2);">12 Role Levels Defined · <span style="color:var(--green);">3 Active Users</span></div>
+              <button class="btn-add-user" onclick="toggleAddUser()">+ Add User</button>
+            </div>
+
+            <div class="role-tabs">
+              <div class="role-tab active" onclick="filterRoles('all',this)">All Roles</div>
+              <div class="role-tab" onclick="filterRoles('mgmt',this)">Management</div>
+              <div class="role-tab" onclick="filterRoles('project',this)">Project Team</div>
+              <div class="role-tab" onclick="filterRoles('ops',this)">Operations</div>
+              <div class="role-tab" onclick="filterRoles('finance',this)">Finance</div>
+            </div>
+
+            <!-- ROLE CARDS -->
+            <div id="roles-list">
+
+              <!-- CMD -->
+              <div class="role-card" data-group="mgmt">
+                <div class="role-card-header" onclick="toggleRole('cmd')">
+                  <div class="role-card-left">
+                    <div class="role-level-badge" style="background:rgba(245,158,11,0.15);color:var(--amber);">L1</div>
+                    <div><div class="role-name">CMD / CEO / Proprietor</div><div class="role-sub">Company head · Full platform authority · All projects</div></div>
+                  </div>
+                  <div class="role-card-right">
+                    <span class="user-count">1 user</span>
+                    <div class="expand-icon" id="icon-cmd">▼</div>
+                  </div>
+                </div>
+                <div class="role-card-body" id="body-cmd">
+                  <div class="perm-section">
+                    <div class="perm-section-title">Access Permissions</div>
+                    <div class="perm-grid">
+                      <div class="perm-item"><div class="perm-check perm-yes"><svg width="9" height="9" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="1.8" fill="none"/></svg></div>All Financial Data</div>
+                      <div class="perm-item"><div class="perm-check perm-yes"><svg width="9" height="9" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="1.8" fill="none"/></svg></div>SATURDAY Full Access</div>
+                      <div class="perm-item"><div class="perm-check perm-yes"><svg width="9" height="9" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="1.8" fill="none"/></svg></div>All Projects</div>
+                      <div class="perm-item"><div class="perm-check perm-yes"><svg width="9" height="9" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="1.8" fill="none"/></svg></div>Approve Any Amount</div>
+                      <div class="perm-item"><div class="perm-check perm-yes"><svg width="9" height="9" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="1.8" fill="none"/></svg></div>User Management</div>
+                      <div class="perm-item"><div class="perm-check perm-yes"><svg width="9" height="9" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="1.8" fill="none"/></svg></div>Subscription Control</div>
+                      <div class="perm-item"><div class="perm-check perm-yes"><svg width="9" height="9" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="1.8" fill="none"/></svg></div>Delete Any Record</div>
+                      <div class="perm-item"><div class="perm-check perm-yes"><svg width="9" height="9" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="1.8" fill="none"/></svg></div>Client Portal Admin</div>
+                    </div>
+                  </div>
+                  <div class="divider-line"></div>
+                  <div class="perm-section-title" style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Users in this Role</div>
+                  <div class="users-in-role"><span class="user-chip">K · Krishna Teja</span></div>
+                </div>
+              </div>
+
+              <!-- CFO -->
+              <div class="role-card" data-group="finance">
+                <div class="role-card-header" onclick="toggleRole('cfo')">
+                  <div class="role-card-left">
+                    <div class="role-level-badge" style="background:rgba(99,102,241,0.15);color:var(--indigo-l);">L2</div>
+                    <div><div class="role-name">CFO — Chief Financial Officer</div><div class="role-sub">Complete financial authority · SATURDAY full access · No project ops</div></div>
+                  </div>
+                  <div class="role-card-right"><span class="user-count">0 users</span><div class="expand-icon" id="icon-cfo">▼</div></div>
+                </div>
+                <div class="role-card-body" id="body-cfo">
+                  <div class="perm-section"><div class="perm-section-title">Access Permissions</div>
+                    <div class="perm-grid">
+                      <div class="perm-item"><div class="perm-check perm-yes"><svg width="9" height="9" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="1.8" fill="none"/></svg></div>All Financial Reports</div>
+                      <div class="perm-item"><div class="perm-check perm-yes"><svg width="9" height="9" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="1.8" fill="none"/></svg></div>SATURDAY Full Access</div>
+                      <div class="perm-item"><div class="perm-check perm-yes"><svg width="9" height="9" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="1.8" fill="none"/></svg></div>GST & TDS Filing</div>
+                      <div class="perm-item"><div class="perm-check perm-yes"><svg width="9" height="9" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="1.8" fill="none"/></svg></div>Approve Bills ≤ ₹50L</div>
+                      <div class="perm-item"><div class="perm-check perm-yes"><svg width="9" height="9" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="1.8" fill="none"/></svg></div>Bank Transactions</div>
+                      <div class="perm-item"><div class="perm-check perm-no"><svg width="9" height="9" viewBox="0 0 10 10"><line x1="2" y1="2" x2="8" y2="8" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/><line x1="8" y1="2" x2="2" y2="8" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/></svg></div><span style="color:var(--text3);">Project Execution Ops</span></div>
+                      <div class="perm-item"><div class="perm-check perm-no"><svg width="9" height="9" viewBox="0 0 10 10"><line x1="2" y1="2" x2="8" y2="8" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/><line x1="8" y1="2" x2="2" y2="8" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/></svg></div><span style="color:var(--text3);">User Management</span></div>
+                      <div class="perm-item"><div class="perm-check perm-no"><svg width="9" height="9" viewBox="0 0 10 10"><line x1="2" y1="2" x2="8" y2="8" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/><line x1="8" y1="2" x2="2" y2="8" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/></svg></div><span style="color:var(--text3);">Subscription Settings</span></div>
+                    </div>
+                  </div>
+                  <div class="divider-line"></div>
+                  <div class="perm-section-title" style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Users in this Role</div>
+                  <div class="users-in-role"><span style="font-size:12px;color:var(--text3);">No users assigned yet</span></div>
+                </div>
+              </div>
+
+              <!-- PD -->
+              <div class="role-card" data-group="mgmt">
+                <div class="role-card-header" onclick="toggleRole('pd')">
+                  <div class="role-card-left">
+                    <div class="role-level-badge" style="background:rgba(255,255,255,0.08);color:var(--text2);">L3</div>
+                    <div><div class="role-name">PD — Project Director</div><div class="role-sub">Multiple projects head · Budget approval · Subcontractor authority</div></div>
+                  </div>
+                  <div class="role-card-right"><span class="user-count">1 user</span><div class="expand-icon" id="icon-pd">▼</div></div>
+                </div>
+                <div class="role-card-body" id="body-pd">
+                  <div class="perm-section"><div class="perm-section-title">Access Permissions</div>
+                    <div class="perm-grid">
+                      <div class="perm-item"><div class="perm-check perm-yes"><svg width="9" height="9" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="1.8" fill="none"/></svg></div>Assigned Projects (all)</div>
+                      <div class="perm-item"><div class="perm-check perm-yes"><svg width="9" height="9" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="1.8" fill="none"/></svg></div>Approve POs ≤ ₹25L</div>
+                      <div class="perm-item"><div class="perm-check perm-yes"><svg width="9" height="9" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="1.8" fill="none"/></svg></div>Subcontractor WOs</div>
+                      <div class="perm-item"><div class="perm-check perm-yes"><svg width="9" height="9" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="1.8" fill="none"/></svg></div>RA Bill Certification</div>
+                      <div class="perm-item"><div class="perm-check perm-partial"><svg width="9" height="9" viewBox="0 0 10 10"><line x1="1" y1="5" x2="9" y2="5" stroke="#fbbf24" stroke-width="1.8"/></svg></div>Financial Reports (read)</div>
+                      <div class="perm-item"><div class="perm-check perm-no"><svg width="9" height="9" viewBox="0 0 10 10"><line x1="2" y1="2" x2="8" y2="8" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/><line x1="8" y1="2" x2="2" y2="8" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/></svg></div><span style="color:var(--text3);">SATURDAY Settings</span></div>
+                    </div>
+                  </div>
+                  <div class="divider-line"></div>
+                  <div class="perm-section-title" style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Users in this Role</div>
+                  <div class="users-in-role"><span class="user-chip" style="border-color:rgba(255,255,255,0.12);color:var(--text2);">R · Ravi Kumar</span></div>
+                </div>
+              </div>
+
+              <!-- GM -->
+              <div class="role-card" data-group="mgmt">
+                <div class="role-card-header" onclick="toggleRole('gm')">
+                  <div class="role-card-left"><div class="role-level-badge" style="background:rgba(255,255,255,0.08);color:var(--text2);">L4</div><div><div class="role-name">GM — General Manager</div><div class="role-sub">2–3 projects coordination · Progress review · Billing approval</div></div></div>
+                  <div class="role-card-right"><span class="user-count">0 users</span><div class="expand-icon" id="icon-gm">▼</div></div>
+                </div>
+                <div class="role-card-body" id="body-gm">
+                  <div class="perm-section"><div class="perm-section-title">Access Permissions</div>
+                    <div class="perm-grid">
+                      <div class="perm-item"><div class="perm-check perm-yes"><svg width="9" height="9" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="1.8" fill="none"/></svg></div>Assigned 2–3 Projects</div>
+                      <div class="perm-item"><div class="perm-check perm-yes"><svg width="9" height="9" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="1.8" fill="none"/></svg></div>Approve POs ≤ ₹10L</div>
+                      <div class="perm-item"><div class="perm-check perm-yes"><svg width="9" height="9" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="1.8" fill="none"/></svg></div>Progress Reports</div>
+                      <div class="perm-item"><div class="perm-check perm-partial"><svg width="9" height="9" viewBox="0 0 10 10"><line x1="1" y1="5" x2="9" y2="5" stroke="#fbbf24" stroke-width="1.8"/></svg></div>Bill Certification (view)</div>
+                      <div class="perm-item"><div class="perm-check perm-no"><svg width="9" height="9" viewBox="0 0 10 10"><line x1="2" y1="2" x2="8" y2="8" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/><line x1="8" y1="2" x2="2" y2="8" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/></svg></div><span style="color:var(--text3);">Financial Data</span></div>
+                    </div>
+                  </div>
+                  <div class="divider-line"></div>
+                  <div class="users-in-role"><span style="font-size:12px;color:var(--text3);">No users assigned yet</span></div>
+                </div>
+              </div>
+
+              <!-- AGM / SPM / PM combined card -->
+              <div class="role-card" data-group="project">
+                <div class="role-card-header" onclick="toggleRole('spm')">
+                  <div class="role-card-left"><div class="role-level-badge" style="background:rgba(255,255,255,0.08);color:var(--text2);">L5–7</div><div><div class="role-name">AGM · SPM · PM</div><div class="role-sub">Site-level management · Execution · DPR · Indent approval</div></div></div>
+                  <div class="role-card-right"><span class="user-count">1 user</span><div class="expand-icon" id="icon-spm">▼</div></div>
+                </div>
+                <div class="role-card-body" id="body-spm">
+                  <div class="perm-section"><div class="perm-section-title">Access Permissions</div>
+                    <div class="perm-grid">
+                      <div class="perm-item"><div class="perm-check perm-yes"><svg width="9" height="9" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="1.8" fill="none"/></svg></div>Single Assigned Project</div>
+                      <div class="perm-item"><div class="perm-check perm-yes"><svg width="9" height="9" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="1.8" fill="none"/></svg></div>Daily Progress Entry</div>
+                      <div class="perm-item"><div class="perm-check perm-yes"><svg width="9" height="9" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="1.8" fill="none"/></svg></div>Approve Indents ≤ ₹2L</div>
+                      <div class="perm-item"><div class="perm-check perm-yes"><svg width="9" height="9" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="1.8" fill="none"/></svg></div>Labour Attendance</div>
+                      <div class="perm-item"><div class="perm-check perm-yes"><svg width="9" height="9" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="1.8" fill="none"/></svg></div>Photo Upload — Site</div>
+                      <div class="perm-item"><div class="perm-check perm-partial"><svg width="9" height="9" viewBox="0 0 10 10"><line x1="1" y1="5" x2="9" y2="5" stroke="#fbbf24" stroke-width="1.8"/></svg></div>Cost Reports (read only)</div>
+                      <div class="perm-item"><div class="perm-check perm-no"><svg width="9" height="9" viewBox="0 0 10 10"><line x1="2" y1="2" x2="8" y2="8" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/><line x1="8" y1="2" x2="2" y2="8" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/></svg></div><span style="color:var(--text3);">Financial Data</span></div>
+                      <div class="perm-item"><div class="perm-check perm-no"><svg width="9" height="9" viewBox="0 0 10 10"><line x1="2" y1="2" x2="8" y2="8" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/><line x1="8" y1="2" x2="2" y2="8" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/></svg></div><span style="color:var(--text3);">Vendor Management</span></div>
+                    </div>
+                  </div>
+                  <div class="divider-line"></div>
+                  <div class="users-in-role"><span class="user-chip" style="border-color:rgba(255,255,255,0.12);color:var(--text2);">S · Suresh PM</span></div>
+                </div>
+              </div>
+
+              <!-- QS / Store / Accountant -->
+              <div class="role-card" data-group="ops">
+                <div class="role-card-header" onclick="toggleRole('qs')">
+                  <div class="role-card-left"><div class="role-level-badge" style="background:rgba(255,255,255,0.08);color:var(--text2);">L8+</div><div><div class="role-name">QS Manager · Store Manager · Accountant · APM</div><div class="role-sub">Domain-specific access · Functional roles · Restricted scope</div></div></div>
+                  <div class="role-card-right"><span class="user-count">0 users</span><div class="expand-icon" id="icon-qs">▼</div></div>
+                </div>
+                <div class="role-card-body" id="body-qs">
+                  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+                    <div style="background:var(--bg3);border:0.5px solid var(--border);border-radius:10px;padding:12px;">
+                      <div style="font-size:12px;font-weight:600;margin-bottom:8px;color:var(--text);">QS Manager</div>
+                      <div class="perm-item" style="margin-bottom:6px;"><div class="perm-check perm-yes" style="width:14px;height:14px;"><svg width="7" height="7" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="2" fill="none"/></svg></div><span style="font-size:11px;">BOQ & Quantities</span></div>
+                      <div class="perm-item" style="margin-bottom:6px;"><div class="perm-check perm-yes" style="width:14px;height:14px;"><svg width="7" height="7" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="2" fill="none"/></svg></div><span style="font-size:11px;">BBS Generation</span></div>
+                      <div class="perm-item"><div class="perm-check perm-no" style="width:14px;height:14px;"><svg width="7" height="7" viewBox="0 0 10 10"><line x1="2" y1="2" x2="8" y2="8" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/><line x1="8" y1="2" x2="2" y2="8" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/></svg></div><span style="font-size:11px;color:var(--text3);">Financial Data</span></div>
+                    </div>
+                    <div style="background:var(--bg3);border:0.5px solid var(--border);border-radius:10px;padding:12px;">
+                      <div style="font-size:12px;font-weight:600;margin-bottom:8px;color:var(--text);">Store Manager</div>
+                      <div class="perm-item" style="margin-bottom:6px;"><div class="perm-check perm-yes" style="width:14px;height:14px;"><svg width="7" height="7" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="2" fill="none"/></svg></div><span style="font-size:11px;">Inventory Full</span></div>
+                      <div class="perm-item" style="margin-bottom:6px;"><div class="perm-check perm-yes" style="width:14px;height:14px;"><svg width="7" height="7" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="2" fill="none"/></svg></div><span style="font-size:11px;">GRN Entry</span></div>
+                      <div class="perm-item"><div class="perm-check perm-no" style="width:14px;height:14px;"><svg width="7" height="7" viewBox="0 0 10 10"><line x1="2" y1="2" x2="8" y2="8" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/><line x1="8" y1="2" x2="2" y2="8" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/></svg></div><span style="font-size:11px;color:var(--text3);">PO Creation</span></div>
+                    </div>
+                    <div style="background:var(--bg3);border:0.5px solid var(--border);border-radius:10px;padding:12px;">
+                      <div style="font-size:12px;font-weight:600;margin-bottom:8px;color:var(--text);">Accountant</div>
+                      <div class="perm-item" style="margin-bottom:6px;"><div class="perm-check perm-yes" style="width:14px;height:14px;"><svg width="7" height="7" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="2" fill="none"/></svg></div><span style="font-size:11px;">Voucher Entry</span></div>
+                      <div class="perm-item" style="margin-bottom:6px;"><div class="perm-check perm-yes" style="width:14px;height:14px;"><svg width="7" height="7" viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2" stroke="#4ade80" stroke-width="2" fill="none"/></svg></div><span style="font-size:11px;">GST Data Entry</span></div>
+                      <div class="perm-item"><div class="perm-check perm-no" style="width:14px;height:14px;"><svg width="7" height="7" viewBox="0 0 10 10"><line x1="2" y1="2" x2="8" y2="8" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/><line x1="8" y1="2" x2="2" y2="8" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/></svg></div><span style="font-size:11px;color:var(--text3);">Approve Payments</span></div>
+                    </div>
+                  </div>
+                  <div class="divider-line"></div>
+                  <div class="users-in-role"><span style="font-size:12px;color:var(--text3);">No users assigned yet</span></div>
+                </div>
+              </div>
+
+            </div><!-- end roles-list -->
+
+            <!-- ADD USER PANEL -->
+            <div class="add-user-panel" id="add-user-panel" style="display:none;">
+              <div class="add-user-title">Add New User</div>
+              <div class="add-user-grid">
+                <div class="field"><label>Full Name</label><input type="text" id="nu-name" placeholder="Employee Name"/></div>
+                <div class="field"><label>Email Address</label><input type="email" id="nu-email" placeholder="employee@company.com"/></div>
+                <div class="field"><label>Mobile Number</label><input type="tel" id="nu-mobile" placeholder="+91 XXXXX XXXXX"/></div>
+                <div class="field"><label>Employee ID</label><input type="text" id="nu-empid" placeholder="EMP-001"/></div>
+              </div>
+              <div class="field" style="margin-top:4px;"><label>Assign Role</label>
+                <div class="role-select-grid" id="role-select-grid">
+                  <div class="role-select-item" onclick="pickRole(this,'CMD / CEO / Proprietor')">CMD / CEO</div>
+                  <div class="role-select-item" onclick="pickRole(this,'CFO')">CFO</div>
+                  <div class="role-select-item" onclick="pickRole(this,'Project Director')">Project Director</div>
+                  <div class="role-select-item" onclick="pickRole(this,'General Manager')">General Manager</div>
+                  <div class="role-select-item" onclick="pickRole(this,'AGM')">AGM</div>
+                  <div class="role-select-item" onclick="pickRole(this,'SPM')">SPM</div>
+                  <div class="role-select-item" onclick="pickRole(this,'Project Manager')">Project Manager</div>
+                  <div class="role-select-item" onclick="pickRole(this,'APM')">APM</div>
+                  <div class="role-select-item" onclick="pickRole(this,'QS Manager')">QS Manager</div>
+                  <div class="role-select-item" onclick="pickRole(this,'Store Manager')">Store Manager</div>
+                  <div class="role-select-item" onclick="pickRole(this,'Accountant')">Accountant</div>
+                  <div class="role-select-item" onclick="pickRole(this,'Site Engineer')">Site Engineer</div>
+                </div>
+              </div>
+              <button class="btn-save-user" onclick="saveNewUser()">Add User to ERP+</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="success-toast" id="toast"></div>
+
+<script>
+var currentStep=1;
+var selectedPlan='pro';
+var selectedRole='';
+var appState={companyName:'TTIPL',userName:'Krishna',userRole:'CMD / Proprietor'};
+
+// AUTH
+function switchAuthTab(tab,el){
+  document.querySelectorAll('.auth-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('login-form').style.display=tab==='login'?'block':'none';
+  document.getElementById('signup-form').style.display=tab==='signup'?'block':'none';
+}
+function doLogin(){
+  var e=document.getElementById('login-email').value.trim();
+  var p=document.getElementById('login-pass').value.trim();
+  if(!e||!p){document.getElementById('login-err').style.display='block';return;}
+  document.getElementById('login-err').style.display='none';
+  showPage('page-app');
+}
+function demoLogin(){
+  showPage('page-app');
+}
+function doSignup(){
+  var f=document.getElementById('su-first').value.trim();
+  var e=document.getElementById('su-email').value.trim();
+  if(!f||!e){document.getElementById('signup-err').style.display='block';return;}
+  document.getElementById('signup-err').style.display='none';
+  appState.userName=f+' '+(document.getElementById('su-last').value||'');
+  showPage('page-setup');
+}
+
+// LOGO UPLOAD
+function previewLogo(e){
+  var f=e.target.files[0];
+  if(!f)return;
+  var r=new FileReader();
+  r.onload=function(ev){
+    document.getElementById('logo-img').src=ev.target.result;
+    document.getElementById('logo-preview').style.display='block';
+    document.getElementById('upload-icon').style.display='none';
+  };
+  r.readAsDataURL(f);
+}
+
+// SETUP WIZARD
+function goStep(n){
+  document.getElementById('step'+currentStep).classList.remove('active');
+  document.getElementById('sc'+currentStep).classList.remove('active','done');
+  document.getElementById('sl'+currentStep).classList.remove('active');
+  document.getElementById('sc'+currentStep).classList.add('done');
+  document.getElementById('sc'+currentStep).innerHTML='✓';
+  currentStep=n;
+  document.getElementById('step'+currentStep).classList.add('active');
+  document.getElementById('sc'+currentStep).classList.add('active');
+  document.getElementById('sl'+currentStep).classList.add('active');
+  var cname=document.getElementById('s1-name').value||'Your Company';
+  var cshort=document.getElementById('s1-short').value||cname.split(' ').map(w=>w[0]).join('').toUpperCase();
+  if(n===4){
+    document.getElementById('setup-done-title').textContent=cshort+' is Ready!';
+    document.getElementById('sidebar-company-name').textContent=cshort;
+    appState.companyName=cshort;
+  }
+}
+function selectPlan(plan){
+  selectedPlan=plan;
+  ['basic','pro','max'].forEach(p=>{
+    var c=document.getElementById('sub-'+p);
+    var r=document.getElementById('r-'+p);
+    c.className='sub-card';
+    if(p===plan){c.classList.add('selected-'+p);r.classList.add('checked');r.querySelector('.radio-dot').style.display='block';}
+    else{r.classList.remove('checked');r.querySelector('.radio-dot').style.display='none';}
+  });
+}
+function launchApp(){showPage('page-app');}
+
+// PAGE NAVIGATION
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// MODULE NAVIGATION
+function openModule(mod,el){
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.module').forEach(m=>m.classList.remove('active'));
+  document.getElementById('module-'+mod).classList.add('active');
+}
+
+// ROLE TOGGLE
+function toggleRole(id){
+  var b=document.getElementById('body-'+id);
+  var i=document.getElementById('icon-'+id);
+  var isOpen=b.classList.contains('open');
+  b.classList.toggle('open');
+  i.classList.toggle('open');
+}
+
+// FILTER ROLES
+function filterRoles(group,el){
+  document.querySelectorAll('.role-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.role-card').forEach(c=>{
+    c.style.display=(group==='all'||c.dataset.group===group)?'block':'none';
+  });
+}
+
+// ADD USER
+function toggleAddUser(){
+  var p=document.getElementById('add-user-panel');
+  p.style.display=p.style.display==='block'?'none':'block';
+  if(p.style.display==='block') p.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function pickRole(el,role){
+  document.querySelectorAll('.role-select-item').forEach(i=>i.classList.remove('picked'));
+  el.classList.add('picked');
+  selectedRole=role;
+}
+function saveNewUser(){
+  var name=document.getElementById('nu-name').value.trim();
+  if(!name||!selectedRole){showToast('Please fill name and select a role.');return;}
+  showToast('✓ '+name+' added as '+selectedRole);
+  document.getElementById('nu-name').value='';
+  document.getElementById('nu-email').value='';
+  document.getElementById('nu-mobile').value='';
+  document.getElementById('nu-empid').value='';
+  document.querySelectorAll('.role-select-item').forEach(i=>i.classList.remove('picked'));
+  selectedRole='';
+  document.getElementById('add-user-panel').style.display='none';
+}
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+// HASH BASED ROUTING
+if(window.location.hash==='#signup'){
+  switchAuthTab('signup',document.querySelectorAll('.auth-tab')[1]);
+}
+</script>
+</body>
+</html>
