@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Saturday ERP+</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ════ EDIT YOUR BRAND COLORS HERE ════ */
+:root{
+  --C1:#4f46e5;--C2:#818cf8;--CD:rgba(99,102,241,0.13);
+  --AM:#f59e0b;--GR:#22c55e;--RD:#ef4444;
+  --B0:#080810;--B1:#0f0f18;--B2:#141420;
+  --T0:#e8e8ff;--T1:rgba(232,232,255,0.55);--T2:rgba(232,232,255,0.28);
+  --BR:rgba(255,255,255,0.08);--B2X:rgba(255,255,255,0.14);
+  --SW:220px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--B0);color:var(--T0);font-size:14px;}
+h1,h2,h3,.logo{font-family:'Syne',sans-serif;}
+input,select,textarea,button{font-family:'DM Sans',sans-serif;}
+.page{display:none;min-height:100vh;}
+.page.active{display:flex;}
+button{cursor:pointer;}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:var(--B1);}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:2px;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+
+/* AUTH */
+.aw{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;position:relative;overflow:hidden;}
+.aw::before{content:'';position:absolute;top:25%;left:50%;transform:translateX(-50%);width:500px;height:280px;background:radial-gradient(ellipse,rgba(99,102,241,.09),transparent 70%);pointer-events:none;}
+.ac{background:var(--B1);border:.5px solid rgba(99,102,241,.22);border-radius:22px;padding:36px 32px;width:100%;max-width:410px;z-index:1;}
+.ac .logo{font-size:20px;font-weight:800;text-align:center;margin-bottom:4px;}
+.ac .logo span{color:var(--C2);}
+.ac-sub{font-size:12px;color:var(--T2);text-align:center;margin-bottom:24px;}
+.atabs{display:flex;background:rgba(255,255,255,.04);border-radius:8px;padding:3px;margin-bottom:22px;}
+.atab{flex:1;padding:8px;text-align:center;font-size:13px;border-radius:6px;border:none;background:transparent;color:var(--T1);transition:all .2s;}
+.atab.on{background:var(--C1);color:#fff;font-weight:500;}
+.f{margin-bottom:13px;}
+.f label{display:block;font-size:10px;color:var(--T2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px;}
+.f input,.f select,.f textarea{width:100%;background:rgba(255,255,255,.05);border:.5px solid var(--B2X);border-radius:8px;padding:10px 12px;color:var(--T0);font-size:13px;outline:none;transition:border-color .2s;}
+.f input:focus,.f select:focus{border-color:rgba(99,102,241,.5);}
+.f input::placeholder{color:var(--T2);}
+.f select option{background:#1a1a28;}
+.f textarea{resize:vertical;min-height:70px;color:var(--T0);}
+.btn-p{background:var(--C1);color:#fff;border:none;padding:11px 20px;border-radius:9px;font-size:13px;font-weight:500;transition:all .2s;}
+.btn-p:hover{background:#4338ca;}
+.btn-p.w{width:100%;padding:13px;font-size:14px;}
+.btn-s{background:transparent;border:.5px solid var(--B2X);color:var(--T1);padding:9px 16px;border-radius:8px;font-size:12px;transition:all .2s;}
+.btn-s:hover{background:rgba(255,255,255,.05);}
+.btn-g{background:transparent;border:none;color:var(--C2);padding:7px;font-size:13px;cursor:pointer;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px;}
+.err{background:rgba(239,68,68,.1);border:.5px solid rgba(239,68,68,.28);border-radius:7px;padding:9px 12px;font-size:12px;color:#f87171;margin-bottom:12px;display:none;}
+
+/* SETUP */
+.sw{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;position:relative;overflow:hidden;}
+.sw::before{content:'';position:absolute;top:20%;left:50%;transform:translateX(-50%);width:600px;height:350px;background:radial-gradient(ellipse,rgba(99,102,241,.07),transparent 70%);pointer-events:none;}
+.scard{background:var(--B1);border:.5px solid rgba(99,102,241,.18);border-radius:22px;padding:36px;width:100%;max-width:530px;z-index:1;}
+.wsteps{display:flex;margin-bottom:30px;}
+.wsi{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;}
+.wsi:not(:last-child)::after{content:'';position:absolute;top:13px;left:50%;width:100%;height:.5px;background:var(--B2X);}
+.wn{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--B2X);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--T2);background:var(--B0);z-index:1;transition:all .3s;}
+.wn.dn{background:var(--C1);border-color:var(--C1);color:#fff;}
+.wn.ac2{border-color:var(--C2);color:var(--C2);}
+.wlb{font-size:10px;color:var(--T2);margin-top:4px;}
+.wlb.ac2{color:var(--C2);}
+.wstep{display:none;}
+.wstep.on{display:block;}
+.wt{font-size:19px;font-weight:700;margin-bottom:6px;font-family:'Syne',sans-serif;}
+.ws2{font-size:13px;color:var(--T1);margin-bottom:20px;line-height:1.6;}
+.ldrop{border:1.5px dashed var(--B2X);border-radius:11px;padding:24px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:13px;}
+.ldrop:hover{border-color:rgba(99,102,241,.4);background:var(--CD);}
+.scards2{display:flex;flex-direction:column;gap:8px;margin-bottom:8px;}
+.scard2{background:var(--B0);border:1.5px solid var(--BR);border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:space-between;}
+.scard2.sp{border-color:var(--C1);}
+.scard2.sm{border-color:var(--AM);}
+.scard2.sb{border-color:rgba(255,255,255,.3);}
+.sr2{width:15px;height:15px;border-radius:50%;border:1.5px solid var(--B2X);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
+.sr2.on{background:var(--C1);border-color:var(--C1);}
+.rd{width:6px;height:6px;border-radius:50%;background:#fff;}
+.brow{display:flex;gap:9px;margin-top:22px;}
+.bb{flex:1;background:transparent;border:.5px solid var(--B2X);color:var(--T1);padding:11px;border-radius:8px;font-size:13px;cursor:pointer;}
+.bn{flex:2;background:var(--C1);color:#fff;border:none;padding:11px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;}
+
+/* APP SHELL */
+.al{flex:1;display:flex;}
+.sb{width:var(--SW);background:var(--B1);border-right:.5px solid var(--BR);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:50;overflow-y:auto;}
+.sh{padding:16px 14px 12px;border-bottom:.5px solid var(--BR);}
+.sh .logo{font-size:15px;font-weight:800;}
+.sh .logo span{color:var(--C2);}
+.sco{font-size:10px;color:var(--T2);margin-top:2px;}
+.sn{flex:1;padding:7px 6px;}
+.ng{font-size:9px;color:var(--T2);text-transform:uppercase;letter-spacing:1px;padding:10px 8px 4px;}
+.ni{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:7px;font-size:12px;color:var(--T1);cursor:pointer;transition:all .18s;margin-bottom:1px;border:none;background:transparent;width:100%;text-align:left;}
+.ni:hover{background:rgba(255,255,255,.05);color:var(--T0);}
+.ni.on{background:var(--CD);color:var(--C2);}
+.ni svg{width:14px;height:14px;flex-shrink:0;opacity:.65;}
+.ni.on svg{opacity:1;}
+.nb{margin-left:auto;background:var(--RD);color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:5px;}
+.sf{padding:10px 12px;border-top:.5px solid var(--BR);margin-top:auto;}
+.ur{display:flex;align-items:center;gap:8px;}
+.uav{width:28px;height:28px;border-radius:50%;background:var(--CD);border:1px solid rgba(99,102,241,.3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--C2);flex-shrink:0;}
+.unm{font-size:11px;font-weight:500;}
+.url{font-size:10px;color:var(--T2);}
+.lo{margin-left:auto;background:transparent;border:none;color:var(--T2);cursor:pointer;padding:3px;}
+.lo:hover{color:var(--RD);}
+.mw{flex:1;margin-left:var(--SW);min-width:0;}
+.tb{position:sticky;top:0;background:rgba(8,8,16,.92);backdrop-filter:blur(10px);border-bottom:.5px solid var(--BR);padding:0 20px;height:50px;display:flex;align-items:center;justify-content:space-between;z-index:40;}
+.bc{font-size:12px;color:var(--T2);}
+.bc span{color:var(--T1);}
+.tbr{display:flex;align-items:center;gap:9px;}
+.nb2{width:28px;height:28px;background:transparent;border:.5px solid var(--B2X);border-radius:7px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;color:var(--T1);}
+.nd{position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;background:var(--RD);}
+.pc{padding:20px;}
+
+/* MODULES */
+.mod{display:none;}
+.mod.on{display:block;}
+.mh{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;}
+.mt2{font-size:19px;font-weight:700;font-family:'Syne',sans-serif;}
+.ms{font-size:11px;color:var(--T2);margin-top:3px;}
+.ma{display:flex;gap:8px;}
+.stb{display:flex;gap:5px;margin-bottom:16px;flex-wrap:wrap;border-bottom:.5px solid var(--BR);padding-bottom:10px;}
+.st{padding:5px 14px;border-radius:7px;font-size:12px;font-weight:500;color:var(--T1);cursor:pointer;background:transparent;border:none;transition:all .18s;}
+.st:hover{background:rgba(255,255,255,.05);color:var(--T0);}
+.st.on{background:var(--CD);color:var(--C2);}
+.sec{display:none;}
+.sec.on{display:block;}
+
+/* STATS */
+.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:18px;}
+.sk{background:var(--B1);border:.5px solid var(--BR);border-radius:11px;padding:14px;}
+.sk .lb{font-size:10px;color:var(--T2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:5px;}
+.sk .vl{font-size:18px;font-weight:700;font-family:'DM Mono',monospace;margin-bottom:3px;}
+.sk .dl{font-size:11px;}
+
+/* TABLE */
+.tw{background:var(--B1);border:.5px solid var(--BR);border-radius:12px;overflow:hidden;margin-bottom:13px;}
+.ttb{padding:11px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:.5px solid var(--BR);flex-wrap:wrap;gap:8px;}
+.ttl{font-size:13px;font-weight:600;}
+.ttls{display:flex;gap:7px;align-items:center;}
+.sx{background:rgba(255,255,255,.05);border:.5px solid var(--B2X);border-radius:7px;padding:6px 10px;color:var(--T0);font-size:12px;outline:none;width:160px;}
+.sx::placeholder{color:var(--T2);}
+table{width:100%;border-collapse:collapse;}
+th{padding:8px 12px;text-align:left;font-size:10px;color:var(--T2);text-transform:uppercase;letter-spacing:.6px;border-bottom:.5px solid var(--BR);background:rgba(255,255,255,.02);font-weight:500;}
+td{padding:10px 12px;font-size:12px;color:var(--T1);border-bottom:.5px solid rgba(255,255,255,.04);}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,.02);color:var(--T0);}
+.tb2{font-weight:500;color:var(--T0);}
+.tm{font-family:'DM Mono',monospace;font-size:12px;}
+.bd{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;}
+.bg{background:rgba(34,197,94,.13);color:#4ade80;}
+.br2{background:rgba(239,68,68,.13);color:#f87171;}
+.ba{background:rgba(245,158,11,.13);color:#fbbf24;}
+.bb2{background:rgba(99,102,241,.13);color:#818cf8;}
+.bgr{background:rgba(255,255,255,.07);color:var(--T1);}
+.al2{color:var(--C2);font-size:11px;cursor:pointer;background:none;border:none;padding:0;}
+.al2:hover{text-decoration:underline;}
+
+/* FORM PANEL */
+.fp{background:var(--B2);border:.5px solid rgba(99,102,241,.18);border-radius:12px;padding:18px;margin-top:11px;display:none;}
+.fp.on{display:block;}
+.fph{font-size:13px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;}
+.fcl{background:transparent;border:none;color:var(--T2);font-size:17px;cursor:pointer;line-height:1;}
+.fcl:hover{color:var(--RD);}
+.fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:11px;}
+.fr{display:flex;gap:8px;margin-top:14px;}
+.divl{height:.5px;background:var(--BR);margin:12px 0;}
+.emp{text-align:center;padding:40px 20px;}
+.emi{font-size:30px;margin-bottom:10px;opacity:.5;}
+.emt{font-size:14px;font-weight:500;color:var(--T1);margin-bottom:5px;}
+.ems{font-size:12px;color:var(--T2);}
+
+/* ALERT CARDS */
+.alert-r{background:#110e05;border:.5px solid rgba(239,68,68,.3);border-radius:10px;padding:13px 15px;margin-bottom:9px;}
+.alert-a{background:#110a05;border:.5px solid rgba(245,158,11,.3);border-radius:10px;padding:13px 15px;margin-bottom:9px;}
+.alert-b{background:#0a0a18;border:.5px solid rgba(99,102,241,.3);border-radius:10px;padding:13px 15px;margin-bottom:9px;}
+.alert-g{background:#080e0a;border:.5px solid rgba(34,197,94,.22);border-radius:10px;padding:13px 15px;margin-bottom:9px;}
+.alert-title{font-size:12px;font-weight:600;margin-bottom:4px;}
+.alert-body{font-size:12px;color:var(--T1);line-height:1.5;}
+
+/* CARD */
+.card{background:var(--B1);border:.5px solid var(--BR);border-radius:12px;padding:16px;margin-bottom:12px;}
+
+/* TOAST */
+.toast{position:fixed;bottom:18px;right:18px;padding:10px 16px;border-radius:9px;font-size:13px;z-index:999;transform:translateY(50px);opacity:0;transition:all .3s;pointer-events:none;}
+.toast.on{transform:translateY(0);opacity:1;}
+.toast.s{background:#0f2214;border:.5px solid rgba(34,197,94,.4);color:#4ade80;}
+.toast.e{background:#1f0d0d;border:.5px solid rgba(239,68,68,.4);color:#f87171;}
+.toast.i{background:#0c0f1f;border:.5px solid rgba(99,102,241,.4);color:#818cf8;}
+
+/* TOGGLE */
+.trow{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:.5px solid var(--BR);}
+.trow:last-child{border-bottom:none;}
+.tlbl{font-size:12px;color:var(--T1);}
+.tgl{position:relative;width:34px;height:18px;}
+.tgl input{opacity:0;width:0;height:0;}
+.tslider{position:absolute;inset:0;background:rgba(255,255,255,.12);border-radius:20px;transition:.3s;cursor:pointer;}
+.tslider::before{content:'';position:absolute;width:12px;height:12px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.3s;}
+.tgl input:checked+.tslider{background:var(--C1);}
+.tgl input:checked+.tslider::before{transform:translateX(16px);}
+</style>
+
+<!-- ═══ SUPABASE — MUST BE ADDED HERE BEFORE </head> ═══ -->
+<!-- Step 1: Add this line: -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script> -->
+<!-- Step 2: Add this line: -->
+<!-- <script src="supabase.js"></script> -->
+<!-- Remove the comment markers (<!-- -->) when you add them -->
+
+</head>
+<body>
+
+<!-- ══════════════════════ LOGIN ══════════════════════ -->
+<div class="page active" id="pg-login">
+<div class="aw">
+  <div class="ac">
+    <div class="logo">saturday<span>ERP+</span></div>
+    <div class="ac-sub">Construction Intelligence Platform</div>
+    <div class="atabs">
+      <button class="atab on" onclick="atab('lf',this)">Sign In</button>
+      <button class="atab" onclick="atab('sf',this)">Create Account</button>
+    </div>
+    <div id="lf">
+      <div class="err" id="lerr">Please enter your email and password.</div>
+      <div class="f"><label>Email</label><input type="email" id="lem" placeholder="you@company.com"/></div>
+      <div class="f"><label>Password</label><input type="password" id="lpw" placeholder="Your password" onkeydown="if(event.key==='Enter')doLogin()"/></div>
+      <button class="btn-p w" onclick="doLogin()">Sign In to ERP+</button>
+      <div style="text-align:center;margin-top:11px;"><button class="btn-g" onclick="demoLogin()">→ Demo login — no password needed</button></div>
+    </div>
+    <div id="sf" style="display:none;">
+      <div class="err" id="serr">Please fill all required fields.</div>
+      <div class="g2">
+        <div class="f"><label>First Name *</label><input type="text" id="sfn" placeholder="Krishna"/></div>
+        <div class="f"><label>Last Name</label><input type="text" id="sln" placeholder="Teja"/></div>
+      </div>
+      <div class="f"><label>Work Email *</label><input type="email" id="sem" placeholder="you@company.com"/></div>
+      <div class="f"><label>Mobile *</label><input type="tel" id="smb" placeholder="+91 98765 43210"/></div>
+      <div class="f"><label>Password *</label><input type="password" id="spw" placeholder="Min 8 characters"/></div>
+      <button class="btn-p w" onclick="doSignup()">Create Account & Setup Company</button>
+    </div>
+    <div style="text-align:center;margin-top:13px;"><a href="index.html" style="font-size:12px;color:var(--T2);">← Back to saturdayerp.com</a></div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════ SETUP WIZARD ══════════════════════ -->
+<div class="page" id="pg-setup">
+<div class="sw">
+  <div class="scard">
+    <div class="wsteps">
+      <div class="wsi"><div class="wn ac2" id="wn1">1</div><div class="wlb ac2" id="wl1">Company</div></div>
+      <div class="wsi"><div class="wn" id="wn2">2</div><div class="wlb" id="wl2">Details</div></div>
+      <div class="wsi"><div class="wn" id="wn3">3</div><div class="wlb" id="wl3">Plan</div></div>
+      <div class="wsi"><div class="wn" id="wn4">4</div><div class="wlb" id="wl4">Launch</div></div>
+    </div>
+    <!-- Step 1 -->
+    <div class="wstep on" id="ws1">
+      <div class="wt">Set Up Your Company</div>
+      <div class="ws2">Your company identity across all dashboards, bills, and client communications.</div>
+      <div class="ldrop" onclick="document.getElementById('lfi').click()">
+        <div id="lpr" style="display:none;margin-bottom:8px;"><img id="lim" style="height:48px;object-fit:contain;"/></div>
+        <div id="lic" style="font-size:24px;margin-bottom:7px;">🏢</div>
+        <div style="font-size:13px;color:var(--T1);">Click to upload company logo</div>
+        <div style="font-size:11px;color:var(--T2);margin-top:3px;">PNG, JPG, SVG · Max 2MB</div>
+      </div>
+      <input type="file" id="lfi" accept="image/*" style="display:none" onchange="prevLogo(event)">
+      <div class="f"><label>Company Full Name *</label><input type="text" id="s1n" placeholder="e.g. TTIPL Construction Pvt. Ltd."/></div>
+      <div class="g2">
+        <div class="f"><label>Short Name *</label><input type="text" id="s1s" placeholder="TTIPL"/></div>
+        <div class="f"><label>Industry</label><select id="s1i"><option value="civil">Civil Construction</option><option value="infra">Infrastructure / EPC</option><option value="real">Real Estate</option><option value="roads">Roads & Highways</option><option value="ind">Industrial</option></select></div>
+      </div>
+      <div class="f"><label>Company Type</label><select id="s1t"><option value="pvt">Private Limited</option><option value="prop">Proprietorship</option><option value="partner">Partnership</option><option value="llp">LLP</option></select></div>
+      <div class="brow"><button class="bn" onclick="wgo(2)">Continue →</button></div>
+    </div>
+    <!-- Step 2 -->
+    <div class="wstep" id="ws2">
+      <div class="wt">Statutory Details</div>
+      <div class="ws2">Used in RA bills, GST returns, and all official documents auto-generated by SATURDAY.</div>
+      <div class="g2">
+        <div class="f"><label>GSTIN</label><input type="text" id="s2g" placeholder="36XXXXXXXXXXXXX" maxlength="15"/></div>
+        <div class="f"><label>PAN</label><input type="text" id="s2p" placeholder="AAAAA0000A" maxlength="10"/></div>
+      </div>
+      <div class="f"><label>Registered Address</label><input type="text" id="s2a" placeholder="Plot No., Street, Area"/></div>
+      <div class="g2">
+        <div class="f"><label>City</label><input type="text" id="s2c" placeholder="Hyderabad"/></div>
+        <div class="f"><label>State</label><select id="s2st"><option value="TG">Telangana</option><option value="AP">Andhra Pradesh</option><option value="MH">Maharashtra</option><option value="KA">Karnataka</option><option value="TN">Tamil Nadu</option></select></div>
+      </div>
+      <div class="g2">
+        <div class="f"><label>Phone</label><input type="tel" id="s2ph" placeholder="+91 40 XXXX XXXX"/></div>
+        <div class="f"><label>Company Email</label><input type="email" id="s2em" placeholder="info@company.com"/></div>
+      </div>
+      <div class="brow"><button class="bb" onclick="wgo(1)">← Back</button><button class="bn" onclick="wgo(3)">Continue →</button></div>
+    </div>
+    <!-- Step 3 -->
+    <div class="wstep" id="ws3">
+      <div class="wt">Choose Your Plan</div>
+      <div class="ws2">14-day free trial on all plans. No credit card. Upgrade anytime.</div>
+      <div class="scards2">
+        <div class="scard2" id="sc-basic" onclick="pp('basic')"><div style="display:flex;align-items:center;gap:10px;"><div class="sr2" id="sr-basic"><div class="rd" style="display:none;"></div></div><div><div style="font-size:13px;font-weight:600;color:var(--T1);">ERP+</div><div style="font-size:11px;color:var(--T2);">Finance · Basic · 10 users · 2 projects</div></div></div><div style="font-size:13px;font-weight:700;color:var(--T1);font-family:'DM Mono',monospace;">₹4,999<span style="font-size:10px;font-weight:400;color:var(--T2);">/mo</span></div></div>
+        <div class="scard2 sp" id="sc-pro" onclick="pp('pro')"><div style="display:flex;align-items:center;gap:10px;"><div class="sr2 on" id="sr-pro"><div class="rd"></div></div><div><div style="font-size:13px;font-weight:600;color:var(--C2);">ERP+ Pro</div><div style="font-size:11px;color:var(--T2);">Full automation · GST · 25 users · 10 projects</div></div></div><div style="font-size:13px;font-weight:700;color:var(--C2);font-family:'DM Mono',monospace;">₹12,999<span style="font-size:10px;font-weight:400;color:var(--T2);">/mo</span></div></div>
+        <div class="scard2" id="sc-max" onclick="pp('max')"><div style="display:flex;align-items:center;gap:10px;"><div class="sr2" id="sr-max"><div class="rd" style="display:none;"></div></div><div><div style="font-size:13px;font-weight:600;color:var(--AM);">ERP+ Max</div><div style="font-size:11px;color:var(--T2);">BBS · Client portal · Unlimited everything</div></div></div><div style="font-size:13px;font-weight:700;color:var(--AM);font-family:'DM Mono',monospace;">₹24,999<span style="font-size:10px;font-weight:400;color:var(--T2);">/mo</span></div></div>
+      </div>
+      <div style="background:rgba(34,197,94,.07);border:.5px solid rgba(34,197,94,.22);border-radius:8px;padding:8px 12px;font-size:12px;color:#4ade80;">✓ 14-day free trial · No credit card · Cancel anytime</div>
+      <div class="brow"><button class="bb" onclick="wgo(2)">← Back</button><button class="bn" onclick="wgo(4)">Launch ERP+ →</button></div>
+    </div>
+    <!-- Step 4 -->
+    <div class="wstep" id="ws4">
+      <div style="text-align:center;padding:12px 0;">
+        <div style="width:52px;height:52px;background:rgba(34,197,94,.13);border:1px solid rgba(34,197,94,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><polyline points="20,6 9,17 4,12" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="wt" id="dn" style="text-align:center;">Company is Ready!</div>
+        <div style="font-size:13px;color:var(--T1);margin:9px auto 22px;max-width:300px;line-height:1.6;">ERP+ configured · SATURDAY initialising · All modules activated</div>
+        <button class="bn" style="max-width:230px;margin:0 auto;display:block;" onclick="launch()">Open ERP+ Dashboard →</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════ MAIN APP ══════════════════════ -->
+<div class="page" id="pg-app">
+<div class="al">
+
+  <!-- SIDEBAR -->
+  <div class="sb">
+    <div class="sh">
+      <div class="logo">saturday<span>ERP+</span></div>
+      <div class="sco" id="sb-co">TTIPL</div>
+    </div>
+    <div class="sn">
+      <div class="ng">Command</div>
+      <button class="ni on" onclick="nav('chiefs',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Chiefs / CMD</button>
+      <button class="ni" onclick="nav('managers',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Managers</button>
+      <div class="ng">Operations</div>
+      <button class="ni" onclick="nav('store',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>Store</button>
+      <button class="ni" onclick="nav('qs',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 17h7M17 14v7"/></svg>Quantity Survey</button>
+      <button class="ni" onclick="nav('planning',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Planning</button>
+      <button class="ni" onclick="nav('finance',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Finance<span class="nb">3</span></button>
+      <button class="ni" onclick="nav('hr',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>HR</button>
+      <div class="ng">System</div>
+      <button class="ni" onclick="nav('saturday',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>SATURDAY AI</button>
+      <button class="ni" onclick="nav('admin',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Admin</button>
+    </div>
+    <div class="sf">
+      <div class="ur">
+        <div class="uav" id="sb-av">K</div>
+        <div><div class="unm" id="sb-nm">Krishna Teja</div><div class="url" id="sb-rl">CMD / Proprietor</div></div>
+        <button class="lo" onclick="showPage('pg-login')" title="Logout"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="mw">
+    <div class="tb">
+      <div class="bc" id="bc">saturdayERP+ / <span>Chiefs</span></div>
+      <div class="tbr">
+        <div class="nb2"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><div class="nd"></div></div>
+        <div style="font-size:11px;color:var(--T2);" id="tbd">Tue, 25 Mar 2025</div>
+      </div>
+    </div>
+    <div class="pc">
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--                    CHIEFS MODULE                           -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="mod on" id="mod-chiefs">
+  <div class="mh"><div><div class="mt2">Chiefs Command Centre</div><div class="ms">CMD · CEO · CFO — strategic overview, approvals, and financial intelligence</div></div><div class="ma"><button class="btn-p" onclick="T('Report generated by SATURDAY','s')">Generate Report</button></div></div>
+  <div class="sg">
+    <div class="sk"><div class="lb">Today Net P&L</div><div class="vl" style="color:var(--GR);">+₹1,74,150</div><div class="dl" style="color:var(--GR);">↑ 32.7% vs yesterday</div></div>
+    <div class="sk"><div class="lb">Work Done (unbilled)</div><div class="vl">₹47.8L</div><div class="dl" style="color:var(--T2);">Day 23 of cycle</div></div>
+    <div class="sk"><div class="lb">Pending Approvals</div><div class="vl" style="color:var(--AM);">7</div><div class="dl" style="color:var(--T2);">₹32.45L value</div></div>
+    <div class="sk"><div class="lb">Cash Balance</div><div class="vl">₹38.4L</div><div class="dl" style="color:var(--AM);">Shortfall risk Apr 15</div></div>
+    <div class="sk"><div class="lb">Active Projects</div><div class="vl">3</div><div class="dl" style="color:var(--T2);">₹13.03 Cr total</div></div>
+  </div>
+  <div class="stb">
+    <button class="st on" onclick="sec('chiefs','overview',this)">Overview</button>
+    <button class="st" onclick="sec('chiefs','approvals',this)">Approvals</button>
+    <button class="st" onclick="sec('chiefs','financial',this)">Financial Intel</button>
+    <button class="st" onclick="sec('chiefs','strategic',this)">Strategic</button>
+    <button class="st" onclick="sec('chiefs','alerts',this)">Alerts</button>
+  </div>
+  <div class="sec on" id="chiefs-overview">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="tw"><div class="ttb"><div class="ttl">Project Health</div></div><table><thead><tr><th>Project</th><th>P&L Today</th><th>Balance</th><th>Status</th></tr></thead><tbody>
+        <tr><td class="tb2">YIIRS Pkg 05</td><td class="tm" style="color:var(--GR);">+₹1,24,000</td><td class="tm">₹8.23Cr</td><td><span class="bd bg">On Track</span></td></tr>
+        <tr><td class="tb2">Residential</td><td class="tm" style="color:var(--RD);">-₹18,200</td><td class="tm">₹1.45Cr</td><td><span class="bd ba">Watch</span></td></tr>
+        <tr><td class="tb2">Industrial Shed</td><td class="tm" style="color:var(--GR);">+₹67,800</td><td class="tm">₹3.87Cr</td><td><span class="bd bg">On Track</span></td></tr>
+      </tbody></table></div>
+      <div class="tw"><div class="ttb"><div class="ttl">Top Pending Approvals</div></div><table><thead><tr><th>Item</th><th>Amount</th><th>Priority</th></tr></thead><tbody>
+        <tr><td class="tb2">Steel Indent Pkg 05</td><td class="tm">₹4,94,000</td><td><span class="bd br2">High</span></td></tr>
+        <tr><td class="tb2">RA Bill #5</td><td class="tm">₹18,50,000</td><td><span class="bd br2">High</span></td></tr>
+        <tr><td class="tb2">Masonry Bill</td><td class="tm">₹3,10,000</td><td><span class="bd ba">Medium</span></td></tr>
+      </tbody></table></div>
+    </div>
+  </div>
+  <div class="sec" id="chiefs-approvals">
+    <div class="tw"><div class="ttb"><div class="ttl">All Pending Approvals</div><div class="ttls"><input class="sx" placeholder="Search..."/></div></div>
+    <table><thead><tr><th>Type</th><th>Description</th><th>Project</th><th>Amount</th><th>Raised By</th><th>Action</th></tr></thead><tbody>
+      <tr><td><span class="bd bb2">Indent</span></td><td class="tb2">Steel Fe 500D 12mm 5.2MT</td><td>YIIRS Pkg 05</td><td class="tm">₹4,94,000</td><td>Store Mgr</td><td><button class="al2" onclick="T('Approved','s')">Approve</button> · <button class="al2" style="color:var(--RD);">Reject</button></td></tr>
+      <tr><td><span class="bd bg">RA Bill</span></td><td class="tb2">RA Bill #5 — TGEWIDC</td><td>YIIRS Pkg 05</td><td class="tm">₹18,50,000</td><td>PM Suresh</td><td><button class="al2" onclick="T('RA Bill approved — SATURDAY processing','s')">Approve</button> · <button class="al2" style="color:var(--RD);">Reject</button></td></tr>
+      <tr><td><span class="bd ba">Subcon</span></td><td class="tb2">Masonry — M/s Ravi</td><td>YIIRS Pkg 05</td><td class="tm">₹3,10,000</td><td>AGM Ravi</td><td><button class="al2" onclick="T('Approved','s')">Approve</button> · <button class="al2" style="color:var(--RD);">Reject</button></td></tr>
+      <tr><td><span class="bd bgr">PO</span></td><td class="tb2">Cement 500 bags</td><td>YIIRS Pkg 05</td><td class="tm">₹1,80,000</td><td>PM Suresh</td><td><button class="al2" onclick="T('PO approved','s')">Approve</button> · <button class="al2" style="color:var(--RD);">Reject</button></td></tr>
+    </tbody></table></div>
+  </div>
+  <div class="sec" id="chiefs-financial">
+    <div class="sg"><div class="sk"><div class="lb">Monthly Revenue</div><div class="vl" style="color:var(--GR);">₹74.5L</div></div><div class="sk"><div class="lb">Monthly Expenses</div><div class="vl" style="color:var(--RD);">₹62.2L</div></div><div class="sk"><div class="lb">Net Margin</div><div class="vl" style="color:var(--AM);">16.4%</div></div><div class="sk"><div class="lb">Receivables</div><div class="vl">₹56.7L</div><div class="dl" style="color:var(--RD);">₹18.5L overdue</div></div></div>
+    <div class="tw"><div class="ttb"><div class="ttl">Project P&L Summary</div></div><table><thead><tr><th>Project</th><th>Contract</th><th>Revenue MTD</th><th>Cost MTD</th><th>Margin</th></tr></thead><tbody>
+      <tr><td class="tb2">YIIRS Package 05</td><td class="tm">₹8.71Cr</td><td class="tm" style="color:var(--GR);">₹52.3L</td><td class="tm">₹43.1L</td><td class="tm" style="color:var(--GR);">17.6%</td></tr>
+      <tr><td class="tb2">Residential Complex</td><td class="tm">₹1.45Cr</td><td class="tm">₹6.2L</td><td class="tm">₹5.8L</td><td class="tm" style="color:var(--AM);">6.5%</td></tr>
+      <tr><td class="tb2">Industrial Shed</td><td class="tm">₹3.87Cr</td><td class="tm" style="color:var(--GR);">₹16.0L</td><td class="tm">₹13.3L</td><td class="tm" style="color:var(--GR);">16.9%</td></tr>
+    </tbody></table></div>
+  </div>
+  <div class="sec" id="chiefs-strategic">
+    <div class="tw"><div class="ttb"><div class="ttl">Tender Pipeline</div><div class="ttls"><button class="btn-p" style="padding:6px 12px;font-size:12px;" onclick="FP('fp-tender')">+ Add Tender</button></div></div>
+    <table><thead><tr><th>Tender</th><th>Client</th><th>Est. Value</th><th>Submission</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="tb2">YIIRS Package 06</td><td>TGEWIDC</td><td class="tm">₹12.4Cr</td><td>15 Apr 2025</td><td><span class="bd ba">Preparing</span></td></tr>
+      <tr><td class="tb2">District Hospital</td><td>TGMSC</td><td class="tm">₹8.7Cr</td><td>02 May 2025</td><td><span class="bd bgr">Evaluating</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-tender"><div class="fph">Add New Tender <button class="fcl" onclick="CF('fp-tender')">×</button></div>
+    <div class="fg"><div class="f"><label>Tender Name</label><input type="text" placeholder="e.g. YIIRS Pkg 07"/></div><div class="f"><label>Client</label><input type="text"/></div><div class="f"><label>Est. Value (₹)</label><input type="number"/></div><div class="f"><label>Submission Date</label><input type="date"/></div><div class="f"><label>EMD Amount (₹)</label><input type="number"/></div><div class="f"><label>Status</label><select><option>Evaluating</option><option>Preparing bid</option><option>Submitted</option><option>Won</option><option>Lost</option></select></div></div>
+    <div class="fr"><button class="btn-p" onclick="SF('fp-tender','Tender added')">Save</button><button class="btn-s" onclick="CF('fp-tender')">Cancel</button></div></div></div>
+  </div>
+  <div class="sec" id="chiefs-alerts">
+    <div class="alert-r"><div class="alert-title" style="color:#f87171;">🔴 Cement over-consumption — YIIRS Pkg 05</div><div class="alert-body">64 bags/cum actual vs 48 theoretical. 34% excess. Site inspection needed.</div></div>
+    <div class="alert-a"><div class="alert-title" style="color:#fbbf24;">🟡 RA Bill #4 overdue — TGEWIDC</div><div class="alert-body">₹38,20,000 outstanding. 5 days overdue. Cash flow impact if not received by Apr 5.</div></div>
+    <div class="alert-b"><div class="alert-title" style="color:#818cf8;">🔵 Cash shortfall predicted — Apr 15</div><div class="alert-body">SATURDAY predicts ₹23L shortfall. Submit RA Bill #5 by Mar 28 to avoid it.</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--                   MANAGERS MODULE                          -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="mod" id="mod-managers">
+  <div class="mh"><div><div class="mt2">Managers</div><div class="ms">PD · GM · AGM · SPM · PM — coordination and execution oversight</div></div></div>
+  <div class="stb">
+    <button class="st on" onclick="sec('managers','overview',this)">Overview</button>
+    <button class="st" onclick="sec('managers','dpr',this)">DPR & Reports</button>
+    <button class="st" onclick="sec('managers','teams',this)">Teams</button>
+    <button class="st" onclick="sec('managers','myapprovals',this)">My Approvals</button>
+  </div>
+  <div class="sec on" id="managers-overview">
+    <div class="sg"><div class="sk"><div class="lb">Projects Assigned</div><div class="vl">2</div></div><div class="sk"><div class="lb">DPR Pending Today</div><div class="vl" style="color:var(--AM);">1</div></div><div class="sk"><div class="lb">My Pending Approvals</div><div class="vl" style="color:var(--RD);">4</div></div><div class="sk"><div class="lb">Team Headcount</div><div class="vl">18</div></div></div>
+    <div class="tw"><div class="ttb"><div class="ttl">My Assigned Projects</div></div><table><thead><tr><th>Project</th><th>Progress</th><th>Today Value</th><th>Milestone</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="tb2">YIIRS Package 05</td><td>38%</td><td class="tm">₹1,24,000</td><td>Superstructure Floor 2</td><td><span class="bd bg">On Track</span></td></tr>
+      <tr><td class="tb2">Industrial Shed</td><td>62%</td><td class="tm">₹67,800</td><td>Roofing in progress</td><td><span class="bd bg">On Track</span></td></tr>
+    </tbody></table></div>
+  </div>
+  <div class="sec" id="managers-dpr">
+    <div class="tw"><div class="ttb"><div class="ttl">Daily Progress Reports</div><div class="ttls"><button class="btn-p" style="padding:6px 12px;font-size:12px;" onclick="FP('fp-dpr')">+ New DPR</button></div></div>
+    <table><thead><tr><th>Date</th><th>Project</th><th>Activities</th><th>Work Value</th><th>Labour</th><th>Issues</th></tr></thead><tbody>
+      <tr><td>25 Mar</td><td>YIIRS Pkg 05</td><td>Column casting F2 · Masonry 3rd floor</td><td class="tm">₹1,24,000</td><td>48 workers</td><td><span class="bd bg">None</span></td></tr>
+      <tr><td>24 Mar</td><td>YIIRS Pkg 05</td><td>Shuttering beam · Steel fixing slab</td><td class="tm">₹98,500</td><td>52 workers</td><td><span class="bd ba">1 NCR</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-dpr"><div class="fph">New Daily Progress Report <button class="fcl" onclick="CF('fp-dpr')">×</button></div>
+    <div class="fg"><div class="f"><label>Date</label><input type="date"/></div><div class="f"><label>Project</label><select><option>YIIRS Package 05</option><option>Industrial Shed</option></select></div><div class="f" style="grid-column:span 2"><label>Work Done Today</label><textarea placeholder="Activities, quantities, locations completed today..."></textarea></div><div class="f"><label>Work Value (₹)</label><input type="number" placeholder="0"/></div><div class="f"><label>Labour Deployed</label><input type="number" placeholder="0"/></div><div class="f"><label>Machinery Hours</label><input type="number" placeholder="0"/></div><div class="f" style="grid-column:span 2"><label>Issues / NCRs</label><textarea placeholder="Quality issues, delays, safety incidents..."></textarea></div><div class="f"><label>Upload Site Photos</label><input type="file" accept="image/*" multiple/></div></div>
+    <div class="fr"><button class="btn-p" onclick="SF('fp-dpr','DPR submitted successfully')">Submit DPR</button><button class="btn-s" onclick="CF('fp-dpr')">Cancel</button></div></div></div>
+  </div>
+  <div class="sec" id="managers-teams">
+    <div class="sg"><div class="sk"><div class="lb">Total Team Size</div><div class="vl">18</div></div><div class="sk"><div class="lb">On Site Today</div><div class="vl" style="color:var(--GR);">16</div></div><div class="sk"><div class="lb">On Leave</div><div class="vl" style="color:var(--AM);">2</div></div></div>
+    <div class="tw"><div class="ttb"><div class="ttl">Team Members</div><div class="ttls"><button class="btn-p" style="padding:6px 12px;font-size:12px;" onclick="FP('fp-team')">+ Add Member</button></div></div>
+    <table><thead><tr><th>Name</th><th>Role</th><th>Project</th><th>Mobile</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="tb2">Ravi Kumar</td><td>Project Director</td><td>YIIRS Pkg 05</td><td class="tm">+91 98765 00011</td><td><span class="bd bg">On Site</span></td></tr>
+      <tr><td class="tb2">Suresh PM</td><td>Project Manager</td><td>YIIRS Pkg 05</td><td class="tm">+91 98765 00012</td><td><span class="bd bg">On Site</span></td></tr>
+      <tr><td class="tb2">Anil Engineer</td><td>Site Engineer</td><td>YIIRS Pkg 05</td><td class="tm">+91 98765 00013</td><td><span class="bd ba">Leave</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-team"><div class="fph">Add Team Member <button class="fcl" onclick="CF('fp-team')">×</button></div>
+    <div class="fg"><div class="f"><label>Full Name</label><input type="text"/></div><div class="f"><label>Role</label><select><option>Site Engineer</option><option>APM</option><option>QS Manager</option><option>Store Manager</option><option>Supervisor</option></select></div><div class="f"><label>Mobile</label><input type="tel"/></div><div class="f"><label>Assigned Project</label><select><option>YIIRS Package 05</option><option>Industrial Shed</option></select></div></div>
+    <div class="fr"><button class="btn-p" onclick="SF('fp-team','Team member added')">Add</button><button class="btn-s" onclick="CF('fp-team')">Cancel</button></div></div></div>
+  </div>
+  <div class="sec" id="managers-myapprovals">
+    <div class="tw"><div class="ttb"><div class="ttl">Approvals Waiting for Me</div></div>
+    <table><thead><tr><th>Item</th><th>Project</th><th>Amount</th><th>Raised By</th><th>Action</th></tr></thead><tbody>
+      <tr><td class="tb2">Cement Indent — 200 bags</td><td>YIIRS Pkg 05</td><td class="tm">₹98,000</td><td>Site Engineer</td><td><button class="al2" onclick="T('Indent approved','s')">Approve</button> · <button class="al2" style="color:var(--RD);">Reject</button></td></tr>
+      <tr><td class="tb2">Diesel purchase</td><td>YIIRS Pkg 05</td><td class="tm">₹18,400</td><td>Supervisor</td><td><button class="al2" onclick="T('Approved','s')">Approve</button> · <button class="al2" style="color:var(--RD);">Reject</button></td></tr>
+    </tbody></table></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--                     STORE MODULE                           -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="mod" id="mod-store">
+  <div class="mh"><div><div class="mt2">Store</div><div class="ms">Procurement and Inventory — materials, GRN, stock control</div></div></div>
+  <div class="stb">
+    <button class="st on" onclick="sec('store','procurement',this)">Procurement</button>
+    <button class="st" onclick="sec('store','inventory',this)">Inventory</button>
+  </div>
+
+  <!-- PROCUREMENT SECTION -->
+  <div class="sec on" id="store-procurement">
+    <div class="sg"><div class="sk"><div class="lb">Open Indents</div><div class="vl" style="color:var(--AM);">8</div></div><div class="sk"><div class="lb">POs This Month</div><div class="vl">14</div></div><div class="sk"><div class="lb">GRN Pending</div><div class="vl" style="color:var(--AM);">3</div></div><div class="sk"><div class="lb">Vendor Payments Due</div><div class="vl" style="color:var(--RD);">₹12.1L</div></div></div>
+    <div class="stb" style="border:none;padding-bottom:0;margin-bottom:13px;">
+      <button class="st on" onclick="sec('proc','indents',this)">Indents</button>
+      <button class="st" onclick="sec('proc','po',this)">Purchase Orders</button>
+      <button class="st" onclick="sec('proc','grn',this)">GRN</button>
+      <button class="st" onclick="sec('proc','vendors',this)">Vendors</button>
+    </div>
+    <div class="sec on" id="proc-indents">
+      <div class="tw"><div class="ttb"><div class="ttl">Material Indents</div><div class="ttls"><input class="sx" placeholder="Search..."/><button class="btn-p" style="padding:6px 12px;font-size:12px;" onclick="FP('fp-indent')">+ New Indent</button></div></div>
+      <table><thead><tr><th>No.</th><th>Material</th><th>Qty</th><th>Unit</th><th>Project</th><th>Status</th><th>Action</th></tr></thead><tbody>
+        <tr><td class="tm">IND-047</td><td class="tb2">Steel Fe 500D 12mm</td><td>5.2</td><td>MT</td><td>YIIRS Pkg 05</td><td><span class="bd ba">Pending Approval</span></td><td><button class="al2">View</button></td></tr>
+        <tr><td class="tm">IND-046</td><td class="tb2">Cement OPC 53</td><td>200</td><td>Bags</td><td>YIIRS Pkg 05</td><td><span class="bd bb2">PO Raised</span></td><td><button class="al2">View</button></td></tr>
+        <tr><td class="tm">IND-045</td><td class="tb2">River Sand</td><td>50</td><td>CUM</td><td>YIIRS Pkg 05</td><td><span class="bd bg">Delivered</span></td><td><button class="al2">View</button></td></tr>
+      </tbody></table>
+      <div class="fp" id="fp-indent"><div class="fph">New Material Indent <button class="fcl" onclick="CF('fp-indent')">×</button></div>
+      <div class="fg"><div class="f"><label>Material Name *</label><input type="text" placeholder="e.g. Steel Fe 500D 16mm"/></div><div class="f"><label>Quantity *</label><input type="number"/></div><div class="f"><label>Unit</label><select><option>MT</option><option>Bags</option><option>CUM</option><option>Nos</option><option>SQM</option><option>Kg</option><option>Ltr</option></select></div><div class="f"><label>Project</label><select><option>YIIRS Package 05</option><option>Industrial Shed</option><option>Residential Complex</option></select></div><div class="f"><label>Required By Date</label><input type="date"/></div><div class="f"><label>Purpose</label><input type="text" placeholder="For column casting 3rd floor"/></div><div class="f"><label>Est. Rate (₹/unit)</label><input type="number"/></div><div class="f"><label>Specification</label><input type="text" placeholder="IS code / grade / brand"/></div></div>
+      <div class="fr"><button class="btn-p" onclick="SF('fp-indent','Indent raised successfully')">Raise Indent</button><button class="btn-s" onclick="CF('fp-indent')">Cancel</button></div></div>
+    </div>
+    <div class="sec" id="proc-po">
+      <div class="tw"><div class="ttb"><div class="ttl">Purchase Orders</div><div class="ttls"><button class="btn-p" style="padding:6px 12px;font-size:12px;" onclick="FP('fp-po')">+ Create PO</button></div></div>
+      <table><thead><tr><th>PO No.</th><th>Vendor</th><th>Material</th><th>Qty</th><th>Amount</th><th>Expected</th><th>Status</th></tr></thead><tbody>
+        <tr><td class="tm">PO-0128</td><td>M/s Vizag Steel</td><td class="tb2">Steel Fe 500D 12mm</td><td>5.2 MT</td><td class="tm">₹4,94,000</td><td>28 Mar</td><td><span class="bd ba">Pending Delivery</span></td></tr>
+        <tr><td class="tm">PO-0127</td><td>M/s Prism Cement</td><td class="tb2">OPC 53 Grade</td><td>200 Bags</td><td class="tm">₹98,000</td><td>27 Mar</td><td><span class="bd bb2">In Transit</span></td></tr>
+        <tr><td class="tm">PO-0126</td><td>M/s Kumar Sand</td><td class="tb2">River Sand</td><td>50 CUM</td><td class="tm">₹62,500</td><td>26 Mar</td><td><span class="bd bg">Delivered</span></td></tr>
+      </tbody></table>
+      <div class="fp" id="fp-po"><div class="fph">Create Purchase Order <button class="fcl" onclick="CF('fp-po')">×</button></div>
+      <div class="fg"><div class="f"><label>Vendor Name *</label><input type="text"/></div><div class="f"><label>Material *</label><input type="text"/></div><div class="f"><label>Quantity</label><input type="number"/></div><div class="f"><label>Unit</label><select><option>MT</option><option>Bags</option><option>CUM</option><option>Nos</option></select></div><div class="f"><label>Rate per Unit (₹)</label><input type="number"/></div><div class="f"><label>Expected Delivery</label><input type="date"/></div><div class="f"><label>Delivery Location</label><input type="text" placeholder="Site address"/></div><div class="f"><label>Payment Terms</label><select><option>Immediate on delivery</option><option>7 days credit</option><option>15 days credit</option><option>30 days credit</option></select></div></div>
+      <div class="fr"><button class="btn-p" onclick="SF('fp-po','Purchase Order created')">Create PO</button><button class="btn-s" onclick="CF('fp-po')">Cancel</button></div></div>
+    </div>
+    <div class="sec" id="proc-grn">
+      <div class="tw"><div class="ttb"><div class="ttl">Goods Receipt Notes</div><div class="ttls"><button class="btn-p" style="padding:6px 12px;font-size:12px;" onclick="FP('fp-grn')">+ New GRN</button></div></div>
+      <table><thead><tr><th>GRN No.</th><th>PO Ref.</th><th>Material</th><th>Ordered Qty</th><th>Received Qty</th><th>Quality</th><th>Date</th></tr></thead><tbody>
+        <tr><td class="tm">GRN-089</td><td class="tm">PO-0126</td><td class="tb2">River Sand</td><td>50 CUM</td><td>50 CUM</td><td><span class="bd bg">Passed</span></td><td>26 Mar</td></tr>
+        <tr><td class="tm">GRN-088</td><td class="tm">PO-0124</td><td class="tb2">Fly Ash Blocks 200mm</td><td>2000 Nos</td><td>1980 Nos</td><td><span class="bd ba">Short Delivery</span></td><td>24 Mar</td></tr>
+      </tbody></table>
+      <div class="fp" id="fp-grn"><div class="fph">New GRN Entry <button class="fcl" onclick="CF('fp-grn')">×</button></div>
+      <div class="fg"><div class="f"><label>PO Reference</label><select><option>PO-0128 — Steel 5.2MT</option><option>PO-0127 — Cement 200 bags</option></select></div><div class="f"><label>Received Quantity</label><input type="number"/></div><div class="f"><label>Receipt Date</label><input type="date"/></div><div class="f"><label>Challan / DC No.</label><input type="text"/></div><div class="f"><label>Quality Status</label><select><option>Passed</option><option>Failed — Rejected</option><option>Short Delivery</option><option>Pending Lab Test</option></select></div><div class="f"><label>Received By</label><input type="text"/></div></div>
+      <div class="fr"><button class="btn-p" onclick="SF('fp-grn','GRN recorded')">Save GRN</button><button class="btn-s" onclick="CF('fp-grn')">Cancel</button></div></div>
+    </div>
+    <div class="sec" id="proc-vendors">
+      <div class="tw"><div class="ttb"><div class="ttl">Approved Vendors</div><div class="ttls"><button class="btn-p" style="padding:6px 12px;font-size:12px;" onclick="FP('fp-vendor')">+ Add Vendor</button></div></div>
+      <table><thead><tr><th>Vendor Name</th><th>Category</th><th>GSTIN</th><th>Contact</th><th>Rating</th><th>Outstanding</th></tr></thead><tbody>
+        <tr><td class="tb2">M/s Vizag Steel Corp</td><td>Steel / TMT Bars</td><td class="tm">36XXXXXXX</td><td>+91 98765 00001</td><td>⭐⭐⭐⭐⭐</td><td class="tm" style="color:var(--RD);">₹4,94,000</td></tr>
+        <tr><td class="tb2">M/s Prism Cement</td><td>Cement</td><td class="tm">36XXXXXXX</td><td>+91 98765 00002</td><td>⭐⭐⭐⭐</td><td class="tm">₹98,000</td></tr>
+        <tr><td class="tb2">M/s Kumar Sand</td><td>Sand / Aggregates</td><td class="tm">36XXXXXXX</td><td>+91 98765 00003</td><td>⭐⭐⭐⭐</td><td class="tm" style="color:var(--GR);">₹0</td></tr>
+      </tbody></table>
+      <div class="fp" id="fp-vendor"><div class="fph">Add Vendor <button class="fcl" onclick="CF('fp-vendor')">×</button></div>
+      <div class="fg"><div class="f"><label>Vendor / Firm Name *</label><input type="text"/></div><div class="f"><label>Category</label><input type="text" placeholder="Steel, Cement, Sand..."/></div><div class="f"><label>GSTIN</label><input type="text" maxlength="15"/></div><div class="f"><label>PAN</label><input type="text" maxlength="10"/></div><div class="f"><label>Contact Person</label><input type="text"/></div><div class="f"><label>Mobile</label><input type="tel"/></div><div class="f"><label>Email</label><input type="email"/></div><div class="f"><label>Bank Account No.</label><input type="text"/></div><div class="f"><label>IFSC Code</label><input type="text"/></div></div>
+      <div class="fr"><button class="btn-p" onclick="SF('fp-vendor','Vendor added')">Save Vendor</button><button class="btn-s" onclick="CF('fp-vendor')">Cancel</button></div></div>
+    </div>
+  </div>
+
+  <!-- INVENTORY SECTION -->
+  <div class="sec" id="store-inventory">
+    <div class="sg"><div class="sk"><div class="lb">Total Stock Value</div><div class="vl">₹18.4L</div></div><div class="sk"><div class="lb">Low Stock Alerts</div><div class="vl" style="color:var(--RD);">4</div><div class="dl" style="color:var(--RD);">Action needed</div></div><div class="sk"><div class="lb">Items in Store</div><div class="vl">32</div></div><div class="sk"><div class="lb">Wastage This Month</div><div class="vl" style="color:var(--AM);">2.8%</div><div class="dl" style="color:var(--T2);">vs IS norm 2.0%</div></div></div>
+    <div class="tw"><div class="ttb"><div class="ttl">Stock Register — All Materials</div><div class="ttls"><input class="sx" placeholder="Search material..."/><button class="btn-p" style="padding:6px 12px;font-size:12px;" onclick="FP('fp-issue')">Issue Material</button></div></div>
+    <table><thead><tr><th>Material</th><th>Unit</th><th>Opening</th><th>Received</th><th>Issued</th><th>Balance</th><th>Min Stock</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="tb2">Steel Fe 500D 12mm</td><td>MT</td><td class="tm">3.2</td><td class="tm">5.2</td><td class="tm">7.8</td><td class="tm" style="color:var(--RD);">0.6</td><td class="tm">2.0</td><td><span class="bd br2">Low Stock</span></td></tr>
+      <tr><td class="tb2">Steel Fe 500D 16mm</td><td>MT</td><td class="tm">4.5</td><td class="tm">8.0</td><td class="tm">9.1</td><td class="tm" style="color:var(--GR);">3.4</td><td class="tm">2.0</td><td><span class="bd bg">OK</span></td></tr>
+      <tr><td class="tb2">Steel Fe 500D 20mm</td><td>MT</td><td class="tm">2.0</td><td class="tm">4.5</td><td class="tm">5.8</td><td class="tm" style="color:var(--GR);">0.7</td><td class="tm">1.0</td><td><span class="bd ba">Watch</span></td></tr>
+      <tr><td class="tb2">OPC 53 Grade Cement</td><td>Bags</td><td class="tm">120</td><td class="tm">200</td><td class="tm">298</td><td class="tm" style="color:var(--RD);">22</td><td class="tm">100</td><td><span class="bd br2">Low Stock</span></td></tr>
+      <tr><td class="tb2">River Sand</td><td>CUM</td><td class="tm">80</td><td class="tm">50</td><td class="tm">95</td><td class="tm">35</td><td class="tm">30</td><td><span class="bd ba">Watch</span></td></tr>
+      <tr><td class="tb2">20mm Aggregate</td><td>CUM</td><td class="tm">60</td><td class="tm">40</td><td class="tm">72</td><td class="tm" style="color:var(--GR);">28</td><td class="tm">20</td><td><span class="bd bg">OK</span></td></tr>
+      <tr><td class="tb2">12mm Aggregate</td><td>CUM</td><td class="tm">40</td><td class="tm">30</td><td class="tm">54</td><td class="tm" style="color:var(--GR);">16</td><td class="tm">15</td><td><span class="bd bg">OK</span></td></tr>
+      <tr><td class="tb2">Fly Ash Blocks 200mm</td><td>Nos</td><td class="tm">5000</td><td class="tm">2000</td><td class="tm">6200</td><td class="tm">800</td><td class="tm">500</td><td><span class="bd ba">Watch</span></td></tr>
+      <tr><td class="tb2">Fly Ash Blocks 100mm</td><td>Nos</td><td class="tm">2000</td><td class="tm">1000</td><td class="tm">2400</td><td class="tm" style="color:var(--RD);">600</td><td class="tm">800</td><td><span class="bd br2">Low Stock</span></td></tr>
+      <tr><td class="tb2">Binding Wire</td><td>Kg</td><td class="tm">150</td><td class="tm">100</td><td class="tm">190</td><td class="tm" style="color:var(--GR);">60</td><td class="tm">50</td><td><span class="bd bg">OK</span></td></tr>
+      <tr><td class="tb2">Cover Blocks 40mm</td><td>Nos</td><td class="tm">2000</td><td class="tm">1500</td><td class="tm">2800</td><td class="tm" style="color:var(--RD);">700</td><td class="tm">1000</td><td><span class="bd br2">Low Stock</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-issue"><div class="fph">Issue Material from Store <button class="fcl" onclick="CF('fp-issue')">×</button></div>
+    <div class="fg"><div class="f"><label>Material</label><select><option>Steel Fe 500D 12mm</option><option>Steel Fe 500D 16mm</option><option>OPC 53 Cement</option><option>River Sand</option><option>20mm Aggregate</option><option>Fly Ash Blocks 200mm</option></select></div><div class="f"><label>Qty to Issue</label><input type="number" placeholder="0"/></div><div class="f"><label>Issued For (Work / Location)</label><input type="text" placeholder="Column casting Floor 3"/></div><div class="f"><label>Issued By</label><input type="text" placeholder="Store Manager name"/></div><div class="f"><label>Date</label><input type="date"/></div></div>
+    <div class="fr"><button class="btn-p" onclick="SF('fp-issue','Material issued — stock balance updated')">Issue Material</button><button class="btn-s" onclick="CF('fp-issue')">Cancel</button></div></div>
+    <div style="margin-top:14px;">
+      <div class="alert-a"><div class="alert-title" style="color:#fbbf24;">⚠️ Low Stock Alerts — Action Required</div><div class="alert-body">Steel 12mm: 0.6 MT remaining (min: 2 MT) · Cement: 22 bags (min: 100) · Fly Ash 100mm: 600 Nos (min: 800) · Cover Blocks: 700 Nos (min: 1000)<br>Raise indents immediately to avoid site stoppage.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--                QUANTITY SURVEY MODULE                      -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="mod" id="mod-qs">
+  <div class="mh"><div><div class="mt2">Quantity Survey</div><div class="ms">Quantities · Client Billings · Vendor Billing · Contractor Billing · Compliance</div></div><div class="ma"><button class="btn-p" onclick="T('BOQ upload with AI extraction — next brick','i')">Upload BOQ / Drawings</button></div></div>
+  <div class="stb">
+    <button class="st on" onclick="sec('qs','quantities',this)">Quantities</button>
+    <button class="st" onclick="sec('qs','clientbill',this)">Client Billings</button>
+    <button class="st" onclick="sec('qs','vendorbill',this)">Vendor Billing</button>
+    <button class="st" onclick="sec('qs','contractorbill',this)">Contractor Billing</button>
+    <button class="st" onclick="sec('qs','qscomp',this)">Compliance</button>
+  </div>
+  <div class="sec on" id="qs-quantities">
+    <div class="tw"><div class="ttb"><div class="ttl">BOQ — Abstract of Quantities (YIIRS Pkg 05)</div><div class="ttls"><input class="sx" placeholder="Search item..."/><button class="btn-p" style="padding:6px 12px;font-size:12px;" onclick="FP('fp-boq')">+ Add Item</button></div></div>
+    <table><thead><tr><th>Item No.</th><th>Description</th><th>Unit</th><th>BOQ Qty</th><th>Done Qty</th><th>Balance</th><th>Rate (₹)</th><th>Balance Value</th><th>%</th></tr></thead><tbody>
+      <tr><td>1.1</td><td class="tb2">Earthwork excavation in ordinary soil</td><td>CUM</td><td class="tm">1,840</td><td class="tm">1,840</td><td class="tm">0</td><td class="tm">180</td><td class="tm" style="color:var(--GR);">₹0</td><td><span class="bd bg">100%</span></td></tr>
+      <tr><td>2.1</td><td class="tb2">PCC M7.5 (1:4:8) in foundation</td><td>CUM</td><td class="tm">420</td><td class="tm">420</td><td class="tm">0</td><td class="tm">4,800</td><td class="tm" style="color:var(--GR);">₹0</td><td><span class="bd bg">100%</span></td></tr>
+      <tr><td>3.1</td><td class="tb2">RCC M30 in columns</td><td>CUM</td><td class="tm">285</td><td class="tm">142</td><td class="tm">143</td><td class="tm">12,400</td><td class="tm">₹17,73,200</td><td><span class="bd bb2">50%</span></td></tr>
+      <tr><td>3.2</td><td class="tb2">RCC M30 in beams & slabs</td><td>CUM</td><td class="tm">420</td><td class="tm">168</td><td class="tm">252</td><td class="tm">11,800</td><td class="tm">₹29,73,600</td><td><span class="bd bb2">40%</span></td></tr>
+      <tr><td>4.1</td><td class="tb2">Fly Ash Block masonry 200mm</td><td>CUM</td><td class="tm">840</td><td class="tm">310</td><td class="tm">530</td><td class="tm">3,200</td><td class="tm">₹16,96,000</td><td><span class="bd bb2">37%</span></td></tr>
+      <tr><td>5.1</td><td class="tb2">Steel Fe 500D reinforcement</td><td>MT</td><td class="tm">128</td><td class="tm">52</td><td class="tm">76</td><td class="tm">68,500</td><td class="tm">₹52,06,000</td><td><span class="bd bb2">41%</span></td></tr>
+      <tr><td>6.1</td><td class="tb2">Shuttering and form work</td><td>SQM</td><td class="tm">4,200</td><td class="tm">1,680</td><td class="tm">2,520</td><td class="tm">380</td><td class="tm">₹9,57,600</td><td><span class="bd bb2">40%</span></td></tr>
+      <tr><td>7.1</td><td class="tb2">Plaster 12mm internal walls</td><td>SQM</td><td class="tm">6,800</td><td class="tm">0</td><td class="tm">6,800</td><td class="tm">220</td><td class="tm">₹14,96,000</td><td><span class="bd bgr">0%</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-boq"><div class="fph">Add BOQ Item <button class="fcl" onclick="CF('fp-boq')">×</button></div>
+    <div class="fg"><div class="f"><label>Item Number</label><input type="text" placeholder="e.g. 3.3"/></div><div class="f"><label>Description *</label><input type="text" placeholder="Work description as per BOQ"/></div><div class="f"><label>Unit</label><select><option>CUM</option><option>SQM</option><option>MT</option><option>Nos</option><option>RMT</option><option>Bags</option><option>LS</option></select></div><div class="f"><label>BOQ Quantity</label><input type="number"/></div><div class="f"><label>Rate (₹) per Unit</label><input type="number"/></div><div class="f"><label>SOR / APSS Code</label><input type="text" placeholder="Telangana R&B SOR 2025-26"/></div></div>
+    <div class="fr"><button class="btn-p" onclick="SF('fp-boq','BOQ item added')">Add Item</button><button class="btn-s" onclick="CF('fp-boq')">Cancel</button></div></div>
+  </div>
+  <div class="sec" id="qs-clientbill">
+    <div class="sg"><div class="sk"><div class="lb">Contract Value</div><div class="vl">₹8.71Cr</div></div><div class="sk"><div class="lb">Total Billed</div><div class="vl">₹1.53Cr</div><div class="dl" style="color:var(--T2);">17.6% of contract</div></div><div class="sk"><div class="lb">Retention Held</div><div class="vl" style="color:var(--RD);">₹7.64L</div></div><div class="sk"><div class="lb">Next Bill Projection</div><div class="vl" style="color:var(--C2);">~₹52L</div></div></div>
+    <div class="tw"><div class="ttb"><div class="ttl">RA Bills — YIIRS Pkg 05</div><div class="ttls"><button class="btn-p" style="padding:6px 12px;font-size:12px;" onclick="FP('fp-ra')">+ Prepare RA Bill</button></div></div>
+    <table><thead><tr><th>Bill No.</th><th>Period</th><th>Gross Amount</th><th>Retention 5%</th><th>Net Amount</th><th>Submitted</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="tm">RA-005</td><td>Mar 1–25</td><td class="tm">₹40,21,000</td><td class="tm" style="color:var(--RD);">₹2,01,050</td><td class="tm">₹38,19,950</td><td>25 Mar 2025</td><td><span class="bd ba">Submitted</span></td></tr>
+      <tr><td class="tm">RA-004</td><td>Feb 1–28</td><td class="tm">₹40,21,050</td><td class="tm" style="color:var(--RD);">₹2,01,053</td><td class="tm">₹38,19,997</td><td>28 Feb 2025</td><td><span class="bd br2">Payment Overdue</span></td></tr>
+      <tr><td class="tm">RA-003</td><td>Jan 1–31</td><td class="tm">₹38,45,200</td><td class="tm">₹1,92,260</td><td class="tm">₹36,52,940</td><td>31 Jan 2025</td><td><span class="bd bg">Paid</span></td></tr>
+      <tr><td class="tm">RA-002</td><td>Dec 1–31</td><td class="tm">₹22,10,000</td><td class="tm">₹1,10,500</td><td class="tm">₹20,99,500</td><td>31 Dec 2024</td><td><span class="bd bg">Paid</span></td></tr>
+      <tr><td class="tm">RA-001</td><td>Nov 1–30</td><td class="tm">₹12,80,000</td><td class="tm">₹64,000</td><td class="tm">₹12,16,000</td><td>30 Nov 2024</td><td><span class="bd bg">Paid</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-ra"><div class="fph">Prepare RA Bill <button class="fcl" onclick="CF('fp-ra')">×</button></div>
+    <div class="fg"><div class="f"><label>Project</label><select><option>YIIRS Package 05 — TGEWIDC</option><option>Industrial Shed — TSIIC</option></select></div><div class="f"><label>Bill Period From</label><input type="date"/></div><div class="f"><label>Bill Period To</label><input type="date"/></div><div class="f"><label>Previous Cumulative (₹)</label><input type="number" placeholder="Total billed up to last bill"/></div><div class="f"><label>This Period Gross Amount (₹)</label><input type="number" placeholder="0"/></div><div class="f"><label>Retention % (auto-deducted)</label><input type="number" value="5"/></div></div>
+    <div style="background:rgba(99,102,241,.07);border:.5px solid rgba(99,102,241,.2);border-radius:8px;padding:9px 12px;margin-top:10px;font-size:12px;color:var(--C2);">💡 SATURDAY auto-verifies quantities, applies retention, and generates the RA bill document.</div>
+    <div class="fr"><button class="btn-p" onclick="SF('fp-ra','RA Bill prepared — sent to SATURDAY')">Prepare Bill</button><button class="btn-s" onclick="CF('fp-ra')">Cancel</button></div></div>
+  </div>
+  <div class="sec" id="qs-vendorbill">
+    <div class="tw"><div class="ttb"><div class="ttl">Vendor / Supplier Bills</div><div class="ttls"><button class="btn-p" style="padding:6px 12px;font-size:12px;" onclick="FP('fp-vbill')">+ Add Vendor Bill</button></div></div>
+    <table><thead><tr><th>Bill No.</th><th>Vendor</th><th>PO Ref.</th><th>Invoice Amt</th><th>TDS</th><th>Net Payable</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="tm">VB-201</td><td>M/s Kumar Sand</td><td class="tm">PO-0126</td><td class="tm">₹62,500</td><td class="tm">₹1,250</td><td class="tm" style="color:var(--GR);">₹61,250</td><td><span class="bd bg">Paid</span></td></tr>
+      <tr><td class="tm">VB-200</td><td>M/s Vizag Steel</td><td class="tm">PO-0128</td><td class="tm">₹4,94,000</td><td class="tm">₹9,880</td><td class="tm">₹4,84,120</td><td><span class="bd ba">Due</span></td></tr>
+      <tr><td class="tm">VB-199</td><td>M/s Prism Cement</td><td class="tm">PO-0125</td><td class="tm">₹98,000</td><td class="tm">₹1,960</td><td class="tm">₹96,040</td><td><span class="bd ba">Due</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-vbill"><div class="fph">Add Vendor Bill <button class="fcl" onclick="CF('fp-vbill')">×</button></div>
+    <div class="fg"><div class="f"><label>Vendor</label><select><option>M/s Vizag Steel Corp</option><option>M/s Prism Cement</option><option>M/s Kumar Sand</option></select></div><div class="f"><label>PO Reference</label><input type="text" placeholder="PO-XXXX"/></div><div class="f"><label>Invoice No.</label><input type="text"/></div><div class="f"><label>Invoice Amount (₹)</label><input type="number"/></div><div class="f"><label>TDS Rate %</label><input type="number" value="2"/></div><div class="f"><label>Invoice Date</label><input type="date"/></div><div class="f"><label>Upload Invoice</label><input type="file" accept=".pdf,image/*"/></div></div>
+    <div class="fr"><button class="btn-p" onclick="SF('fp-vbill','Vendor bill recorded')">Save Bill</button><button class="btn-s" onclick="CF('fp-vbill')">Cancel</button></div></div>
+  </div>
+  <div class="sec" id="qs-contractorbill">
+    <div class="tw"><div class="ttb"><div class="ttl">Subcontractor / Contractor Bills</div><div class="ttls"><button class="btn-p" style="padding:6px 12px;font-size:12px;" onclick="FP('fp-scbill')">+ Record Bill</button></div></div>
+    <table><thead><tr><th>Bill No.</th><th>Contractor</th><th>Work Description</th><th>Bill Amount</th><th>TDS 194C</th><th>Net Payable</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="tm">SCB-041</td><td>M/s Ravi Masonry</td><td>Fly Ash Block masonry 3rd floor</td><td class="tm">₹3,20,000</td><td class="tm" style="color:var(--RD);">₹6,400</td><td class="tm">₹3,13,600</td><td><span class="bd ba">Pending Payment</span></td></tr>
+      <tr><td class="tm">SCB-040</td><td>M/s Vijay Plastering</td><td>Internal plaster 2nd floor</td><td class="tm">₹1,85,000</td><td class="tm" style="color:var(--RD);">₹3,700</td><td class="tm" style="color:var(--GR);">₹1,81,300</td><td><span class="bd bg">Paid</span></td></tr>
+      <tr><td class="tm">SCB-039</td><td>M/s SK Bar Benders</td><td>Bar bending 2nd floor slab</td><td class="tm">₹2,40,000</td><td class="tm" style="color:var(--RD);">₹4,800</td><td class="tm" style="color:var(--GR);">₹2,35,200</td><td><span class="bd bg">Paid</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-scbill"><div class="fph">Record Contractor Bill <button class="fcl" onclick="CF('fp-scbill')">×</button></div>
+    <div class="fg"><div class="f"><label>Contractor Name</label><input type="text"/></div><div class="f"><label>Work Order Ref.</label><input type="text" placeholder="WO-XXX"/></div><div class="f"><label>Work Description</label><input type="text"/></div><div class="f"><label>Bill Amount (₹)</label><input type="number"/></div><div class="f"><label>TDS 194C %</label><select><option value="1">1% — Ind / HUF</option><option value="2" selected>2% — Company</option></select></div><div class="f"><label>Bill Date</label><input type="date"/></div><div class="f"><label>Upload Bill Document</label><input type="file" accept=".pdf,image/*"/></div></div>
+    <div class="fr"><button class="btn-p" onclick="SF('fp-scbill','Contractor bill recorded — TDS auto-deducted by SATURDAY')">Record Bill</button><button class="btn-s" onclick="CF('fp-scbill')">Cancel</button></div></div>
+  </div>
+  <div class="sec" id="qs-qscomp">
+    <div class="tw"><div class="ttb"><div class="ttl">QS Compliance Register</div><div class="ttls"><button class="btn-p" style="padding:6px 12px;font-size:12px;" onclick="FP('fp-qsc')">+ Add Item</button></div></div>
+    <table><thead><tr><th>Compliance Item</th><th>Frequency</th><th>Due Date</th><th>Responsible</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="tb2">Measurement Book update</td><td>Weekly</td><td style="color:var(--RD);">25 Mar 2025</td><td>QS Manager</td><td><span class="bd ba">Pending</span></td></tr>
+      <tr><td class="tb2">RA Bill #5 certification</td><td>Monthly</td><td>25 Mar 2025</td><td>QS Manager</td><td><span class="bd bg">Done</span></td></tr>
+      <tr><td class="tb2">Abstract statement update</td><td>Monthly</td><td>31 Mar 2025</td><td>QS Manager</td><td><span class="bd bgr">Not Started</span></td></tr>
+      <tr><td class="tb2">BOQ quantity reconciliation</td><td>Monthly</td><td>31 Mar 2025</td><td>PM / QS</td><td><span class="bd bgr">Not Started</span></td></tr>
+      <tr><td class="tb2">Deviation statement</td><td>Quarterly</td><td>30 Apr 2025</td><td>QS Manager</td><td><span class="bd bgr">Upcoming</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-qsc"><div class="fph">Add Compliance Item <button class="fcl" onclick="CF('fp-qsc')">×</button></div>
+    <div class="fg"><div class="f"><label>Compliance Item</label><input type="text"/></div><div class="f"><label>Frequency</label><select><option>Daily</option><option>Weekly</option><option>Monthly</option><option>Quarterly</option></select></div><div class="f"><label>Due Date</label><input type="date"/></div><div class="f"><label>Responsible</label><input type="text"/></div></div>
+    <div class="fr"><button class="btn-p" onclick="SF('fp-qsc','Compliance item added')">Add</button><button class="btn-s" onclick="CF('fp-qsc')">Cancel</button></div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--                    PLANNING MODULE                         -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="mod" id="mod-planning">
+  <div class="mh"><div><div class="mt2">Planning</div><div class="ms">Estimates · Targets · Progress · Manpower</div></div></div>
+  <div class="stb">
+    <button class="st on" onclick="sec('planning','estimates',this)">Estimates</button>
+    <button class="st" onclick="sec('planning','targets',this)">Targets</button>
+    <button class="st" onclick="sec('planning','progress',this)">Progress</button>
+    <button class="st" onclick="sec('planning','manpower',this)">Manpower</button>
+  </div>
+  <div class="sec on" id="planning-estimates">
+    <div class="tw"><div class="ttb"><div class="ttl">Cost Estimates vs Actuals — YIIRS Pkg 05</div><div class="ttls"><button class="btn-p" style="padding:6px 12px;font-size:12px;" onclick="FP('fp-est')">+ Add Estimate</button></div></div>
+    <table><thead><tr><th>Work Head</th><th>Est. Cost</th><th>Actual Cost</th><th>Variance</th><th>% Complete</th><th>Trend</th></tr></thead><tbody>
+      <tr><td class="tb2">Earthwork & PCC</td><td class="tm">₹18,40,000</td><td class="tm">₹17,92,000</td><td class="tm" style="color:var(--GR);">-₹48,000</td><td><span class="bd bg">100%</span></td><td style="color:var(--GR);">✓ Under Budget</td></tr>
+      <tr><td class="tb2">RCC Work (Structural)</td><td class="tm">₹1,24,00,000</td><td class="tm">₹48,80,000</td><td class="tm" style="color:var(--GR);">On Track</td><td><span class="bd bb2">39%</span></td><td>→ On Track</td></tr>
+      <tr><td class="tb2">Masonry</td><td class="tm">₹26,88,000</td><td class="tm">₹9,92,000</td><td class="tm" style="color:var(--GR);">On Track</td><td><span class="bd bb2">37%</span></td><td>→ On Track</td></tr>
+      <tr><td class="tb2">Steel / Reinforcement</td><td class="tm">₹87,68,000</td><td class="tm">₹35,62,000</td><td class="tm" style="color:var(--AM);">+₹2,400</td><td><span class="bd bb2">40%</span></td><td style="color:var(--AM);">⚠ Slight Overrun</td></tr>
+      <tr><td class="tb2">Shuttering & Formwork</td><td class="tm">₹15,96,000</td><td class="tm">₹6,38,400</td><td class="tm" style="color:var(--GR);">On Track</td><td><span class="bd bb2">40%</span></td><td>→ On Track</td></tr>
+      <tr><td class="tb2">Plastering & Finishing</td><td class="tm">₹42,00,000</td><td class="tm">₹0</td><td class="tm">—</td><td><span class="bd bgr">0%</span></td><td>— Not Started</td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-est"><div class="fph">Add Estimate Head <button class="fcl" onclick="CF('fp-est')">×</button></div>
+    <div class="fg"><div class="f"><label>Work Head</label><input type="text" placeholder="e.g. RCC Work — Structural"/></div><div class="f"><label>Estimated Cost (₹)</label><input type="number"/></div><div class="f"><label>Duration (days)</label><input type="number"/></div><div class="f"><label>Responsible</label><input type="text"/></div></div>
+    <div class="fr"><button class="btn-p" onclick="SF('fp-est','Estimate head added')">Add</button><button class="btn-s" onclick="CF('fp-est')">Cancel</button></div></div>
+  </div>
+  <div class="sec" id="planning-targets">
+    <div class="tw"><div class="ttb"><div class="ttl">Monthly Targets vs Achievement</div><div class="ttls"><button class="btn-p" style="padding:6px 12px;font-size:12px;" onclick="FP('fp-target')">+ Set Target</button></div></div>
+    <table><thead><tr><th>Month</th><th>Target Value</th><th>Achieved</th><th>Achievement %</th><th>Status</th></tr></thead><tbody>
+      <tr><td>Sep 2024</td><td class="tm">₹12,00,000</td><td class="tm">₹12,80,000</td><td style="color:var(--GR);">106.7%</td><td><span class="bd bg">Exceeded</span></td></tr>
+      <tr><td>Oct 2024</td><td class="tm">₹18,00,000</td><td class="tm">₹16,40,000</td><td style="color:var(--RD);">91.1%</td><td><span class="bd br2">Missed</span></td></tr>
+      <tr><td>Nov 2024</td><td class="tm">₹20,00,000</td><td class="tm">₹22,10,000</td><td style="color:var(--GR);">110.5%</td><td><span class="bd bg">Exceeded</span></td></tr>
+      <tr><td>Dec 2024</td><td class="tm">₹28,00,000</td><td class="tm">₹28,90,000</td><td style="color:var(--GR);">103.2%</td><td><span class="bd bg">Exceeded</span></td></tr>
+      <tr><td>Jan 2025</td><td class="tm">₹35,00,000</td><td class="tm">₹38,45,200</td><td style="color:var(--GR);">109.9%</td><td><span class="bd bg">Exceeded</span></td></tr>
+      <tr><td>Feb 2025</td><td class="tm">₹38,00,000</td><td class="tm">₹40,21,000</td><td style="color:var(--GR);">105.8%</td><td><span class="bd bg">Exceeded</span></td></tr>
+      <tr><td>Mar 2025</td><td class="tm">₹42,00,000</td><td class="tm">₹27,84,000</td><td style="color:var(--AM);">66.3%</td><td><span class="bd ba">In Progress</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-target"><div class="fph">Set Monthly Target <button class="fcl" onclick="CF('fp-target')">×</button></div>
+    <div class="fg"><div class="f"><label>Month</label><input type="month"/></div><div class="f"><label>Project</label><select><option>YIIRS Package 05</option><option>Industrial Shed</option><option>All Projects Combined</option></select></div><div class="f"><label>Target Value (₹)</label><input type="number"/></div><div class="f"><label>Key Milestone for Month</label><input type="text" placeholder="e.g. Complete 3rd floor columns"/></div></div>
+    <div class="fr"><button class="btn-p" onclick="SF('fp-target','Monthly target set')">Save Target</button><button class="btn-s" onclick="CF('fp-target')">Cancel</button></div></div>
+  </div>
+  <div class="sec" id="planning-progress">
+    <div class="sg"><div class="sk"><div class="lb">Overall Progress</div><div class="vl">38%</div><div class="dl" style="color:var(--T2);">YIIRS Pkg 05</div></div><div class="sk"><div class="lb">Days Elapsed</div><div class="vl">185</div><div class="dl" style="color:var(--T2);">of 900 total</div></div><div class="sk"><div class="lb">Days Remaining</div><div class="vl">715</div><div class="dl" style="color:var(--GR);">On Schedule</div></div><div class="sk"><div class="lb">Milestones</div><div class="vl">4 / 12</div><div class="dl" style="color:var(--T2);">Completed</div></div></div>
+    <div class="tw"><div class="ttb"><div class="ttl">Milestone Tracker</div><div class="ttls"><button class="btn-p" style="padding:6px 12px;font-size:12px;" onclick="FP('fp-mile')">+ Add Milestone</button></div></div>
+    <table><thead><tr><th>Milestone</th><th>Target Date</th><th>Actual Date</th><th>Delay</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="tb2">Site mobilisation & setup</td><td>Sep 2024</td><td>Sep 2024</td><td>—</td><td><span class="bd bg">Done</span></td></tr>
+      <tr><td class="tb2">Foundation & earthwork complete</td><td>Oct 2024</td><td>Oct 2024</td><td>—</td><td><span class="bd bg">Done</span></td></tr>
+      <tr><td class="tb2">Ground floor structural complete</td><td>Nov 2024</td><td>Dec 2024</td><td style="color:var(--AM);">+30 days</td><td><span class="bd bg">Done</span></td></tr>
+      <tr><td class="tb2">First floor structural complete</td><td>Jan 2025</td><td>Feb 2025</td><td style="color:var(--AM);">+28 days</td><td><span class="bd bg">Done</span></td></tr>
+      <tr><td class="tb2">Second floor structural</td><td>Mar 2025</td><td>—</td><td style="color:var(--RD);">Risk</td><td><span class="bd bb2">In Progress</span></td></tr>
+      <tr><td class="tb2">Full structural complete</td><td>Jun 2025</td><td>—</td><td>—</td><td><span class="bd bgr">Upcoming</span></td></tr>
+      <tr><td class="tb2">Brick masonry complete</td><td>Aug 2025</td><td>—</td><td>—</td><td><span class="bd bgr">Upcoming</span></td></tr>
+      <tr><td class="tb2">Plastering & finishing</td><td>Dec 2025</td><td>—</td><td>—</td><td><span class="bd bgr">Upcoming</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-mile"><div class="fph">Add Milestone <button class="fcl" onclick="CF('fp-mile')">×</button></div>
+    <div class="fg"><div class="f"><label>Milestone Name</label><input type="text"/></div><div class="f"><label>Target Date</label><input type="date"/></div><div class="f"><label>Project</label><select><option>YIIRS Package 05</option><option>Industrial Shed</option></select></div><div class="f"><label>Description</label><input type="text"/></div></div>
+    <div class="fr"><button class="btn-p" onclick="SF('fp-mile','Milestone added')">Add</button><button class="btn-s" onclick="CF('fp-mile')">Cancel</button></div></div>
+  </div>
+  <div class="sec" id="planning-manpower">
+    <div class="sg"><div class="sk"><div class="lb">Total Planned</div><div class="vl">81</div></div><div class="sk"><div class="lb">Deployed Today</div><div class="vl" style="color:var(--GR);">79</div></div><div class="sk"><div class="lb">Shortage</div><div class="vl" style="color:var(--RD);">-4</div><div class="dl" style="color:var(--T2);">Carpenter & Mason</div></div><div class="sk"><div class="lb">Avg Productivity</div><div class="vl">96%</div></div></div>
+    <div class="tw"><div class="ttb"><div class="ttl">Manpower Plan vs Deployment</div><div class="ttls"><button class="btn-p" style="padding:6px 12px;font-size:12px;" onclick="FP('fp-mp')">+ Update</button></div></div>
+    <table><thead><tr><th>Category</th><th>Planned</th><th>Today Deployed</th><th>Variance</th><th>Productivity</th><th>Wages/Day</th></tr></thead><tbody>
+      <tr><td class="tb2">Mason (Skilled)</td><td>20</td><td>18</td><td style="color:var(--AM);">-2</td><td>94%</td><td class="tm">₹750</td></tr>
+      <tr><td class="tb2">Bar Bender (Skilled)</td><td>15</td><td>15</td><td style="color:var(--GR);">0</td><td>98%</td><td class="tm">₹700</td></tr>
+      <tr><td class="tb2">Carpenter (Skilled)</td><td>12</td><td>10</td><td style="color:var(--RD);">-2</td><td>88%</td><td class="tm">₹700</td></tr>
+      <tr><td class="tb2">Helper (Unskilled)</td><td>30</td><td>32</td><td style="color:var(--GR);">+2</td><td>100%</td><td class="tm">₹450</td></tr>
+      <tr><td class="tb2">Supervisor</td><td>4</td><td>4</td><td style="color:var(--GR);">0</td><td>100%</td><td class="tm">₹1,200</td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-mp"><div class="fph">Update Manpower <button class="fcl" onclick="CF('fp-mp')">×</button></div>
+    <div class="fg"><div class="f"><label>Date</label><input type="date"/></div><div class="f"><label>Category</label><select><option>Mason</option><option>Bar Bender</option><option>Carpenter</option><option>Helper</option><option>Supervisor</option></select></div><div class="f"><label>Planned Strength</label><input type="number"/></div><div class="f"><label>Deployed Today</label><input type="number"/></div></div>
+    <div class="fr"><button class="btn-p" onclick="SF('fp-mp','Manpower data updated')">Update</button><button class="btn-s" onclick="CF('fp-mp')">Cancel</button></div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--                    FINANCE MODULE                          -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="mod" id="mod-finance">
+  <div class="mh"><div><div class="mt2">Finance</div><div class="ms">Accounts · Vendor Payments · Agency Payments · Project Expenses · Compliance</div></div><div class="ma"><div style="display:flex;align-items:center;gap:6px;background:rgba(99,102,241,.1);border:.5px solid rgba(99,102,241,.25);border-radius:7px;padding:5px 10px;font-size:11px;color:var(--C2);"><div style="width:5px;height:5px;border-radius:50%;background:var(--GR);animation:pulse 2s infinite;"></div>SATURDAY Active</div></div></div>
+  <div class="stb">
+    <button class="st on" onclick="sec('finance','accounts',this)">Accounts</button>
+    <button class="st" onclick="sec('finance','vendorpay',this)">Vendor Payments</button>
+    <button class="st" onclick="sec('finance','agencypay',this)">Agency Payments</button>
+    <button class="st" onclick="sec('finance','expenses',this)">Project Expenses</button>
+    <button class="st" onclick="sec('finance','fincomp',this)">Compliance</button>
+  </div>
+  <div class="sec on" id="finance-accounts">
+    <div class="sg"><div class="sk"><div class="lb">Bank Balance</div><div class="vl">₹38,45,200</div></div><div class="sk"><div class="lb">Total Receivables</div><div class="vl" style="color:var(--AM);">₹56,70,000</div></div><div class="sk"><div class="lb">Total Payables</div><div class="vl" style="color:var(--RD);">₹29,14,000</div></div><div class="sk"><div class="lb">Net P&L Month</div><div class="vl" style="color:var(--GR);">+₹12,30,000</div></div></div>
+    <div class="tw"><div class="ttb"><div class="ttl">Accounts Ledger</div><div class="ttls"><input class="sx" placeholder="Search ledger..."/><button class="btn-p" style="padding:6px 12px;font-size:12px;" onclick="FP('fp-vch')">+ Voucher Entry</button></div></div>
+    <table><thead><tr><th>Date</th><th>Narration</th><th>Debit (₹)</th><th>Credit (₹)</th><th>Type</th><th>Project</th></tr></thead><tbody>
+      <tr><td>25 Mar</td><td class="tb2">TGEWIDC RA Bill #4 receipt</td><td>—</td><td class="tm" style="color:var(--GR);">₹38,19,997</td><td><span class="bd bg">Receipt</span></td><td>YIIRS Pkg 05</td></tr>
+      <tr><td>24 Mar</td><td class="tb2">M/s Vizag Steel payment</td><td class="tm" style="color:var(--RD);">₹4,94,000</td><td>—</td><td><span class="bd br2">Payment</span></td><td>YIIRS Pkg 05</td></tr>
+      <tr><td>23 Mar</td><td class="tb2">Labour wages March advance</td><td class="tm" style="color:var(--RD);">₹3,20,000</td><td>—</td><td><span class="bd ba">Wages</span></td><td>YIIRS Pkg 05</td></tr>
+      <tr><td>22 Mar</td><td class="tb2">M/s Ravi Masonry — TDS deducted</td><td>—</td><td class="tm">₹6,400</td><td><span class="bd bb2">TDS</span></td><td>YIIRS Pkg 05</td></tr>
+      <tr><td>21 Mar</td><td class="tb2">Diesel purchase — generator</td><td class="tm" style="color:var(--RD);">₹18,400</td><td>—</td><td><span class="bd bgr">Expense</span></td><td>YIIRS Pkg 05</td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-vch"><div class="fph">Journal / Voucher Entry <button class="fcl" onclick="CF('fp-vch')">×</button></div>
+    <div class="fg"><div class="f"><label>Voucher Type</label><select><option>Payment Voucher</option><option>Receipt Voucher</option><option>Journal Entry</option><option>Contra Entry</option></select></div><div class="f"><label>Date</label><input type="date"/></div><div class="f"><label>Account (Debit)</label><input type="text" placeholder="Account head"/></div><div class="f"><label>Account (Credit)</label><input type="text" placeholder="Account head"/></div><div class="f"><label>Amount (₹)</label><input type="number"/></div><div class="f"><label>Narration</label><input type="text" placeholder="Transaction description"/></div><div class="f"><label>Project</label><select><option>YIIRS Package 05</option><option>Industrial Shed</option><option>General</option></select></div><div class="f"><label>Ref (Cheque / NEFT / UPI)</label><input type="text" placeholder="Reference number"/></div></div>
+    <div class="fr"><button class="btn-p" onclick="SF('fp-vch','Voucher posted to ledger')">Post Voucher</button><button class="btn-s" onclick="CF('fp-vch')">Cancel</button></div></div>
+  </div>
+  <div class="sec" id="finance-vendorpay">
+    <div class="tw"><div class="ttb"><div class="ttl">Vendor Payments</div><div class="ttls"><button class="btn-p" style="padding:6px 12px;font-size:12px;" onclick="FP('fp-vpay')">+ Record Payment</button></div></div>
+    <table><thead><tr><th>Vendor</th><th>Invoice No.</th><th>Invoice Amt</th><th>TDS</th><th>Net Paid</th><th>Date</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="tb2">M/s Kumar Sand</td><td class="tm">INV-2025-234</td><td class="tm">₹62,500</td><td class="tm">₹1,250</td><td class="tm" style="color:var(--GR);">₹61,250</td><td>26 Mar</td><td><span class="bd bg">Paid</span></td></tr>
+      <tr><td class="tb2">M/s Vizag Steel</td><td class="tm">INV-2025-412</td><td class="tm">₹4,94,000</td><td class="tm">₹9,880</td><td class="tm">₹4,84,120</td><td>—</td><td><span class="bd ba">Pending</span></td></tr>
+      <tr><td class="tb2">M/s Prism Cement</td><td class="tm">INV-2025-198</td><td class="tm">₹98,000</td><td class="tm">₹1,960</td><td class="tm">₹96,040</td><td>—</td><td><span class="bd ba">Pending</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-vpay"><div class="fph">Record Vendor Payment <button class="fcl" onclick="CF('fp-vpay')">×</button></div>
+    <div class="fg"><div class="f"><label>Vendor</label><select><option>M/s Vizag Steel Corp</option><option>M/s Prism Cement</option><option>M/s Kumar Sand</option></select></div><div class="f"><label>Invoice No.</label><input type="text"/></div><div class="f"><label>Invoice Amount (₹)</label><input type="number"/></div><div class="f"><label>TDS Rate %</label><input type="number" value="2"/></div><div class="f"><label>Payment Mode</label><select><option>NEFT</option><option>RTGS</option><option>UPI</option><option>Cheque</option><option>Cash</option></select></div><div class="f"><label>Payment Date</label><input type="date"/></div></div>
+    <div class="fr"><button class="btn-p" onclick="SF('fp-vpay','Payment recorded — SATURDAY updating ledger')">Record</button><button class="btn-s" onclick="CF('fp-vpay')">Cancel</button></div></div>
+  </div>
+  <div class="sec" id="finance-agencypay">
+    <div class="tw"><div class="ttb"><div class="ttl">Agency / Subcontractor Payments</div><div class="ttls"><button class="btn-p" style="padding:6px 12px;font-size:12px;" onclick="FP('fp-apay')">+ Record Payment</button></div></div>
+    <table><thead><tr><th>Agency</th><th>Work Order</th><th>Bill Amt</th><th>TDS 194C</th><th>Net Paid</th><th>Date</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="tb2">M/s Ravi Masonry</td><td class="tm">WO-038</td><td class="tm">₹3,20,000</td><td class="tm" style="color:var(--RD);">₹6,400</td><td class="tm">₹3,13,600</td><td>—</td><td><span class="bd ba">Due</span></td></tr>
+      <tr><td class="tb2">M/s Vijay Plastering</td><td class="tm">WO-035</td><td class="tm">₹1,85,000</td><td class="tm" style="color:var(--RD);">₹3,700</td><td class="tm" style="color:var(--GR);">₹1,81,300</td><td>22 Mar</td><td><span class="bd bg">Paid</span></td></tr>
+      <tr><td class="tb2">M/s SK Bar Benders</td><td class="tm">WO-041</td><td class="tm">₹2,40,000</td><td class="tm" style="color:var(--RD);">₹4,800</td><td class="tm" style="color:var(--GR);">₹2,35,200</td><td>20 Mar</td><td><span class="bd bg">Paid</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-apay"><div class="fph">Record Agency Payment <button class="fcl" onclick="CF('fp-apay')">×</button></div>
+    <div class="fg"><div class="f"><label>Contractor / Agency</label><input type="text"/></div><div class="f"><label>Work Order Ref.</label><input type="text" placeholder="WO-XXX"/></div><div class="f"><label>Bill Amount (₹)</label><input type="number"/></div><div class="f"><label>TDS 194C %</label><select><option value="1">1% — Ind / HUF</option><option value="2" selected>2% — Company</option></select></div><div class="f"><label>Payment Date</label><input type="date"/></div><div class="f"><label>Payment Mode</label><select><option>NEFT</option><option>RTGS</option><option>Cheque</option></select></div></div>
+    <div class="fr"><button class="btn-p" onclick="SF('fp-apay','Payment recorded — TDS auto-deducted by SATURDAY')">Record</button><button class="btn-s" onclick="CF('fp-apay')">Cancel</button></div></div>
+  </div>
+  <div class="sec" id="finance-expenses">
+    <div class="tw"><div class="ttb"><div class="ttl">Project Expenses</div><div class="ttls"><input class="sx" placeholder="Search..."/><button class="btn-p" style="padding:6px 12px;font-size:12px;" onclick="FP('fp-exp')">+ Add Expense</button></div></div>
+    <table><thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount</th><th>Project</th><th>Approved By</th></tr></thead><tbody>
+      <tr><td>25 Mar</td><td><span class="bd bb2">Site</span></td><td>Diesel for generator</td><td class="tm">₹18,400</td><td>YIIRS Pkg 05</td><td>PM Suresh</td></tr>
+      <tr><td>24 Mar</td><td><span class="bd ba">Transport</span></td><td>Material shifting charges</td><td class="tm">₹8,500</td><td>YIIRS Pkg 05</td><td>PM Suresh</td></tr>
+      <tr><td>23 Mar</td><td><span class="bd bgr">Admin</span></td><td>Stationery and printing</td><td class="tm">₹2,100</td><td>General</td><td>Accountant</td></tr>
+      <tr><td>22 Mar</td><td><span class="bd bb2">Site</span></td><td>Safety equipment — helmets & boots</td><td class="tm">₹12,800</td><td>YIIRS Pkg 05</td><td>PM Suresh</td></tr>
+      <tr><td>21 Mar</td><td><span class="bd ba">Transport</span></td><td>Site visit travel — Nizamabad</td><td class="tm">₹4,200</td><td>YIIRS Pkg 05</td><td>AGM Ravi</td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-exp"><div class="fph">Add Project Expense <button class="fcl" onclick="CF('fp-exp')">×</button></div>
+    <div class="fg"><div class="f"><label>Date</label><input type="date"/></div><div class="f"><label>Category</label><select><option>Site Expense</option><option>Transport</option><option>Equipment Hire</option><option>Admin / Office</option><option>Testing & QC</option><option>Safety</option><option>Miscellaneous</option></select></div><div class="f"><label>Description</label><input type="text"/></div><div class="f"><label>Amount (₹)</label><input type="number"/></div><div class="f"><label>Project</label><select><option>YIIRS Package 05</option><option>Industrial Shed</option><option>General</option></select></div><div class="f"><label>Voucher / Receipt No.</label><input type="text"/></div><div class="f"><label>Upload Receipt</label><input type="file" accept=".pdf,image/*"/></div></div>
+    <div class="fr"><button class="btn-p" onclick="SF('fp-exp','Expense recorded')">Save</button><button class="btn-s" onclick="CF('fp-exp')">Cancel</button></div></div>
+  </div>
+  <div class="sec" id="finance-fincomp">
+    <div class="tw"><div class="ttb"><div class="ttl">Financial Compliance Calendar</div></div>
+    <table><thead><tr><th>Compliance</th><th>Frequency</th><th>Next Due</th><th>Responsible</th><th>SATURDAY Status</th></tr></thead><tbody>
+      <tr><td class="tb2">GSTR-1 Filing</td><td>Monthly</td><td style="color:var(--RD);">11 Apr 2025</td><td>CFO / SATURDAY</td><td><span class="bd bb2">Auto-preparing</span></td></tr>
+      <tr><td class="tb2">GSTR-3B Filing</td><td>Monthly</td><td>20 Apr 2025</td><td>CFO / SATURDAY</td><td><span class="bd bgr">Not Started</span></td></tr>
+      <tr><td class="tb2">TDS Deposit 194C</td><td>Monthly</td><td>7 Apr 2025</td><td>SATURDAY</td><td><span class="bd ba">Challan Ready</span></td></tr>
+      <tr><td class="tb2">Form 26Q TDS Return</td><td>Quarterly</td><td>30 Apr 2025</td><td>SATURDAY</td><td><span class="bd bg">Auto-prepared</span></td></tr>
+      <tr><td class="tb2">Advance Tax</td><td>Quarterly</td><td>15 Jun 2025</td><td>CFO</td><td><span class="bd bgr">Upcoming</span></td></tr>
+    </tbody></table></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--                      HR MODULE                             -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="mod" id="mod-hr">
+  <div class="mh"><div><div class="mt2">HR</div><div class="ms">Staff management and agency / subcontractor workforce</div></div></div>
+  <div class="stb">
+    <button class="st on" onclick="sec('hr','staff',this)">Staff</button>
+    <button class="st" onclick="sec('hr','agencies',this)">Agencies</button>
+  </div>
+  <div class="sec on" id="hr-staff">
+    <div class="sg"><div class="sk"><div class="lb">Total Staff</div><div class="vl">12</div></div><div class="sk"><div class="lb">On-Site Today</div><div class="vl" style="color:var(--GR);">9</div></div><div class="sk"><div class="lb">On Leave</div><div class="vl" style="color:var(--AM);">2</div></div><div class="sk"><div class="lb">Monthly Payroll</div><div class="vl">₹8.4L</div></div></div>
+    <div class="tw"><div class="ttb"><div class="ttl">Staff Register</div><div class="ttls"><input class="sx" placeholder="Search staff..."/><button class="btn-p" style="padding:6px 12px;font-size:12px;" onclick="FP('fp-staff')">+ Add Staff</button></div></div>
+    <table><thead><tr><th>Name</th><th>Designation</th><th>Project</th><th>Join Date</th><th>Mobile</th><th>Salary</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="tb2">Krishna Teja</td><td>CMD / Proprietor</td><td>All Projects</td><td>—</td><td>—</td><td>—</td><td><span class="bd bg">Active</span></td></tr>
+      <tr><td class="tb2">Ravi Kumar</td><td>Project Director</td><td>YIIRS Pkg 05</td><td>Jan 2024</td><td class="tm">+91 98765 00011</td><td class="tm">₹85,000</td><td><span class="bd bg">Active</span></td></tr>
+      <tr><td class="tb2">Suresh PM</td><td>Project Manager</td><td>YIIRS Pkg 05</td><td>Mar 2024</td><td class="tm">+91 98765 00012</td><td class="tm">₹55,000</td><td><span class="bd bg">Active</span></td></tr>
+      <tr><td class="tb2">Anil Site Engineer</td><td>Site Engineer</td><td>YIIRS Pkg 05</td><td>Apr 2024</td><td class="tm">+91 98765 00013</td><td class="tm">₹38,000</td><td><span class="bd ba">Leave</span></td></tr>
+      <tr><td class="tb2">Priya Accountant</td><td>Accountant</td><td>All Projects</td><td>Jun 2024</td><td class="tm">+91 98765 00014</td><td class="tm">₹32,000</td><td><span class="bd bg">Active</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-staff"><div class="fph">Add Staff Member <button class="fcl" onclick="CF('fp-staff')">×</button></div>
+    <div class="fg"><div class="f"><label>Full Name *</label><input type="text"/></div><div class="f"><label>Designation</label><select><option>Project Director</option><option>General Manager</option><option>AGM</option><option>SPM</option><option>Project Manager</option><option>APM</option><option>Site Engineer</option><option>QS Manager</option><option>Store Manager</option><option>Accountant</option></select></div><div class="f"><label>Assigned Project</label><select><option>YIIRS Package 05</option><option>Industrial Shed</option><option>All Projects</option></select></div><div class="f"><label>Join Date</label><input type="date"/></div><div class="f"><label>Mobile *</label><input type="tel"/></div><div class="f"><label>Email</label><input type="email"/></div><div class="f"><label>Monthly Salary (₹)</label><input type="number"/></div><div class="f"><label>PF Account No.</label><input type="text"/></div><div class="f"><label>Aadhaar No.</label><input type="text" maxlength="12"/></div><div class="f"><label>PAN</label><input type="text" maxlength="10"/></div><div class="f"><label>Bank Account No.</label><input type="text"/></div><div class="f"><label>IFSC Code</label><input type="text"/></div></div>
+    <div class="fr"><button class="btn-p" onclick="SF('fp-staff','Staff member added')">Add Staff</button><button class="btn-s" onclick="CF('fp-staff')">Cancel</button></div></div>
+  </div>
+  <div class="sec" id="hr-agencies">
+    <div class="sg"><div class="sk"><div class="lb">Active Agencies</div><div class="vl">6</div></div><div class="sk"><div class="lb">Labour Deployed</div><div class="vl">84</div><div class="dl" style="color:var(--T2);">All sites today</div></div><div class="sk"><div class="lb">Pending Wages</div><div class="vl" style="color:var(--AM);">₹4.2L</div></div><div class="sk"><div class="lb">PF / ESI Status</div><div class="vl" style="color:var(--GR);">✓ Compliant</div></div></div>
+    <div class="tw"><div class="ttb"><div class="ttl">Labour Agencies Register</div><div class="ttls"><button class="btn-p" style="padding:6px 12px;font-size:12px;" onclick="FP('fp-agency')">+ Add Agency</button></div></div>
+    <table><thead><tr><th>Agency Name</th><th>Work Type</th><th>Workers</th><th>Work Order</th><th>PF Registered</th><th>Wages Due</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="tb2">M/s Ravi Masonry Works</td><td>Masonry</td><td>22</td><td class="tm">WO-038</td><td><span class="bd bg">Yes</span></td><td class="tm" style="color:var(--AM);">₹1,82,000</td><td><span class="bd bg">Active</span></td></tr>
+      <tr><td class="tb2">M/s Vijay Labour Contractor</td><td>General Labour</td><td>35</td><td class="tm">WO-032</td><td><span class="bd bg">Yes</span></td><td class="tm" style="color:var(--AM);">₹2,38,000</td><td><span class="bd bg">Active</span></td></tr>
+      <tr><td class="tb2">M/s SK Bar Benders</td><td>Bar Bending / Steel</td><td>18</td><td class="tm">WO-041</td><td><span class="bd ba">Pending</span></td><td class="tm" style="color:var(--GR);">₹0</td><td><span class="bd bg">Active</span></td></tr>
+      <tr><td class="tb2">M/s Reddy Carpentry</td><td>Shuttering / Formwork</td><td>9</td><td class="tm">WO-039</td><td><span class="bd bg">Yes</span></td><td class="tm" style="color:var(--GR);">₹0</td><td><span class="bd bg">Active</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-agency"><div class="fph">Add Labour Agency <button class="fcl" onclick="CF('fp-agency')">×</button></div>
+    <div class="fg"><div class="f"><label>Agency / Firm Name *</label><input type="text"/></div><div class="f"><label>Type of Work</label><select><option>Masonry</option><option>Bar Bending & Steel</option><option>Carpentry / Shuttering</option><option>General Labour</option><option>Plastering</option><option>Painting</option><option>MEP</option></select></div><div class="f"><label>Contact Person</label><input type="text"/></div><div class="f"><label>Mobile</label><input type="tel"/></div><div class="f"><label>PF Registration No.</label><input type="text"/></div><div class="f"><label>ESI Registration No.</label><input type="text"/></div><div class="f"><label>No. of Workers</label><input type="number"/></div><div class="f"><label>Work Order Ref.</label><input type="text" placeholder="WO-XXX"/></div></div>
+    <div class="fr"><button class="btn-p" onclick="SF('fp-agency','Agency added')">Add Agency</button><button class="btn-s" onclick="CF('fp-agency')">Cancel</button></div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--                  SATURDAY AI MODULE                        -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="mod" id="mod-saturday">
+  <div class="mh"><div><div class="mt2">SATURDAY AI Engine</div><div class="ms">Autonomous financial intelligence — running 24/7</div></div><div class="ma"><div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--GR);"><div style="width:6px;height:6px;border-radius:50%;background:var(--GR);animation:pulse 2s infinite;"></div>All Systems Online</div></div></div>
+  <div class="sg"><div class="sk"><div class="lb">Tasks Completed Today</div><div class="vl" style="color:var(--GR);">18</div></div><div class="sk"><div class="lb">Anomalies Detected</div><div class="vl" style="color:var(--RD);">2</div></div><div class="sk"><div class="lb">Auto-filings Ready</div><div class="vl" style="color:var(--C2);">3</div></div><div class="sk"><div class="lb">P&L Last Updated</div><div class="vl" style="color:var(--T2);">14 min ago</div></div></div>
+  <div style="background:var(--B1);border:.5px solid rgba(99,102,241,.2);border-radius:12px;padding:18px;margin-bottom:16px;">
+    <div style="font-size:13px;font-weight:600;margin-bottom:12px;color:var(--C2);">Ask SATURDAY Anything Financial</div>
+    <div style="display:flex;gap:9px;"><input class="sx" style="flex:1;width:auto;" id="sq" placeholder="e.g. What is our cash position and forecast for April?" onkeydown="if(event.key==='Enter')askSAT()"/><button class="btn-p" style="padding:9px 16px;" onclick="askSAT()">Ask →</button></div>
+    <div id="sa" style="margin-top:12px;font-size:13px;color:var(--T1);line-height:1.6;display:none;background:rgba(99,102,241,.07);border:.5px solid rgba(99,102,241,.15);border-radius:8px;padding:12px;"></div>
+  </div>
+  <div style="font-size:11px;color:var(--T2);margin-bottom:12px;">Today's autonomous tasks — SATURDAY completed these without any human input:</div>
+  <div class="alert-r"><div class="alert-title" style="color:#f87171;">Anomaly detected — Cement over-consumption</div><div class="alert-body">64 bags/cum actual vs 48 theoretical for M30 concrete. 34% excess usage this week. Possible wastage or incorrect mix. Site inspection recommended immediately.</div></div>
+  <div class="alert-b"><div class="alert-title" style="color:#818cf8;">Cash flow alert — Apr 15 shortfall predicted</div><div class="alert-body">₹23L shortfall projected on April 15. SATURDAY recommends submitting RA Bill #5 (₹52L) by March 28 to ensure receipt before April 10. Action needed by CMD.</div></div>
+  <div class="alert-g"><div class="alert-title" style="color:#4ade80;">GSTR-1 auto-preparation complete — March 2025</div><div class="alert-body">47 outward supplies aggregated. Works contract GST @12% applied correctly. E-invoices linked. Ready for one-click filing. Due: April 11, 2025.</div></div>
+  <div class="alert-g"><div class="alert-title" style="color:#4ade80;">TDS challan ready — Section 194C</div><div class="alert-body">₹4,78,700 TDS across 194C, 194I, 194J. Challan auto-generated. Due for deposit: April 7, 2025. Form 26Q also auto-prepared for Q4.</div></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!--                     ADMIN MODULE                           -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="mod" id="mod-admin">
+  <div class="mh"><div><div class="mt2">Admin</div><div class="ms">Company settings · Users · Projects · Subscription · Integrations</div></div></div>
+  <div class="stb">
+    <button class="st on" onclick="sec('admin','company',this)">Company</button>
+    <button class="st" onclick="sec('admin','users',this)">Users & Roles</button>
+    <button class="st" onclick="sec('admin','projects',this)">Projects</button>
+    <button class="st" onclick="sec('admin','sub',this)">Subscription</button>
+    <button class="st" onclick="sec('admin','integrations',this)">Integrations</button>
+  </div>
+  <div class="sec on" id="admin-company">
+    <div style="background:var(--B1);border:.5px solid var(--BR);border-radius:12px;padding:20px;max-width:580px;">
+      <div style="font-size:13px;font-weight:600;margin-bottom:16px;">Company Profile</div>
+      <div class="fg" style="grid-template-columns:repeat(auto-fit,minmax(185px,1fr));">
+        <div class="f"><label>Company Full Name</label><input type="text" id="co-name" value="TTIPL Construction Pvt. Ltd."/></div>
+        <div class="f"><label>Short Name</label><input type="text" id="co-short" value="TTIPL"/></div>
+        <div class="f"><label>GSTIN</label><input type="text" value="36AAAAA0000A1Z5"/></div>
+        <div class="f"><label>PAN</label><input type="text" value="AAAAA0000A"/></div>
+        <div class="f"><label>City</label><input type="text" value="Hyderabad"/></div>
+        <div class="f"><label>State</label><select><option selected>Telangana</option><option>Andhra Pradesh</option></select></div>
+        <div class="f"><label>Phone</label><input type="tel" value="+91 40 XXXX XXXX"/></div>
+        <div class="f"><label>Email</label><input type="email" value="info@ttipl.in"/></div>
+      </div>
+      <button class="btn-p" style="margin-top:16px;" onclick="T('Company profile saved','s')">Save Changes</button>
+    </div>
+  </div>
+  <div class="sec" id="admin-users">
+    <div class="tw"><div class="ttb"><div class="ttl">Platform Users</div><div class="ttls"><button class="btn-p" style="padding:6px 12px;font-size:12px;" onclick="FP('fp-adduser')">+ Add User</button></div></div>
+    <table><thead><tr><th>Name</th><th>Role</th><th>Email</th><th>Last Login</th><th>Status</th><th>Action</th></tr></thead><tbody>
+      <tr><td class="tb2">Krishna Teja</td><td>CMD / Proprietor</td><td class="tm">krishna@ttipl.in</td><td>Today</td><td><span class="bd bg">Active</span></td><td><button class="al2">Edit</button></td></tr>
+      <tr><td class="tb2">Ravi Kumar</td><td>Project Director</td><td class="tm">ravi@ttipl.in</td><td>Today</td><td><span class="bd bg">Active</span></td><td><button class="al2">Edit</button></td></tr>
+      <tr><td class="tb2">Suresh PM</td><td>Project Manager</td><td class="tm">suresh@ttipl.in</td><td>Yesterday</td><td><span class="bd bg">Active</span></td><td><button class="al2">Edit</button></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-adduser"><div class="fph">Add New User <button class="fcl" onclick="CF('fp-adduser')">×</button></div>
+    <div class="fg"><div class="f"><label>Full Name *</label><input type="text"/></div><div class="f"><label>Work Email *</label><input type="email"/></div><div class="f"><label>Mobile</label><input type="tel"/></div><div class="f"><label>Role Level</label><select><option>CMD / CEO</option><option>CFO</option><option>Project Director</option><option>General Manager</option><option>AGM</option><option>SPM</option><option>Project Manager</option><option>APM</option><option>QS Manager</option><option>Store Manager</option><option>Accountant</option><option>Site Engineer</option></select></div><div class="f"><label>Assigned Project</label><select><option>All Projects</option><option>YIIRS Package 05</option><option>Industrial Shed</option></select></div><div class="f"><label>Temporary Password</label><input type="text" placeholder="User changes on first login"/></div></div>
+    <div class="fr"><button class="btn-p" onclick="SF('fp-adduser','User added — credentials sent by email')">Add User</button><button class="btn-s" onclick="CF('fp-adduser')">Cancel</button></div></div>
+  </div>
+  <div class="sec" id="admin-projects">
+    <div class="tw"><div class="ttb"><div class="ttl">Projects Register</div><div class="ttls"><button class="btn-p" style="padding:6px 12px;font-size:12px;" onclick="FP('fp-proj')">+ Add Project</button></div></div>
+    <table><thead><tr><th>Project Name</th><th>Client</th><th>Contract Value</th><th>Start Date</th><th>Completion</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="tb2">YIIRS Package 05</td><td>TGEWIDC</td><td class="tm">₹8,71,00,000</td><td>Sep 2024</td><td>Mar 2027</td><td><span class="bd bg">Active</span></td></tr>
+      <tr><td class="tb2">Industrial Shed Package</td><td>TSIIC Kamareddy</td><td class="tm">₹3,87,00,000</td><td>Nov 2024</td><td>Nov 2026</td><td><span class="bd bg">Active</span></td></tr>
+      <tr><td class="tb2">Residential Complex</td><td>Private Client</td><td class="tm">₹1,45,00,000</td><td>Jan 2025</td><td>Dec 2025</td><td><span class="bd ba">Watch</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-proj"><div class="fph">Add New Project <button class="fcl" onclick="CF('fp-proj')">×</button></div>
+    <div class="fg"><div class="f"><label>Project Name *</label><input type="text" placeholder="e.g. YIIRS Package 06"/></div><div class="f"><label>Client / Owner</label><input type="text" placeholder="TGEWIDC / TSIIC / Private"/></div><div class="f"><label>Agreement No.</label><input type="text" placeholder="e.g. 16/SE(P)/2025-26"/></div><div class="f"><label>Contract Value (₹)</label><input type="number"/></div><div class="f"><label>Start Date</label><input type="date"/></div><div class="f"><label>Completion Period (months)</label><input type="number" placeholder="30"/></div><div class="f"><label>Project Location</label><input type="text" placeholder="District, Telangana"/></div><div class="f"><label>Supervising Authority</label><input type="text" placeholder="EE, TGEWIDC Nizamabad"/></div><div class="f"><label>Retention %</label><input type="number" value="5"/></div><div class="f"><label>Mobilisation Advance (₹)</label><input type="number" value="0"/></div></div>
+    <div class="fr"><button class="btn-p" onclick="SF('fp-proj','Project added — SATURDAY initialising financial tracking')">Add Project</button><button class="btn-s" onclick="CF('fp-proj')">Cancel</button></div></div>
+  </div>
+  <div class="sec" id="admin-sub">
+    <div style="background:var(--B1);border:1.5px solid var(--C1);border-radius:14px;padding:20px;max-width:440px;">
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px;"><div style="font-size:14px;font-weight:600;color:var(--C2);">ERP+ Pro Plan</div><span class="bd bb2">Active</span></div>
+      <div style="font-size:12px;color:var(--T1);display:flex;flex-direction:column;gap:7px;">
+        <div style="display:flex;justify-content:space-between;border-bottom:.5px solid var(--BR);padding-bottom:7px;"><span>Monthly Cost</span><span style="color:var(--T0);font-family:'DM Mono',monospace;">₹12,999</span></div>
+        <div style="display:flex;justify-content:space-between;border-bottom:.5px solid var(--BR);padding-bottom:7px;"><span>Free Trial Ends</span><span style="color:var(--AM);">8 Apr 2025 (14 days)</span></div>
+        <div style="display:flex;justify-content:space-between;border-bottom:.5px solid var(--BR);padding-bottom:7px;"><span>Users</span><span style="color:var(--T0);">3 / 25</span></div>
+        <div style="display:flex;justify-content:space-between;"><span>Projects</span><span style="color:var(--T0);">3 / 10</span></div>
+      </div>
+      <div style="height:.5px;background:var(--BR);margin:14px 0;"></div>
+      <button class="btn-p" onclick="T('Upgrade to ERP+ Max — contact support@saturdayerp.com','i')">Upgrade to ERP+ Max</button>
+    </div>
+  </div>
+  <div class="sec" id="admin-integrations">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;">
+      <div style="background:var(--B1);border:.5px solid var(--BR);border-radius:11px;padding:14px;"><div style="font-size:12px;font-weight:600;margin-bottom:5px;">GSTN Portal</div><div style="font-size:11px;color:var(--T2);margin-bottom:10px;">Auto-file GSTR-1 and GSTR-3B</div><span class="bd bg">Connected</span></div>
+      <div style="background:var(--B1);border:.5px solid var(--BR);border-radius:11px;padding:14px;"><div style="font-size:12px;font-weight:600;margin-bottom:5px;">Bank / UPI</div><div style="font-size:11px;color:var(--T2);margin-bottom:10px;">Auto bank reconciliation</div><span class="bd ba">Setup Pending</span></div>
+      <div style="background:var(--B1);border:.5px solid var(--BR);border-radius:11px;padding:14px;"><div style="font-size:12px;font-weight:600;margin-bottom:5px;">TRACES (TDS)</div><div style="font-size:11px;color:var(--T2);margin-bottom:10px;">Form 26Q auto-filing</div><span class="bd bg">Connected</span></div>
+      <div style="background:var(--B1);border:.5px solid var(--BR);border-radius:11px;padding:14px;"><div style="font-size:12px;font-weight:600;margin-bottom:5px;">Tally Export</div><div style="font-size:11px;color:var(--T2);margin-bottom:10px;">Export data to Tally format</div><span class="bd bgr">Available</span></div>
+      <div style="background:var(--B1);border:.5px solid var(--BR);border-radius:11px;padding:14px;"><div style="font-size:12px;font-weight:600;margin-bottom:5px;">Supabase DB</div><div style="font-size:11px;color:var(--T2);margin-bottom:10px;">Real-time data persistence</div><span class="bd ba">Setup Required</span></div>
+      <div style="background:var(--B1);border:.5px solid var(--BR);border-radius:11px;padding:14px;"><div style="font-size:12px;font-weight:600;margin-bottom:5px;">SATURDAY (Claude API)</div><div style="font-size:11px;color:var(--T2);margin-bottom:10px;">Live AI financial intelligence</div><span class="bd ba">API Key Missing</span></div>
+    </div>
+  </div>
+</div>
+
+    </div><!-- end pc -->
+  </div><!-- end mw -->
+</div><!-- end al -->
+</div><!-- end pg-app -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+var APP={co:'TTIPL',nm:'Krishna Teja',rl:'CMD / Proprietor',plan:'pro'};
+
+function atab(t,el){
+  document.querySelectorAll('.atab').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('lf').style.display=t==='lf'?'block':'none';
+  document.getElementById('sf').style.display=t==='sf'?'block':'none';
+}
+function doLogin(){
+  var e=document.getElementById('lem').value.trim();
+  var p=document.getElementById('lpw').value.trim();
+  if(!e||!p){document.getElementById('lerr').style.display='block';return;}
+  document.getElementById('lerr').style.display='none';
+  launch();
+}
+function demoLogin(){launch();}
+function doSignup(){
+  var f=document.getElementById('sfn').value.trim();
+  var e=document.getElementById('sem').value.trim();
+  if(!f||!e){document.getElementById('serr').style.display='block';return;}
+  document.getElementById('serr').style.display='none';
+  APP.nm=f+' '+(document.getElementById('sln').value||'');
+  showPage('pg-setup');
+}
+function prevLogo(ev){
+  var r=new FileReader();
+  r.onload=function(e){document.getElementById('lim').src=e.target.result;document.getElementById('lpr').style.display='block';document.getElementById('lic').style.display='none';};
+  r.readAsDataURL(ev.target.files[0]);
+}
+var WS=1;
+function wgo(n){
+  document.getElementById('ws'+WS).classList.remove('on');
+  var c=document.getElementById('wn'+WS);c.classList.remove('ac2','dn');c.classList.add('dn');c.textContent='✓';
+  document.getElementById('wl'+WS).classList.remove('ac2');
+  WS=n;
+  document.getElementById('ws'+WS).classList.add('on');
+  document.getElementById('wn'+WS).classList.add('ac2');
+  document.getElementById('wl'+WS).classList.add('ac2');
+  if(n===4){var nm=document.getElementById('s1s').value||document.getElementById('s1n').value||'Company';document.getElementById('dn').textContent=nm+' is Ready!';APP.co=nm;}
+}
+function pp(p){
+  APP.plan=p;
+  ['basic','pro','max'].forEach(k=>{
+    var c=document.getElementById('sc-'+k);var r=document.getElementById('sr-'+k);
+    c.className='scard2';
+    if(k===p){c.classList.add(p==='pro'?'sp':p==='max'?'sm':'sb');r.classList.add('on');r.querySelector('.rd').style.display='block';}
+    else{r.classList.remove('on');r.querySelector('.rd').style.display='none';}
+  });
+}
+function launch(){
+  document.getElementById('sb-co').textContent=APP.co;
+  document.getElementById('sb-nm').textContent=APP.nm;
+  document.getElementById('sb-rl').textContent=APP.rl;
+  document.getElementById('sb-av').textContent=(APP.nm||'U')[0].toUpperCase();
+  document.getElementById('tbd').textContent=new Date().toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+  showPage('pg-app');
+}
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');}
+var MN={chiefs:'Chiefs / CMD',managers:'Managers',store:'Store',qs:'Quantity Survey',planning:'Planning',finance:'Finance',hr:'HR',saturday:'SATURDAY AI',admin:'Admin'};
+function nav(id,el){
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));el.classList.add('on');
+  document.querySelectorAll('.mod').forEach(m=>m.classList.remove('on'));document.getElementById('mod-'+id).classList.add('on');
+  document.getElementById('bc').innerHTML='saturdayERP+ / <span>'+(MN[id]||id)+'</span>';
+}
+function sec(mod,id,el){
+  var par=el.parentElement;
+  par.querySelectorAll('.st').forEach(t=>t.classList.remove('on'));el.classList.add('on');
+  var next=par.nextElementSibling;
+  while(next&&next.classList.contains('sec')){next.classList.remove('on');next=next.nextElementSibling;}
+  var t=document.getElementById(mod+'-'+id)||document.getElementById(id);
+  if(t)t.classList.add('on');
+}
+function FP(id){var p=document.getElementById(id);if(p){p.classList.add('on');p.scrollIntoView({behavior:'smooth',block:'nearest'});}}
+function CF(id){var p=document.getElementById(id);if(p)p.classList.remove('on');}
+function SF(fid,msg){CF(fid);T('✓ '+msg,'s');}
+function T(msg,type){
+  type=type||'s';var t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast '+type+' on';
+  setTimeout(()=>t.classList.remove('on'),3000);
+}
+var SA={
+  'profit':'Net profit YIIRS Pkg 05 this month: ₹12,48,000 (23.8% margin). Revenue ₹52.3L minus costs ₹39.8L. Trend: improving vs last month 19.2%.',
+  'cash':'Bank balance ₹38,45,200. Projected inflows 30 days: ₹74.5L. Committed outflows: ₹85.2L. April 30 projected balance: ₹27.75L. ⚠️ Cash shortfall risk ₹23L on Apr 15.',
+  'steel':'Steel YIIRS Pkg 05: 12mm on hand 0.6 MT (LOW). PO-0128 pending delivery 5.2 MT. BBS balance: 76 MT remaining of 128 MT total.',
+  'gst':'GST March 2025: Outward supplies ₹1,52,80,000. Works contract @12% = ₹18,33,600. ITC ₹8,24,500. Net payable ₹10,09,100. GSTR-1 ready to file.',
+  'overdue':'Overdue: TGEWIDC RA Bill #4 — ₹38,20,000 — 5 days overdue. Private client Residential — ₹6,20,000 — 18 days overdue.',
+  'tds':'TDS FY 2025-26: 194C ₹4,18,200 · 194I ₹48,000 · 194J ₹12,500. Total ₹4,78,700. Challan ready for Apr 7. Form 26Q auto-prepared.',
+};
+function askSAT(){
+  var q=document.getElementById('sq').value.toLowerCase().trim();
+  if(!q)return;
+  var ans='SATURDAY is processing. Live AI responses will be active when the Claude API is connected (next brick). Try: profit, cash, steel, gst, overdue, tds.';
+  if(q.includes('profit')||q.includes('margin'))ans=SA.profit;
+  else if(q.includes('cash')||q.includes('flow'))ans=SA.cash;
+  else if(q.includes('steel'))ans=SA.steel;
+  else if(q.includes('gst'))ans=SA.gst;
+  else if(q.includes('overdue')||q.includes('receivable'))ans=SA.overdue;
+  else if(q.includes('tds'))ans=SA.tds;
+  var r=document.getElementById('sa');r.style.display='block';r.textContent=ans;
+}
+if(location.hash==='#signup'){document.querySelectorAll('.atab')[1].click();}
+</script>
+</body>
+</html>
