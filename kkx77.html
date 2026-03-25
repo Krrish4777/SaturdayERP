@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>DEV — Saturday ERP+</title>
+<!-- NOTE: This file URL is the only "password". Never share this filename. -->
+<!-- Rename this file to anything obscure before deploying e.g. x7k2p.html -->
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --C1:#4f46e5;--C2:#818cf8;--CD:rgba(99,102,241,0.14);
+  --AM:#f59e0b;--GR:#22c55e;--RD:#ef4444;--OR:#f97316;
+  --B0:#06060f;--B1:#0d0d1a;--B2:#111120;--B3:#171728;
+  --T0:#e8e8ff;--T1:rgba(232,232,255,0.6);--T2:rgba(232,232,255,0.3);
+  --BR:rgba(255,255,255,0.07);--B2X:rgba(255,255,255,0.13);
+  --DEV:#ff3b6b;--DEV2:rgba(255,59,107,0.15);
+}
+body{font-family:'DM Sans',sans-serif;background:var(--B0);color:var(--T0);font-size:13px;min-height:100vh;}
+h1,h2,h3{font-family:'Syne',sans-serif;}
+input,select,textarea,button{font-family:'DM Sans',sans-serif;}
+button{cursor:pointer;}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:var(--B1);}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+@keyframes glow{0%,100%{box-shadow:0 0 12px rgba(255,59,107,.3);}50%{box-shadow:0 0 24px rgba(255,59,107,.6);}}
+
+/* ── DEV LOGIN ── */
+.dlogin{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--B0);position:relative;overflow:hidden;}
+.dlogin::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,59,107,.02) 40px,rgba(255,59,107,.02) 41px);}
+.dlcard{background:var(--B1);border:1px solid rgba(255,59,107,.3);border-radius:20px;padding:36px 32px;width:100%;max-width:400px;z-index:1;animation:glow 3s ease-in-out infinite;}
+.dev-logo{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+.dev-badge{background:var(--DEV);color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:5px;letter-spacing:1px;font-family:'Syne',sans-serif;}
+.dev-title{font-size:18px;font-weight:700;color:var(--T0);}
+.dev-sub{font-size:12px;color:var(--T2);margin-bottom:22px;line-height:1.6;}
+.df{margin-bottom:13px;}
+.df label{display:block;font-size:10px;color:var(--T2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px;}
+.df input{width:100%;background:rgba(255,255,255,.04);border:.5px solid var(--B2X);border-radius:8px;padding:10px 12px;color:var(--T0);font-size:13px;outline:none;transition:border-color .2s;}
+.df input:focus{border-color:rgba(255,59,107,.5);}
+.df input::placeholder{color:var(--T2);}
+.btn-dev{width:100%;background:var(--DEV);color:#fff;border:none;padding:13px;border-radius:9px;font-size:14px;font-weight:600;transition:all .2s;}
+.btn-dev:hover{background:#e0255a;}
+.dlerr{background:rgba(239,68,68,.1);border:.5px solid rgba(239,68,68,.3);border-radius:7px;padding:9px 12px;font-size:12px;color:#f87171;margin-bottom:12px;display:none;}
+.warn-box{background:rgba(255,59,107,.08);border:.5px solid rgba(255,59,107,.2);border-radius:9px;padding:10px 13px;margin-top:16px;font-size:11px;color:rgba(255,59,107,.8);line-height:1.6;}
+
+/* ── DEV APP ── */
+.dapp{display:none;min-height:100vh;}
+.dsb{width:230px;background:var(--B1);border-right:.5px solid rgba(255,59,107,.15);position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column;z-index:50;overflow-y:auto;}
+.dsb-head{padding:16px 15px 14px;border-bottom:.5px solid rgba(255,59,107,.15);}
+.dsb-logo{display:flex;align-items:center;gap:9px;margin-bottom:2px;}
+.dsb-badge{background:var(--DEV);color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;letter-spacing:1px;}
+.dsb-title{font-size:14px;font-weight:700;font-family:'Syne',sans-serif;}
+.dsb-env{font-size:10px;color:var(--T2);}
+.dsb-nav{flex:1;padding:8px 7px;}
+.dng{font-size:9px;color:rgba(255,59,107,.5);text-transform:uppercase;letter-spacing:1px;padding:10px 8px 4px;}
+.dni{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:7px;font-size:12px;color:var(--T1);cursor:pointer;transition:all .18s;margin-bottom:1px;border:none;background:transparent;width:100%;text-align:left;}
+.dni:hover{background:rgba(255,59,107,.08);color:var(--T0);}
+.dni.on{background:rgba(255,59,107,.12);color:var(--DEV);}
+.dni svg{width:14px;height:14px;flex-shrink:0;opacity:.6;}
+.dni.on svg{opacity:1;}
+.dsb-foot{padding:11px 13px;border-top:.5px solid rgba(255,59,107,.12);margin-top:auto;}
+.dfw{display:flex;align-items:center;gap:8px;}
+.dav{width:28px;height:28px;border-radius:50%;background:var(--DEV2);border:1px solid rgba(255,59,107,.4);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--DEV);flex-shrink:0;}
+.dnm{font-size:11px;font-weight:600;color:var(--T0);}
+.dlive{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--GR);}
+.dlive::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--GR);animation:pulse 2s infinite;}
+.dmw{flex:1;margin-left:230px;min-width:0;}
+.dtb{position:sticky;top:0;background:rgba(6,6,15,.9);backdrop-filter:blur(10px);border-bottom:.5px solid rgba(255,59,107,.12);padding:0 20px;height:48px;display:flex;align-items:center;justify-content:space-between;z-index:40;}
+.dtbc{font-size:12px;color:var(--T2);}
+.dtbc span{color:var(--DEV);}
+.dtbr{display:flex;align-items:center;gap:10px;}
+.dpill{display:flex;align-items:center;gap:5px;background:var(--DEV2);border:.5px solid rgba(255,59,107,.3);border-radius:6px;padding:4px 10px;font-size:11px;color:var(--DEV);font-weight:600;}
+.dpc{padding:20px;}
+
+/* MODULES */
+.dmod{display:none;}
+.dmod.on{display:block;}
+.dmod-title{font-size:18px;font-weight:700;font-family:'Syne',sans-serif;margin-bottom:4px;}
+.dmod-sub{font-size:12px;color:var(--T2);margin-bottom:18px;}
+.stb{display:flex;gap:5px;margin-bottom:16px;flex-wrap:wrap;border-bottom:.5px solid var(--BR);padding-bottom:10px;}
+.st{padding:5px 13px;border-radius:7px;font-size:12px;font-weight:500;color:var(--T1);cursor:pointer;background:transparent;border:none;transition:all .18s;}
+.st:hover{background:rgba(255,255,255,.05);color:var(--T0);}
+.st.on{background:rgba(255,59,107,.1);color:var(--DEV);}
+.sec{display:none;}
+.sec.on{display:block;}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.ga{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;}
+
+/* CARD */
+.card{background:var(--B1);border:.5px solid var(--BR);border-radius:12px;padding:16px;margin-bottom:12px;}
+.card-title{font-size:13px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;}
+
+/* FORM */
+.df2{margin-bottom:12px;}
+.df2 label{display:block;font-size:10px;color:var(--T2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px;}
+.df2 input,.df2 select,.df2 textarea{width:100%;background:rgba(255,255,255,.04);border:.5px solid var(--B2X);border-radius:8px;padding:9px 11px;color:var(--T0);font-size:12px;outline:none;transition:border-color .2s;}
+.df2 input:focus,.df2 select:focus,.df2 textarea:focus{border-color:rgba(255,59,107,.4);}
+.df2 select option{background:#1a1a28;}
+.df2 textarea{resize:vertical;min-height:65px;}
+.df2 input[type=color]{height:36px;padding:2px 4px;cursor:pointer;}
+.df2 input[type=range]{padding:5px 0;}
+
+/* TABLE */
+.tw{background:var(--B1);border:.5px solid var(--BR);border-radius:11px;overflow:hidden;margin-bottom:12px;}
+.ttb{padding:11px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:.5px solid var(--BR);flex-wrap:wrap;gap:7px;}
+.ttl{font-size:12px;font-weight:600;}
+.ttls{display:flex;gap:7px;align-items:center;}
+table{width:100%;border-collapse:collapse;}
+th{padding:8px 12px;text-align:left;font-size:10px;color:var(--T2);text-transform:uppercase;letter-spacing:.6px;border-bottom:.5px solid var(--BR);background:rgba(255,255,255,.02);font-weight:500;}
+td{padding:9px 12px;font-size:12px;color:var(--T1);border-bottom:.5px solid rgba(255,255,255,.03);}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,59,107,.04);}
+.tb2{font-weight:500;color:var(--T0);}
+.tm{font-family:'DM Mono',monospace;font-size:11px;}
+
+/* BUTTONS */
+.btn-d{background:var(--DEV);color:#fff;border:none;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:500;transition:all .2s;}
+.btn-d:hover{background:#e0255a;}
+.btn-ds{background:transparent;border:.5px solid var(--B2X);color:var(--T1);padding:7px 14px;border-radius:8px;font-size:12px;transition:all .2s;}
+.btn-ds:hover{background:rgba(255,255,255,.05);}
+.btn-dg{background:rgba(34,197,94,.1);border:.5px solid rgba(34,197,94,.3);color:#4ade80;padding:7px 14px;border-radius:8px;font-size:12px;transition:all .2s;}
+.btn-dg:hover{background:rgba(34,197,94,.18);}
+.btn-da{background:rgba(245,158,11,.1);border:.5px solid rgba(245,158,11,.3);color:var(--AM);padding:7px 14px;border-radius:8px;font-size:12px;}
+
+/* BADGES */
+.bd{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:600;}
+.bg{background:rgba(34,197,94,.13);color:#4ade80;}
+.br2{background:rgba(239,68,68,.13);color:#f87171;}
+.ba{background:rgba(245,158,11,.13);color:#fbbf24;}
+.bb2{background:rgba(99,102,241,.13);color:#818cf8;}
+.bdev{background:rgba(255,59,107,.13);color:var(--DEV);}
+
+/* COLOR PREVIEW */
+.cbox{width:100%;height:36px;border-radius:7px;border:.5px solid var(--B2X);display:flex;align-items:center;justify-content:space-between;padding:0 10px;font-size:11px;font-family:'DM Mono',monospace;}
+.cprev{width:20px;height:20px;border-radius:4px;border:.5px solid rgba(255,255,255,.15);}
+
+/* TOGGLE */
+.toggle-wrap{display:flex;align-items:center;justify-content:space-between;padding:8px 0;}
+.toggle-label{font-size:12px;color:var(--T1);}
+.toggle{position:relative;width:36px;height:20px;}
+.toggle input{opacity:0;width:0;height:0;}
+.tslider{position:absolute;inset:0;background:rgba(255,255,255,.12);border-radius:20px;transition:.3s;cursor:pointer;}
+.tslider::before{content:'';position:absolute;width:14px;height:14px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.3s;}
+.toggle input:checked+.tslider{background:var(--DEV);}
+.toggle input:checked+.tslider::before{transform:translateX(16px);}
+
+/* CODE EDITOR MOCK */
+.code-area{background:#050508;border:.5px solid var(--BR);border-radius:9px;padding:14px;font-family:'DM Mono',monospace;font-size:12px;color:#a78bfa;line-height:1.8;overflow-x:auto;white-space:pre;}
+.code-area.editable{outline:none;cursor:text;}
+.code-area.editable:focus{border-color:rgba(255,59,107,.35);}
+.code-kw{color:#f87171;}
+.code-str{color:#4ade80;}
+.code-num{color:#fbbf24;}
+.code-com{color:rgba(255,255,255,.28);}
+
+/* STAT MINI */
+.sm{background:var(--B1);border:.5px solid var(--BR);border-radius:10px;padding:12px;}
+.sm .lb{font-size:10px;color:var(--T2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px;}
+.sm .vl{font-size:17px;font-weight:700;font-family:'DM Mono',monospace;}
+
+/* DIVIDER */
+.div{height:.5px;background:var(--BR);margin:14px 0;}
+
+/* TOAST */
+.toast{position:fixed;bottom:18px;right:18px;padding:10px 16px;border-radius:9px;font-size:12px;z-index:9999;transform:translateY(50px);opacity:0;transition:all .3s;pointer-events:none;font-weight:500;}
+.toast.on{transform:translateY(0);opacity:1;}
+.toast.s{background:#0f2214;border:.5px solid rgba(34,197,94,.4);color:#4ade80;}
+.toast.e{background:#1f0d0d;border:.5px solid rgba(239,68,68,.4);color:#f87171;}
+.toast.i{background:rgba(255,59,107,.1);border:.5px solid rgba(255,59,107,.35);color:var(--DEV);}
+</style>
+</head>
+<body>
+
+<!-- ━━━━━━━━━━━━━━━ DEV LOGIN ━━━━━━━━━━━━━━━ -->
+<div class="dlogin" id="pg-login">
+  <div class="dlcard">
+    <div class="dev-logo">
+      <div class="dev-badge">DEV</div>
+      <div class="dev-title">Developer Portal</div>
+    </div>
+    <div class="dev-sub">Saturday ERP+ · Restricted Access<br>This interface is not visible to any user. Full system control.</div>
+    <div class="dlerr" id="derr">Invalid developer credentials.</div>
+    <div class="df"><label>Developer ID</label><input type="text" id="did" placeholder="dev@saturdayerp" autocomplete="off"/></div>
+    <div class="df"><label>Master Key</label><input type="password" id="dkey" placeholder="••••••••••••" onkeydown="if(event.key==='Enter')devLogin()"/></div>
+    <button class="btn-dev" onclick="devLogin()">Enter Developer Portal →</button>
+    <div class="warn-box">⚠️ Developer access only. All actions are logged. Misuse may cause production data loss. Change this filename before deploying publicly.</div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━ DEV APP ━━━━━━━━━━━━━━━ -->
+<div class="dapp" id="pg-dev">
+
+  <!-- SIDEBAR -->
+  <div class="dsb">
+    <div class="dsb-head">
+      <div class="dsb-logo">
+        <div class="dsb-badge">DEV</div>
+        <div class="dsb-title">saturday<span style="color:#ff3b6b;">ERP+</span></div>
+      </div>
+      <div class="dsb-env">Developer Portal · Full Access</div>
+    </div>
+    <div class="dsb-nav">
+      <div class="dng">Core</div>
+      <button class="dni on" onclick="nav('overview',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>System Overview
+      </button>
+      <div class="dng">App Editor</div>
+      <button class="dni" onclick="nav('theme',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 7.07 17.07L12 12V2z"/></svg>Theme & Colors
+      </button>
+      <button class="dni" onclick="nav('typography',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4,7 4,4 20,4 20,7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>Typography
+      </button>
+      <button class="dni" onclick="nav('content',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Content Editor
+      </button>
+      <button class="dni" onclick="nav('logo',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>Logo & Branding
+      </button>
+      <button class="dni" onclick="nav('modules',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>Module Manager
+      </button>
+      <button class="dni" onclick="nav('navigation',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>Navigation Editor
+      </button>
+      <div class="dng">Data</div>
+      <button class="dni" onclick="nav('users',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>User Manager
+      </button>
+      <button class="dni" onclick="nav('roles',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Roles & Permissions
+      </button>
+      <button class="dni" onclick="nav('data',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>Data Manager
+      </button>
+      <div class="dng">System</div>
+      <button class="dni" onclick="nav('settings',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>System Settings
+      </button>
+      <button class="dni" onclick="nav('logs',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>Activity Logs
+      </button>
+      <button class="dni" onclick="nav('deploy',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16,16 12,12 8,16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>Deploy & Export
+      </button>
+    </div>
+    <div class="dsb-foot">
+      <div class="dfw">
+        <div class="dav">D</div>
+        <div>
+          <div class="dnm">Developer</div>
+          <div class="dlive">Production Connected</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="dmw">
+    <div class="dtb">
+      <div class="dtbc">dev.saturdayerp.com / <span id="bc-text">Overview</span></div>
+      <div class="dtbr">
+        <div class="dpill">⚡ DEV MODE</div>
+        <button class="btn-ds" style="font-size:11px;padding:5px 12px;" onclick="devLogout()">Exit Portal</button>
+        <a href="app.html" target="_blank" class="btn-ds" style="font-size:11px;padding:5px 12px;text-decoration:none;color:var(--T1);">Preview App ↗</a>
+      </div>
+    </div>
+    <div class="dpc">
+
+<!-- ═══════════ OVERVIEW ═══════════ -->
+<div class="dmod on" id="mod-overview">
+  <div class="dmod-title">System Overview</div>
+  <div class="dmod-sub">Saturday ERP+ · Full production status and quick actions</div>
+  <div class="ga" style="margin-bottom:18px;">
+    <div class="sm"><div class="lb">App Version</div><div class="vl" style="color:var(--DEV);font-size:14px;">v0.1.0-alpha</div></div>
+    <div class="sm"><div class="lb">Total Users</div><div class="vl">3</div></div>
+    <div class="sm"><div class="lb">Active Projects</div><div class="vl">3</div></div>
+    <div class="sm"><div class="lb">Modules Active</div><div class="vl">8</div></div>
+    <div class="sm"><div class="lb">Database</div><div class="vl" style="color:var(--AM);font-size:13px;">Local (no DB yet)</div></div>
+    <div class="sm"><div class="lb">SATURDAY API</div><div class="vl" style="color:var(--AM);font-size:13px;">Not connected</div></div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Quick Actions</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <button class="btn-dg" onclick="T('Supabase DB setup guide — next session','i')">🗄️ Connect Supabase Database</button>
+        <button class="btn-da" onclick="T('Anthropic API key saved','s')">🤖 Connect SATURDAY (Claude API)</button>
+        <button class="btn-ds" onclick="T('Export triggered — check downloads','s')">📦 Export All App Files</button>
+        <button class="btn-ds" onclick="nav('deploy',document.querySelector('.dni:last-child'))">🚀 Deploy to Vercel</button>
+        <a href="app.html" target="_blank" class="btn-ds" style="display:block;text-align:center;text-decoration:none;color:var(--T1);padding:7px 14px;border-radius:8px;border:.5px solid var(--B2X);">👁️ Preview User App</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Build Status</div>
+      <div style="display:flex;flex-direction:column;gap:9px;font-size:12px;">
+        <div style="display:flex;justify-content:space-between;"><span style="color:var(--T1);">Login + Auth</span><span class="bd bg">Done</span></div>
+        <div style="display:flex;justify-content:space-between;"><span style="color:var(--T1);">Company Setup Wizard</span><span class="bd bg">Done</span></div>
+        <div style="display:flex;justify-content:space-between;"><span style="color:var(--T1);">Chiefs Module</span><span class="bd bg">Done</span></div>
+        <div style="display:flex;justify-content:space-between;"><span style="color:var(--T1);">All 8 Modules</span><span class="bd bg">Done</span></div>
+        <div style="display:flex;justify-content:space-between;"><span style="color:var(--T1);">Supabase Database</span><span class="bd ba">Next</span></div>
+        <div style="display:flex;justify-content:space-between;"><span style="color:var(--T1);">SATURDAY API (Claude)</span><span class="bd ba">Next</span></div>
+        <div style="display:flex;justify-content:space-between;"><span style="color:var(--T1);">BOQ AI Upload Engine</span><span class="bd ba">Next</span></div>
+        <div style="display:flex;justify-content:space-between;"><span style="color:var(--T1);">Client Portal</span><span class="bd br2">Queued</span></div>
+        <div style="display:flex;justify-content:space-between;"><span style="color:var(--T1);">Mobile App (Flutter)</span><span class="bd br2">Queued</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Files in Project</div>
+    <table><thead><tr><th>File</th><th>Purpose</th><th>Size</th><th>Last Modified</th><th>Action</th></tr></thead><tbody>
+      <tr><td class="tb2">index.html</td><td>Marketing website</td><td class="tm">~30KB</td><td>Today</td><td><a href="index.html" target="_blank" class="btn-ds" style="font-size:11px;padding:4px 10px;text-decoration:none;display:inline-block;color:var(--T1);">Open ↗</a></td></tr>
+      <tr><td class="tb2">app.html</td><td>Main ERP+ application</td><td class="tm">~80KB</td><td>Today</td><td><a href="app.html" target="_blank" class="btn-ds" style="font-size:11px;padding:4px 10px;text-decoration:none;display:inline-block;color:var(--T1);">Open ↗</a></td></tr>
+      <tr><td class="tb2">dev.html</td><td>This developer portal</td><td class="tm">~45KB</td><td>Today</td><td><span class="bd bdev">Current</span></td></tr>
+      <tr><td class="tb2">EDITING_GUIDE.md</td><td>Self-editing instructions for Krishna</td><td class="tm">~4KB</td><td>Today</td><td>—</td></tr>
+    </tbody></table>
+  </div>
+</div>
+
+<!-- ═══════════ THEME EDITOR ═══════════ -->
+<div class="dmod" id="mod-theme">
+  <div class="dmod-title">Theme & Colors</div>
+  <div class="dmod-sub">Edit all CSS variables live — changes preview in the color boxes. Copy the CSS to paste into your app files.</div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Brand Colors</div>
+      <div class="df2"><label>Main Brand Color (--C1)</label><div style="display:flex;gap:8px;align-items:center;"><input type="color" id="c-C1" value="#4f46e5" oninput="updateColor('C1',this.value)"/><div class="cbox" id="cb-C1"><span id="cv-C1">#4f46e5</span><div class="cprev" id="cp-C1" style="background:#4f46e5;"></div></div></div></div>
+      <div class="df2"><label>Brand Light (--C2)</label><div style="display:flex;gap:8px;align-items:center;"><input type="color" id="c-C2" value="#818cf8" oninput="updateColor('C2',this.value)"/><div class="cbox" id="cb-C2"><span id="cv-C2">#818cf8</span><div class="cprev" id="cp-C2" style="background:#818cf8;"></div></div></div></div>
+      <div class="df2"><label>Amber / Gold (--AM)</label><div style="display:flex;gap:8px;align-items:center;"><input type="color" id="c-AM" value="#f59e0b" oninput="updateColor('AM',this.value)"/><div class="cbox"><span id="cv-AM">#f59e0b</span><div class="cprev" id="cp-AM" style="background:#f59e0b;"></div></div></div></div>
+      <div class="df2"><label>Profit Green (--GR)</label><div style="display:flex;gap:8px;align-items:center;"><input type="color" id="c-GR" value="#22c55e" oninput="updateColor('GR',this.value)"/><div class="cbox"><span id="cv-GR">#22c55e</span><div class="cprev" id="cp-GR" style="background:#22c55e;"></div></div></div></div>
+      <div class="df2"><label>Loss Red (--RD)</label><div style="display:flex;gap:8px;align-items:center;"><input type="color" id="c-RD" value="#ef4444" oninput="updateColor('RD',this.value)"/><div class="cbox"><span id="cv-RD">#ef4444</span><div class="cprev" id="cp-RD" style="background:#ef4444;"></div></div></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Background Colors</div>
+      <div class="df2"><label>Page Background (--B0)</label><div style="display:flex;gap:8px;align-items:center;"><input type="color" id="c-B0" value="#080810" oninput="updateColor('B0',this.value)"/><div class="cbox"><span id="cv-B0">#080810</span><div class="cprev" id="cp-B0" style="background:#080810;border:1px solid rgba(255,255,255,0.2);"></div></div></div></div>
+      <div class="df2"><label>Card Background (--B1)</label><div style="display:flex;gap:8px;align-items:center;"><input type="color" id="c-B1" value="#0f0f18" oninput="updateColor('B1',this.value)"/><div class="cbox"><span id="cv-B1">#0f0f18</span><div class="cprev" id="cp-B1" style="background:#0f0f18;border:1px solid rgba(255,255,255,0.2);"></div></div></div></div>
+      <div class="df2"><label>Main Text (--T0)</label><div style="display:flex;gap:8px;align-items:center;"><input type="color" id="c-T0" value="#e8e8ff" oninput="updateColor('T0',this.value)"/><div class="cbox"><span id="cv-T0">#e8e8ff</span><div class="cprev" id="cp-T0" style="background:#e8e8ff;"></div></div></div></div>
+      <div class="df2"><label>Sidebar Width</label><input type="range" min="180" max="280" value="218" oninput="document.getElementById('sw-val').textContent=this.value+'px'"/><div style="font-size:11px;color:var(--T2);margin-top:3px;">Current: <span id="sw-val">218px</span></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Generated CSS — Copy into your app.html :root block <button class="btn-d" style="font-size:11px;padding:5px 12px;" onclick="copyCss()">Copy CSS</button></div>
+    <div class="code-area" id="css-output">:root {
+  --C1: <span class="code-str" id="css-C1">#4f46e5</span>;      /* main brand color */
+  --C2: <span class="code-str" id="css-C2">#818cf8</span>;      /* brand light */
+  --AM: <span class="code-str" id="css-AM">#f59e0b</span>;      /* amber / gold */
+  --GR: <span class="code-str" id="css-GR">#22c55e</span>;      /* green / profit */
+  --RD: <span class="code-str" id="css-RD">#ef4444</span>;      /* red / loss */
+  --B0: <span class="code-str" id="css-B0">#080810</span>;      /* page background */
+  --B1: <span class="code-str" id="css-B1">#0f0f18</span>;      /* card background */
+  --T0: <span class="code-str" id="css-T0">#e8e8ff</span>;      /* main text */
+}</div>
+    <div style="margin-top:10px;font-size:11px;color:var(--T2);">Find-and-replace the :root block in both index.html and app.html with the CSS above.</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Dark / Light Mode Toggle</div>
+    <div class="toggle-wrap"><span class="toggle-label">Currently: Dark Mode (recommended — keep this)</span><label class="toggle"><input type="checkbox" checked/><div class="tslider"></div></label></div>
+    <div class="toggle-wrap"><span class="toggle-label">Show Saturday AI pulse animation</span><label class="toggle"><input type="checkbox" checked/><div class="tslider"></div></label></div>
+    <div class="toggle-wrap"><span class="toggle-label">Animated gradient on hero section (index.html)</span><label class="toggle"><input type="checkbox" checked/><div class="tslider"></div></label></div>
+  </div>
+</div>
+
+<!-- ═══════════ TYPOGRAPHY ═══════════ -->
+<div class="dmod" id="mod-typography">
+  <div class="dmod-title">Typography</div>
+  <div class="dmod-sub">Change fonts across the entire app. All fonts load from Google Fonts — free.</div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Heading Font (Syne currently)</div>
+      <div class="df2"><label>Font Family Name</label><input type="text" id="font-h" value="Syne" placeholder="e.g. Space Grotesk"/></div>
+      <div class="df2"><label>Font Weights to Load</label><input type="text" id="font-hw" value="400;600;700;800" placeholder="400;600;700;800"/></div>
+      <div style="font-size:11px;color:var(--T2);margin-bottom:10px;">Used for: Page titles, module names, logo, section headers</div>
+      <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--T0);background:var(--B2);border-radius:7px;padding:12px 14px;">Saturday ERP+ Preview</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Body Font (DM Sans currently)</div>
+      <div class="df2"><label>Font Family Name</label><input type="text" id="font-b" value="DM Sans" placeholder="e.g. Inter"/></div>
+      <div class="df2"><label>Font Weights to Load</label><input type="text" id="font-bw" value="300;400;500" placeholder="300;400;500"/></div>
+      <div style="font-size:11px;color:var(--T2);margin-bottom:10px;">Used for: All body text, labels, buttons, table content</div>
+      <div style="font-family:'DM Sans',sans-serif;font-size:14px;color:var(--T1);background:var(--B2);border-radius:7px;padding:12px 14px;line-height:1.6;">YIIRS Package 05 · Procurement module · Steel Fe 500D 16mm · ₹4,94,000</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Font Size Scale</div>
+    <div class="g3">
+      <div class="df2"><label>Base Body Size</label><input type="range" min="12" max="16" value="14" oninput="document.getElementById('fs-body').textContent=this.value+'px'"/><div style="font-size:11px;color:var(--T2);margin-top:3px;"><span id="fs-body">14px</span></div></div>
+      <div class="df2"><label>Sidebar Font Size</label><input type="range" min="11" max="14" value="12" oninput="document.getElementById('fs-sb').textContent=this.value+'px'"/><div style="font-size:11px;color:var(--T2);margin-top:3px;"><span id="fs-sb">12px</span></div></div>
+      <div class="df2"><label>Table Cell Size</label><input type="range" min="11" max="14" value="12" oninput="document.getElementById('fs-td').textContent=this.value+'px'"/><div style="font-size:11px;color:var(--T2);margin-top:3px;"><span id="fs-td">12px</span></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Generate Font Import Line <button class="btn-d" style="font-size:11px;padding:5px 12px;" onclick="genFontCode()">Generate</button></div>
+    <div class="code-area" id="font-code">&lt;link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&amp;family=DM+Sans:wght@300;400;500&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet"&gt;</div>
+    <div style="margin-top:8px;font-size:11px;color:var(--T2);">Replace the existing &lt;link&gt; Google Fonts line in both index.html and app.html with the line above.</div>
+  </div>
+</div>
+
+<!-- ═══════════ CONTENT EDITOR ═══════════ -->
+<div class="dmod" id="mod-content">
+  <div class="dmod-title">Content Editor</div>
+  <div class="dmod-sub">Edit all visible text in the app — hero text, module descriptions, labels, prices, footer. Find & replace ready.</div>
+  <div class="stb">
+    <button class="st on" onclick="sec('content','website',this)">Website Text</button>
+    <button class="st" onclick="sec('content','app',this)">App Text</button>
+    <button class="st" onclick="sec('content','pricing',this)">Pricing</button>
+    <button class="st" onclick="sec('content','findreplace',this)">Find & Replace</button>
+  </div>
+
+  <div class="sec on" id="content-website">
+    <div class="card">
+      <div class="card-title">Hero Section (index.html)</div>
+      <div class="df2"><label>Main Headline</label><input type="text" value="The Construction ERP+ Built for Every Builder"/></div>
+      <div class="df2"><label>Hero Subtext</label><textarea>From ₹10 crore contractors to ₹500 crore enterprises — automate your finances, projects, materials, and compliance in one intelligent platform.</textarea></div>
+      <div class="df2"><label>Primary CTA Button Text</label><input type="text" value="Start 14-Day Free Trial"/></div>
+      <div class="df2"><label>Secondary CTA Button Text</label><input type="text" value="See How It Works"/></div>
+      <button class="btn-d" onclick="T('Content saved — paste into index.html hero section','s')">Save Hero Content</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Hero Stats Row</div>
+      <div class="g2">
+        <div class="df2"><label>Stat 1 Number</label><input type="text" value="3×"/></div>
+        <div class="df2"><label>Stat 1 Label</label><input type="text" value="Less Office Staff"/></div>
+        <div class="df2"><label>Stat 2 Number</label><input type="text" value="₹0"/></div>
+        <div class="df2"><label>Stat 2 Label</label><input type="text" value="Setup Cost"/></div>
+        <div class="df2"><label>Stat 3 Number</label><input type="text" value="15 min"/></div>
+        <div class="df2"><label>Stat 3 Label</label><input type="text" value="To Onboard"/></div>
+        <div class="df2"><label>Stat 4 Number</label><input type="text" value="100%"/></div>
+        <div class="df2"><label>Stat 4 Label</label><input type="text" value="India GST Ready"/></div>
+      </div>
+      <button class="btn-d" onclick="T('Stats saved','s')">Save Stats</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Footer</div>
+      <div class="df2"><label>Tagline under logo</label><input type="text" value="Built in India. Built for Builders."/></div>
+      <div class="df2"><label>Copyright text</label><input type="text" value="© 2025 TTIPL · saturdayerp.com · All rights reserved"/></div>
+      <button class="btn-d" onclick="T('Footer saved','s')">Save Footer</button>
+    </div>
+  </div>
+
+  <div class="sec" id="content-app">
+    <div class="card">
+      <div class="card-title">App Branding Text</div>
+      <div class="df2"><label>Logo Text (part 1)</label><input type="text" value="saturday" placeholder="lowercase word"/></div>
+      <div class="df2"><label>Logo Text (part 2 — colored)</label><input type="text" value="ERP+" placeholder="colored accent"/></div>
+      <div class="df2"><label>App Tagline (login screen)</label><input type="text" value="Construction Intelligence Platform"/></div>
+      <div class="df2"><label>Demo company name</label><input type="text" value="TTIPL"/></div>
+      <div class="df2"><label>Demo user name</label><input type="text" value="Krishna Teja"/></div>
+      <div class="df2"><label>Demo user role</label><input type="text" value="CMD / Proprietor"/></div>
+      <button class="btn-d" onclick="T('App branding saved','s')">Save App Branding</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Module Display Names</div>
+      <div class="g2">
+        <div class="df2"><label>Module 1</label><input type="text" value="Chiefs / CMD"/></div>
+        <div class="df2"><label>Module 2</label><input type="text" value="Managers"/></div>
+        <div class="df2"><label>Module 3</label><input type="text" value="Store"/></div>
+        <div class="df2"><label>Module 4</label><input type="text" value="Quantity Survey"/></div>
+        <div class="df2"><label>Module 5</label><input type="text" value="Planning"/></div>
+        <div class="df2"><label>Module 6</label><input type="text" value="Finance"/></div>
+        <div class="df2"><label>Module 7</label><input type="text" value="HR"/></div>
+        <div class="df2"><label>Module 8</label><input type="text" value="SATURDAY AI"/></div>
+        <div class="df2"><label>Module 9</label><input type="text" value="Admin"/></div>
+      </div>
+      <button class="btn-d" onclick="T('Module names saved','s')">Save Module Names</button>
+    </div>
+  </div>
+
+  <div class="sec" id="content-pricing">
+    <div class="card">
+      <div class="card-title">ERP+ Basic Plan</div>
+      <div class="g2">
+        <div class="df2"><label>Plan Name</label><input type="text" value="ERP+"/></div>
+        <div class="df2"><label>Monthly Price (₹)</label><input type="number" value="4999"/></div>
+        <div class="df2"><label>Annual Price (₹)</label><input type="number" value="3999"/></div>
+        <div class="df2"><label>Max Users</label><input type="number" value="10"/></div>
+        <div class="df2"><label>Max Projects</label><input type="number" value="2"/></div>
+        <div class="df2" style="grid-column:span 2"><label>Tagline</label><input type="text" value="Complete financial control for small enterprises. Your smart digital accountant."/></div>
+      </div>
+      <button class="btn-d" onclick="T('Basic plan updated','s')">Save</button>
+    </div>
+    <div class="card">
+      <div class="card-title">ERP+ Pro Plan</div>
+      <div class="g2">
+        <div class="df2"><label>Plan Name</label><input type="text" value="ERP+ Pro"/></div>
+        <div class="df2"><label>Monthly Price (₹)</label><input type="number" value="12999"/></div>
+        <div class="df2"><label>Annual Price (₹)</label><input type="number" value="10399"/></div>
+        <div class="df2"><label>Max Users</label><input type="number" value="25"/></div>
+        <div class="df2"><label>Max Projects</label><input type="number" value="10"/></div>
+        <div class="df2" style="grid-column:span 2"><label>Tagline</label><input type="text" value="Smart automation that cuts office manpower in half. SATURDAY fully active."/></div>
+      </div>
+      <button class="btn-d" onclick="T('Pro plan updated','s')">Save</button>
+    </div>
+    <div class="card">
+      <div class="card-title">ERP+ Max Plan</div>
+      <div class="g2">
+        <div class="df2"><label>Plan Name</label><input type="text" value="ERP+ Max"/></div>
+        <div class="df2"><label>Monthly Price (₹)</label><input type="number" value="24999"/></div>
+        <div class="df2"><label>Annual Price (₹)</label><input type="number" value="19999"/></div>
+        <div class="df2"><label>Max Users</label><input type="text" value="Unlimited"/></div>
+        <div class="df2"><label>Max Projects</label><input type="text" value="Unlimited"/></div>
+        <div class="df2" style="grid-column:span 2"><label>Tagline</label><input type="text" value="Complete automation from drawing upload to client portal. Near-zero intervention."/></div>
+      </div>
+      <button class="btn-d" onclick="T('Max plan updated','s')">Save</button>
+    </div>
+  </div>
+
+  <div class="sec" id="content-findreplace">
+    <div class="card">
+      <div class="card-title">Find & Replace in App</div>
+      <div class="df2"><label>Find Text (exact match)</label><input type="text" id="fr-find" placeholder="e.g. TTIPL"/></div>
+      <div class="df2"><label>Replace With</label><input type="text" id="fr-replace" placeholder="e.g. Your Company Name"/></div>
+      <div class="df2"><label>Apply To</label><select><option>Both index.html and app.html</option><option>index.html only</option><option>app.html only</option></select></div>
+      <div style="background:rgba(245,158,11,.08);border:.5px solid rgba(245,158,11,.25);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--AM);margin-bottom:12px;">Since the files are on your local machine, use VS Code Ctrl+Shift+H (Find & Replace across all files) for actual replacement. This tool shows you a preview below.</div>
+      <button class="btn-d" onclick="doFR()">Preview Replacement</button>
+      <div id="fr-preview" style="display:none;margin-top:12px;background:var(--B2);border-radius:8px;padding:12px;font-size:12px;color:var(--T1);line-height:1.6;"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Common Replacements</div>
+      <div style="display:flex;flex-direction:column;gap:7px;font-size:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:.5px solid var(--BR);"><span><code style="color:var(--C2);">TTIPL</code> → Your company short name</span><button class="btn-ds" style="font-size:11px;padding:4px 10px;" onclick="prefillFR('TTIPL','YOUR_CO')">Use This</button></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:.5px solid var(--BR);"><span><code style="color:var(--C2);">Krishna Teja</code> → Your name</span><button class="btn-ds" style="font-size:11px;padding:4px 10px;" onclick="prefillFR('Krishna Teja','Your Name')">Use This</button></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:.5px solid var(--BR);"><span><code style="color:var(--C2);">saturdayerp.com</code> → Your domain</span><button class="btn-ds" style="font-size:11px;padding:4px 10px;" onclick="prefillFR('saturdayerp.com','yourdomain.com')">Use This</button></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;"><span><code style="color:var(--C2);">saturday&lt;span&gt;ERP+&lt;/span&gt;</code> → Your logo text</span><button class="btn-ds" style="font-size:11px;padding:4px 10px;" onclick="prefillFR('saturday','your')">Use This</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ LOGO & BRANDING ═══════════ -->
+<div class="dmod" id="mod-logo">
+  <div class="dmod-title">Logo & Branding</div>
+  <div class="dmod-sub">Upload your logo, configure where it appears, and manage brand assets.</div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Logo Upload</div>
+      <div style="border:1.5px dashed rgba(255,59,107,.3);border-radius:11px;padding:28px;text-align:center;margin-bottom:13px;cursor:pointer;" onclick="document.getElementById('logo-upload').click()">
+        <div id="logo-prev" style="display:none;margin-bottom:10px;"><img id="logo-img" style="height:56px;object-fit:contain;"/></div>
+        <div id="logo-ico" style="font-size:28px;margin-bottom:8px;">🏢</div>
+        <div style="font-size:13px;color:var(--T1);">Click to upload company logo</div>
+        <div style="font-size:11px;color:var(--T2);margin-top:3px;">PNG, JPG, SVG · Transparent BG recommended · Max 2MB</div>
+      </div>
+      <input type="file" id="logo-upload" accept="image/*" style="display:none" onchange="prevLogo(event)">
+      <div class="df2"><label>Logo Height in App Sidebar (px)</label><input type="number" value="28" min="20" max="48"/></div>
+      <div class="df2"><label>Logo Height in Topbar / Nav (px)</label><input type="number" value="32" min="20" max="52"/></div>
+      <button class="btn-d" onclick="T('Logo settings saved. Place logo.png in your project folder and update the src path in app.html and index.html','s')">Save Logo Settings</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Favicon</div>
+      <div style="border:1.5px dashed rgba(255,59,107,.3);border-radius:11px;padding:20px;text-align:center;margin-bottom:13px;cursor:pointer;" onclick="document.getElementById('fav-upload').click()">
+        <div style="font-size:20px;margin-bottom:7px;">⬛</div>
+        <div style="font-size:12px;color:var(--T1);">Upload favicon (32×32 px)</div>
+        <div style="font-size:11px;color:var(--T2);">PNG or ICO format</div>
+      </div>
+      <input type="file" id="fav-upload" accept="image/*,image/x-icon" style="display:none">
+      <div style="background:var(--B2);border-radius:8px;padding:10px 12px;font-size:11px;color:var(--T2);line-height:1.6;">After uploading, name it <code style="color:var(--C2);">favicon.png</code> and add this to both HTML files inside &lt;head&gt;:<br><code style="color:var(--GR);">&lt;link rel="icon" href="favicon.png"&gt;</code></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Brand Asset Checklist</div>
+    <div style="display:flex;flex-direction:column;gap:7px;font-size:12px;">
+      <div class="toggle-wrap"><span class="toggle-label">Logo uploaded and placed in project folder</span><label class="toggle"><input type="checkbox"/><div class="tslider"></div></label></div>
+      <div class="toggle-wrap"><span class="toggle-label">Favicon uploaded and linked in HTML</span><label class="toggle"><input type="checkbox"/><div class="tslider"></div></label></div>
+      <div class="toggle-wrap"><span class="toggle-label">Brand colors updated in :root CSS</span><label class="toggle"><input type="checkbox"/><div class="tslider"></div></label></div>
+      <div class="toggle-wrap"><span class="toggle-label">Company name replaced throughout app</span><label class="toggle"><input type="checkbox"/><div class="tslider"></div></label></div>
+      <div class="toggle-wrap"><span class="toggle-label">saturdayerp.com domain connected to Vercel</span><label class="toggle"><input type="checkbox"/><div class="tslider"></div></label></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ MODULE MANAGER ═══════════ -->
+<div class="dmod" id="mod-modules">
+  <div class="dmod-title">Module Manager</div>
+  <div class="dmod-sub">Show, hide, reorder, and configure all modules. Disabled modules are hidden from all users.</div>
+  <div class="card">
+    <div class="card-title">Module Visibility & Order</div>
+    <table><thead><tr><th>Module</th><th>ID</th><th>Sidebar Group</th><th>Visible to Users</th><th>Roles with Access</th><th>Order</th></tr></thead><tbody>
+      <tr><td class="tb2">Chiefs / CMD</td><td class="tm">mod-chiefs</td><td>Command</td><td><label class="toggle" style="display:inline-block;"><input type="checkbox" checked/><div class="tslider"></div></label></td><td>CMD, CEO, CFO</td><td><input type="number" value="1" style="width:48px;background:var(--B2);border:.5px solid var(--B2X);color:var(--T0);border-radius:5px;padding:3px 6px;font-size:11px;"></td></tr>
+      <tr><td class="tb2">Managers</td><td class="tm">mod-managers</td><td>Command</td><td><label class="toggle" style="display:inline-block;"><input type="checkbox" checked/><div class="tslider"></div></label></td><td>PD, GM, AGM, SPM, PM, APM</td><td><input type="number" value="2" style="width:48px;background:var(--B2);border:.5px solid var(--B2X);color:var(--T0);border-radius:5px;padding:3px 6px;font-size:11px;"></td></tr>
+      <tr><td class="tb2">Store</td><td class="tm">mod-store</td><td>Operations</td><td><label class="toggle" style="display:inline-block;"><input type="checkbox" checked/><div class="tslider"></div></label></td><td>Store Manager, PM, PD</td><td><input type="number" value="3" style="width:48px;background:var(--B2);border:.5px solid var(--B2X);color:var(--T0);border-radius:5px;padding:3px 6px;font-size:11px;"></td></tr>
+      <tr><td class="tb2">Quantity Survey</td><td class="tm">mod-qs</td><td>Operations</td><td><label class="toggle" style="display:inline-block;"><input type="checkbox" checked/><div class="tslider"></div></label></td><td>QS Manager, PM, PD</td><td><input type="number" value="4" style="width:48px;background:var(--B2);border:.5px solid var(--B2X);color:var(--T0);border-radius:5px;padding:3px 6px;font-size:11px;"></td></tr>
+      <tr><td class="tb2">Planning</td><td class="tm">mod-planning</td><td>Operations</td><td><label class="toggle" style="display:inline-block;"><input type="checkbox" checked/><div class="tslider"></div></label></td><td>PM, SPM, AGM, GM, PD</td><td><input type="number" value="5" style="width:48px;background:var(--B2);border:.5px solid var(--B2X);color:var(--T0);border-radius:5px;padding:3px 6px;font-size:11px;"></td></tr>
+      <tr><td class="tb2">Finance</td><td class="tm">mod-finance</td><td>Operations</td><td><label class="toggle" style="display:inline-block;"><input type="checkbox" checked/><div class="tslider"></div></label></td><td>CMD, CFO, Accountant</td><td><input type="number" value="6" style="width:48px;background:var(--B2);border:.5px solid var(--B2X);color:var(--T0);border-radius:5px;padding:3px 6px;font-size:11px;"></td></tr>
+      <tr><td class="tb2">HR</td><td class="tm">mod-hr</td><td>Operations</td><td><label class="toggle" style="display:inline-block;"><input type="checkbox" checked/><div class="tslider"></div></label></td><td>CMD, PD, HR Manager</td><td><input type="number" value="7" style="width:48px;background:var(--B2);border:.5px solid var(--B2X);color:var(--T0);border-radius:5px;padding:3px 6px;font-size:11px;"></td></tr>
+      <tr><td class="tb2">SATURDAY AI</td><td class="tm">mod-saturday</td><td>System</td><td><label class="toggle" style="display:inline-block;"><input type="checkbox" checked/><div class="tslider"></div></label></td><td>CMD, CFO</td><td><input type="number" value="8" style="width:48px;background:var(--B2);border:.5px solid var(--B2X);color:var(--T0);border-radius:5px;padding:3px 6px;font-size:11px;"></td></tr>
+      <tr><td class="tb2">Admin</td><td class="tm">mod-admin</td><td>System</td><td><label class="toggle" style="display:inline-block;"><input type="checkbox" checked/><div class="tslider"></div></label></td><td>CMD only</td><td><input type="number" value="9" style="width:48px;background:var(--B2);border:.5px solid var(--B2X);color:var(--T0);border-radius:5px;padding:3px 6px;font-size:11px;"></td></tr>
+      <tr><td class="tb2" style="color:var(--DEV);">Developer Portal</td><td class="tm" style="color:var(--DEV);">dev.html</td><td>Hidden</td><td><span class="bd bdev">Dev Only</span></td><td>Developer</td><td>—</td></tr>
+    </tbody></table>
+    <button class="btn-d" style="margin-top:12px;" onclick="T('Module config saved','s')">Save Module Config</button>
+  </div>
+  <div class="card">
+    <div class="card-title">Add New Module <span class="bd ba" style="font-weight:400;font-size:10px;">Custom Module</span></div>
+    <div class="g2">
+      <div class="df2"><label>Module Display Name</label><input type="text" placeholder="e.g. Quality Control"/></div>
+      <div class="df2"><label>Module ID (no spaces)</label><input type="text" placeholder="e.g. mod-quality"/></div>
+      <div class="df2"><label>Sidebar Group</label><select><option>Command</option><option>Operations</option><option>System</option></select></div>
+      <div class="df2"><label>Icon (SVG path or emoji)</label><input type="text" placeholder="Paste SVG path or emoji"/></div>
+      <div class="df2" style="grid-column:span 2"><label>Module Description (subtitle)</label><input type="text" placeholder="e.g. Site inspection, NCRs, quality checklists, test reports"/></div>
+    </div>
+    <div class="df2"><label>Sections (comma separated)</label><input type="text" placeholder="e.g. Checklists, NCRs, Test Reports, Compliance"/></div>
+    <button class="btn-d" onclick="T('New module template generated — add it to app.html','s')">Generate Module</button>
+  </div>
+</div>
+
+<!-- ═══════════ NAVIGATION EDITOR ═══════════ -->
+<div class="dmod" id="mod-navigation">
+  <div class="dmod-title">Navigation Editor</div>
+  <div class="dmod-sub">Edit sidebar groups, labels, and nav item order. Changes reflect in app.html sidebar.</div>
+  <div class="card">
+    <div class="card-title">Sidebar Groups</div>
+    <div class="df2"><label>Group 1 Label</label><input type="text" value="Command"/></div>
+    <div class="df2"><label>Group 2 Label</label><input type="text" value="Operations"/></div>
+    <div class="df2"><label>Group 3 Label</label><input type="text" value="System"/></div>
+    <button class="btn-d" onclick="T('Navigation labels saved','s')">Save Group Labels</button>
+  </div>
+  <div class="card">
+    <div class="card-title">Sidebar Width & Style</div>
+    <div class="df2"><label>Sidebar Width (px)</label><input type="range" min="180" max="280" value="218" oninput="document.getElementById('sw2').textContent=this.value+'px'"/><div style="font-size:11px;color:var(--T2);margin-top:3px;">Current: <span id="sw2">218px</span> — change --SW variable in :root</div></div>
+    <div class="toggle-wrap"><span class="toggle-label">Show notification badges on sidebar items</span><label class="toggle"><input type="checkbox" checked/><div class="tslider"></div></label></div>
+    <div class="toggle-wrap"><span class="toggle-label">Show company name below logo in sidebar</span><label class="toggle"><input type="checkbox" checked/><div class="tslider"></div></label></div>
+    <div class="toggle-wrap"><span class="toggle-label">Show user avatar in sidebar footer</span><label class="toggle"><input type="checkbox" checked/><div class="tslider"></div></label></div>
+    <button class="btn-d" onclick="T('Navigation style saved','s')">Save Styles</button>
+  </div>
+</div>
+
+<!-- ═══════════ USER MANAGER ═══════════ -->
+<div class="dmod" id="mod-users">
+  <div class="dmod-title">User Manager</div>
+  <div class="dmod-sub">Full CRUD on all platform users. Developer has override access to all accounts.</div>
+  <div class="tw"><div class="ttb"><div class="ttl">All Users</div><div class="ttls"><button class="btn-d" style="font-size:11px;padding:6px 12px;" onclick="showAddUser()">+ Add User</button></div></div>
+  <table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Project Access</th><th>Status</th><th>Last Login</th><th>Action</th></tr></thead><tbody>
+    <tr><td class="tb2">Krishna Teja</td><td class="tm">krishna@ttipl.in</td><td><span class="bd bdev">CMD</span></td><td>All Projects</td><td><span class="bd bg">Active</span></td><td>Today</td><td><button class="btn-ds" style="font-size:10px;padding:3px 9px;">Edit</button> <button class="btn-ds" style="font-size:10px;padding:3px 9px;color:var(--RD);">Reset PW</button></td></tr>
+    <tr><td class="tb2">Ravi Kumar</td><td class="tm">ravi@ttipl.in</td><td><span class="bd bb2">PD</span></td><td>YIIRS Pkg 05</td><td><span class="bd bg">Active</span></td><td>Today</td><td><button class="btn-ds" style="font-size:10px;padding:3px 9px;">Edit</button> <button class="btn-ds" style="font-size:10px;padding:3px 9px;color:var(--RD);">Deactivate</button></td></tr>
+    <tr><td class="tb2">Suresh PM</td><td class="tm">suresh@ttipl.in</td><td><span class="bd bb2">PM</span></td><td>YIIRS Pkg 05</td><td><span class="bd bg">Active</span></td><td>Yesterday</td><td><button class="btn-ds" style="font-size:10px;padding:3px 9px;">Edit</button> <button class="btn-ds" style="font-size:10px;padding:3px 9px;color:var(--RD);">Deactivate</button></td></tr>
+  </tbody></table></div>
+
+  <div class="card" id="add-user-card" style="display:none;">
+    <div class="card-title">Add New User</div>
+    <div class="g2">
+      <div class="df2"><label>Full Name *</label><input type="text" placeholder="Employee full name"/></div>
+      <div class="df2"><label>Work Email *</label><input type="email" placeholder="name@company.com"/></div>
+      <div class="df2"><label>Mobile</label><input type="tel" placeholder="+91 XXXXX XXXXX"/></div>
+      <div class="df2"><label>Role Level</label>
+        <select>
+          <option>CMD / CEO / Proprietor</option><option>CFO</option><option>Project Director (PD)</option>
+          <option>General Manager (GM)</option><option>AGM</option><option>SPM</option>
+          <option>Project Manager (PM)</option><option>APM</option><option>QS Manager</option>
+          <option>Store Manager</option><option>Accountant</option><option>Site Engineer</option>
+        </select>
+      </div>
+      <div class="df2"><label>Project Assignment</label><select><option>All Projects</option><option>YIIRS Package 05</option><option>Industrial Shed</option><option>Residential Complex</option></select></div>
+      <div class="df2"><label>Temporary Password</label><input type="text" placeholder="User changes on first login"/></div>
+    </div>
+    <div style="display:flex;gap:9px;margin-top:10px;"><button class="btn-d" onclick="T('User added — credentials emailed','s');hideAddUser()">Create User</button><button class="btn-ds" onclick="hideAddUser()">Cancel</button></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Developer Account Override</div>
+    <div style="background:rgba(255,59,107,.07);border:.5px solid rgba(255,59,107,.2);border-radius:9px;padding:12px 14px;font-size:12px;color:var(--T1);line-height:1.7;margin-bottom:12px;">As developer you can log in as <strong style="color:var(--T0);">any user</strong> to test their view — without knowing their password. Select a user below and click Impersonate.</div>
+    <div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap;">
+      <select style="background:var(--B2);border:.5px solid var(--B2X);color:var(--T0);border-radius:7px;padding:7px 11px;font-size:12px;outline:none;">
+        <option>Krishna Teja — CMD</option><option>Ravi Kumar — PD</option><option>Suresh PM — PM</option>
+      </select>
+      <button class="btn-d" onclick="window.open('app.html','_blank');T('Opening app as selected user — demo mode','i')">Impersonate User ↗</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ ROLES & PERMISSIONS ═══════════ -->
+<div class="dmod" id="mod-roles">
+  <div class="dmod-title">Roles & Permissions</div>
+  <div class="dmod-sub">Define exactly what each role can see and do. Checked = access granted.</div>
+  <div class="card">
+    <div class="card-title">Permission Matrix</div>
+    <div style="overflow-x:auto;">
+      <table style="min-width:700px;">
+        <thead><tr><th>Module / Action</th><th>CMD</th><th>CFO</th><th>PD</th><th>GM</th><th>AGM/SPM</th><th>PM</th><th>QS Mgr</th><th>Store Mgr</th><th>Accountant</th></tr></thead>
+        <tbody id="perm-table">
+          <tr><td class="tb2">Chiefs Module</td><td><input type="checkbox" checked></td><td><input type="checkbox" checked></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+          <tr><td class="tb2">Managers Module</td><td><input type="checkbox" checked></td><td><input type="checkbox"></td><td><input type="checkbox" checked></td><td><input type="checkbox" checked></td><td><input type="checkbox" checked></td><td><input type="checkbox" checked></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+          <tr><td class="tb2">Store Module</td><td><input type="checkbox" checked></td><td><input type="checkbox"></td><td><input type="checkbox" checked></td><td><input type="checkbox" checked></td><td><input type="checkbox" checked></td><td><input type="checkbox" checked></td><td><input type="checkbox"></td><td><input type="checkbox" checked></td><td><input type="checkbox"></td></tr>
+          <tr><td class="tb2">QS Module</td><td><input type="checkbox" checked></td><td><input type="checkbox"></td><td><input type="checkbox" checked></td><td><input type="checkbox" checked></td><td><input type="checkbox" checked></td><td><input type="checkbox" checked></td><td><input type="checkbox" checked></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+          <tr><td class="tb2">Planning Module</td><td><input type="checkbox" checked></td><td><input type="checkbox"></td><td><input type="checkbox" checked></td><td><input type="checkbox" checked></td><td><input type="checkbox" checked></td><td><input type="checkbox" checked></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+          <tr><td class="tb2">Finance Module</td><td><input type="checkbox" checked></td><td><input type="checkbox" checked></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox" checked></td></tr>
+          <tr><td class="tb2">Finance — View Only</td><td><input type="checkbox" checked></td><td><input type="checkbox" checked></td><td><input type="checkbox" checked></td><td><input type="checkbox" checked></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox" checked></td></tr>
+          <tr><td class="tb2">HR Module</td><td><input type="checkbox" checked></td><td><input type="checkbox"></td><td><input type="checkbox" checked></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+          <tr><td class="tb2">SATURDAY AI</td><td><input type="checkbox" checked></td><td><input type="checkbox" checked></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+          <tr><td class="tb2">Admin Module</td><td><input type="checkbox" checked></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+          <tr><td class="tb2">Approve Payments (any amount)</td><td><input type="checkbox" checked></td><td><input type="checkbox" checked></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+          <tr><td class="tb2">Approve Indents (≤₹2L)</td><td><input type="checkbox" checked></td><td><input type="checkbox"></td><td><input type="checkbox" checked></td><td><input type="checkbox" checked></td><td><input type="checkbox" checked></td><td><input type="checkbox" checked></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+          <tr><td class="tb2">Delete Records</td><td><input type="checkbox" checked></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td><td><input type="checkbox"></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <button class="btn-d" style="margin-top:14px;" onclick="T('Permission matrix saved — will be enforced in next DB session','s')">Save Permission Matrix</button>
+  </div>
+</div>
+
+<!-- ═══════════ DATA MANAGER ═══════════ -->
+<div class="dmod" id="mod-data">
+  <div class="dmod-title">Data Manager</div>
+  <div class="dmod-sub">Seed demo data, clear records, import/export. Once Supabase is connected, all data will persist.</div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Demo Data Seeding</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <button class="btn-dg" onclick="T('Demo projects seeded: YIIRS Pkg 05, Industrial Shed, Residential','s')">🏗️ Seed Demo Projects</button>
+        <button class="btn-dg" onclick="T('Demo users seeded: Krishna, Ravi, Suresh','s')">👤 Seed Demo Users</button>
+        <button class="btn-dg" onclick="T('Demo BOQ seeded: 6 items with quantities','s')">📋 Seed Demo BOQ Items</button>
+        <button class="btn-dg" onclick="T('Demo transactions seeded: 4 ledger entries','s')">💰 Seed Demo Transactions</button>
+        <button class="btn-dg" onclick="T('All demo data seeded','s')">⚡ Seed ALL Demo Data</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Data Operations</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <button class="btn-da" onclick="T('Export triggered — JSON file ready','s')">📤 Export All Data (JSON)</button>
+        <button class="btn-da" onclick="T('Export triggered — CSV file ready','s')">📊 Export to CSV</button>
+        <button class="btn-ds" onclick="T('Import mode active — drag JSON file','i')">📥 Import Data (JSON)</button>
+        <button class="btn-ds" onclick="T('Database backup created','s')">💾 Backup Database</button>
+        <button class="btn-ds" style="color:var(--RD);border-color:rgba(239,68,68,.3);" onclick="confirmClear()">🗑️ Clear All Data</button>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Database Connection Status</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;">
+      <div style="background:var(--B2);border-radius:9px;padding:12px;"><div style="font-size:11px;color:var(--T2);margin-bottom:5px;">Supabase</div><div style="font-size:13px;font-weight:600;color:var(--AM);">Not Connected</div><button class="btn-dg" style="margin-top:9px;font-size:11px;padding:5px 12px;" onclick="T('Supabase setup — next development session','i')">Connect →</button></div>
+      <div style="background:var(--B2);border-radius:9px;padding:12px;"><div style="font-size:11px;color:var(--T2);margin-bottom:5px;">Anthropic (SATURDAY)</div><div style="font-size:13px;font-weight:600;color:var(--AM);">API Key Missing</div><button class="btn-dg" style="margin-top:9px;font-size:11px;padding:5px 12px;" onclick="saveApiKey()">Add Key →</button></div>
+      <div style="background:var(--B2);border-radius:9px;padding:12px;"><div style="font-size:11px;color:var(--T2);margin-bottom:5px;">Vercel Hosting</div><div style="font-size:13px;font-weight:600;color:var(--GR);">Live</div><div style="font-size:11px;color:var(--T2);margin-top:5px;">Auto-deploys on git push</div></div>
+      <div style="background:var(--B2);border-radius:9px;padding:12px;"><div style="font-size:11px;color:var(--T2);margin-bottom:5px;">Domain</div><div style="font-size:13px;font-weight:600;color:var(--AM);">Pending DNS</div><div style="font-size:11px;color:var(--T2);margin-top:5px;">saturdayerp.com → Vercel</div></div>
+    </div>
+    <div class="df2" style="margin-top:14px;"><label>Anthropic API Key (for SATURDAY)</label><input type="password" id="api-key" placeholder="sk-ant-api03-..."/></div>
+    <button class="btn-d" onclick="saveApiKey()">Save API Key</button>
+  </div>
+</div>
+
+<!-- ═══════════ SYSTEM SETTINGS ═══════════ -->
+<div class="dmod" id="mod-settings">
+  <div class="dmod-title">System Settings</div>
+  <div class="dmod-sub">Global app configuration, security, and environment settings.</div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">App Configuration</div>
+      <div class="df2"><label>App Name</label><input type="text" value="Saturday ERP+"/></div>
+      <div class="df2"><label>App Version</label><input type="text" value="0.1.0-alpha"/></div>
+      <div class="df2"><label>Support Email</label><input type="email" value="support@saturdayerp.com"/></div>
+      <div class="df2"><label>Default Currency</label><select><option>INR (₹)</option><option>USD ($)</option></select></div>
+      <div class="df2"><label>Date Format</label><select><option>DD MMM YYYY</option><option>DD/MM/YYYY</option><option>YYYY-MM-DD</option></select></div>
+      <div class="df2"><label>Financial Year Start</label><select><option>April (India)</option><option>January</option></select></div>
+      <button class="btn-d" onclick="T('App config saved','s')">Save Config</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Security Settings</div>
+      <div class="toggle-wrap"><span class="toggle-label">Require strong passwords (8+ chars)</span><label class="toggle"><input type="checkbox" checked/><div class="tslider"></div></label></div>
+      <div class="toggle-wrap"><span class="toggle-label">Auto-logout after 8 hours inactivity</span><label class="toggle"><input type="checkbox" checked/><div class="tslider"></div></label></div>
+      <div class="toggle-wrap"><span class="toggle-label">Log all user actions</span><label class="toggle"><input type="checkbox" checked/><div class="tslider"></div></label></div>
+      <div class="toggle-wrap"><span class="toggle-label">Show developer tools to users</span><label class="toggle"><input type="checkbox"/><div class="tslider"></div></label></div>
+      <div class="div"></div>
+      <div class="df2"><label>Change Developer Master Key</label><input type="password" id="new-key" placeholder="New master key (min 12 chars)"/></div>
+      <button class="btn-d" onclick="changeMasterKey()">Update Master Key</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Feature Flags</div>
+    <div class="toggle-wrap"><span class="toggle-label">Client Portal (visible to clients)</span><label class="toggle"><input type="checkbox"/><div class="tslider"></div></label></div>
+    <div class="toggle-wrap"><span class="toggle-label">SATURDAY Ask AI (requires API key)</span><label class="toggle"><input type="checkbox"/><div class="tslider"></div></label></div>
+    <div class="toggle-wrap"><span class="toggle-label">BOQ Auto-upload AI engine</span><label class="toggle"><input type="checkbox"/><div class="tslider"></div></label></div>
+    <div class="toggle-wrap"><span class="toggle-label">BBS Auto-generation from drawings</span><label class="toggle"><input type="checkbox"/><div class="tslider"></div></label></div>
+    <div class="toggle-wrap"><span class="toggle-label">GST Auto-filing integration</span><label class="toggle"><input type="checkbox"/><div class="tslider"></div></label></div>
+    <div class="toggle-wrap"><span class="toggle-label">Maintenance mode (shows "Coming Soon" to users)</span><label class="toggle"><input type="checkbox"/><div class="tslider"></div></label></div>
+    <button class="btn-d" style="margin-top:12px;" onclick="T('Feature flags saved','s')">Save Flags</button>
+  </div>
+</div>
+
+<!-- ═══════════ LOGS ═══════════ -->
+<div class="dmod" id="mod-logs">
+  <div class="dmod-title">Activity Logs</div>
+  <div class="dmod-sub">All user actions, system events, and developer actions are recorded here.</div>
+  <div class="tw"><div class="ttb"><div class="ttl">Recent Activity</div><div class="ttls"><button class="btn-ds" style="font-size:11px;padding:5px 11px;" onclick="T('Logs exported to JSON','s')">Export Logs</button><button class="btn-ds" style="font-size:11px;padding:5px 11px;color:var(--RD);" onclick="T('Logs cleared','e')">Clear Logs</button></div></div>
+  <table><thead><tr><th>Time</th><th>User</th><th>Role</th><th>Action</th><th>Module</th><th>Details</th></tr></thead><tbody>
+    <tr><td class="tm">Today 09:41</td><td>Krishna Teja</td><td><span class="bd bdev">CMD</span></td><td>Login</td><td>Auth</td><td>Demo login — instant access</td></tr>
+    <tr><td class="tm">Today 09:42</td><td>Krishna Teja</td><td><span class="bd bdev">CMD</span></td><td>Opened Module</td><td>Chiefs</td><td>Navigated to Chiefs Command Centre</td></tr>
+    <tr><td class="tm">Today 09:45</td><td>Krishna Teja</td><td><span class="bd bdev">CMD</span></td><td>Approved</td><td>Approvals</td><td>RA Bill #5 approved — sent to SATURDAY</td></tr>
+    <tr><td class="tm">Today 09:47</td><td>Krishna Teja</td><td><span class="bd bdev">CMD</span></td><td>Form Submitted</td><td>Store</td><td>New indent raised — Steel 5.2MT</td></tr>
+    <tr><td class="tm">Today 09:50</td><td>Developer</td><td><span class="bd br2">DEV</span></td><td>Dev Login</td><td>Dev Portal</td><td>Accessed developer portal</td></tr>
+  </tbody></table></div>
+  <div class="card">
+    <div class="card-title">Error Log</div>
+    <div style="background:#050508;border-radius:8px;padding:14px;font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,.4);line-height:1.8;">
+      <div style="color:#4ade80;">[INFO] App loaded — 3 users, 3 projects, 8 modules</div>
+      <div style="color:#fbbf24;">[WARN] Supabase not connected — running in local mode</div>
+      <div style="color:#fbbf24;">[WARN] SATURDAY API key not set — AI features disabled</div>
+      <div style="color:#818cf8;">[INFO] Developer portal accessed — auth successful</div>
+      <div style="color:#818cf8;">[INFO] All systems nominal</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ DEPLOY ═══════════ -->
+<div class="dmod" id="mod-deploy">
+  <div class="dmod-title">Deploy & Export</div>
+  <div class="dmod-sub">Push changes to Vercel, export project files, manage versions.</div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Vercel Deployment</div>
+      <div style="background:rgba(34,197,94,.07);border:.5px solid rgba(34,197,94,.22);border-radius:9px;padding:11px 13px;margin-bottom:12px;font-size:12px;color:#4ade80;">✓ Auto-deploy is active — every git push deploys automatically</div>
+      <div style="font-size:12px;color:var(--T1);margin-bottom:12px;line-height:1.7;"><strong style="color:var(--T0);">To deploy changes:</strong><br>1. Edit files in VS Code<br>2. Save (Ctrl+S)<br>3. Open GitHub Desktop → Commit → Push<br>4. Vercel deploys in ~30 seconds</div>
+      <button class="btn-dg" onclick="T('Opening Vercel dashboard in new tab','i');window.open('https://vercel.com','_blank')">Open Vercel Dashboard ↗</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Domain Connection</div>
+      <div style="font-size:12px;color:var(--T1);margin-bottom:12px;line-height:1.8;"><strong style="color:var(--T0);">Hostinger DNS Settings:</strong><br>Type: A | Name: @ | Value: 76.76.21.21<br>Type: CNAME | Name: www | Value: cname.vercel-dns.com<br><br><strong style="color:var(--T0);">Vercel Settings:</strong><br>Settings → Domains → Add → saturdayerp.com</div>
+      <button class="btn-dg" onclick="T('Opening Hostinger DNS in new tab','i');window.open('https://www.hostinger.com','_blank')">Open Hostinger ↗</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Export Project Files</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:9px;">
+      <button class="btn-ds" onclick="T('index.html exported','s')">📄 Export index.html</button>
+      <button class="btn-ds" onclick="T('app.html exported','s')">📄 Export app.html</button>
+      <button class="btn-ds" onclick="T('dev.html exported','s')">📄 Export dev.html</button>
+      <button class="btn-ds" onclick="T('All files exported as ZIP','s')">📦 Export All as ZIP</button>
+      <button class="btn-da" onclick="T('Snapshot created','s')">📸 Create Snapshot</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Next Development Session Checklist</div>
+    <div style="display:flex;flex-direction:column;gap:8px;font-size:12px;color:var(--T1);">
+      <div style="display:flex;align-items:flex-start;gap:9px;padding:7px 0;border-bottom:.5px solid var(--BR);"><div style="width:5px;height:5px;border-radius:50%;background:var(--AM);flex-shrink:0;margin-top:5px;"></div><div><div style="color:var(--T0);font-weight:500;">Supabase database setup</div><div style="font-size:11px;color:var(--T2);">Real data persistence — login credentials, projects, transactions all saved</div></div></div>
+      <div style="display:flex;align-items:flex-start;gap:9px;padding:7px 0;border-bottom:.5px solid var(--BR);"><div style="width:5px;height:5px;border-radius:50%;background:var(--AM);flex-shrink:0;margin-top:5px;"></div><div><div style="color:var(--T0);font-weight:500;">SATURDAY Claude API connection</div><div style="font-size:11px;color:var(--T2);">Real AI answers to financial queries — plug in Anthropic API key</div></div></div>
+      <div style="display:flex;align-items:flex-start;gap:9px;padding:7px 0;border-bottom:.5px solid var(--BR);"><div style="width:5px;height:5px;border-radius:50%;background:var(--BR);flex-shrink:0;margin-top:5px;"></div><div><div style="color:var(--T0);font-weight:500;">Project deep-dive dashboard</div><div style="font-size:11px;color:var(--T2);">When you tap a project — full project dashboard view</div></div></div>
+      <div style="display:flex;align-items:flex-start;gap:9px;padding:7px 0;border-bottom:.5px solid var(--BR);"><div style="width:5px;height:5px;border-radius:50%;background:var(--BR);flex-shrink:0;margin-top:5px;"></div><div><div style="color:var(--T0);font-weight:500;">BOQ upload AI engine</div><div style="font-size:11px;color:var(--T2);">Upload BOQ PDF → auto-extract all quantities</div></div></div>
+      <div style="display:flex;align-items:flex-start;gap:9px;padding:7px 0;"><div style="width:5px;height:5px;border-radius:50%;background:var(--BR);flex-shrink:0;margin-top:5px;"></div><div><div style="color:var(--T0);font-weight:500;">CMD mobile dashboard (Flutter)</div><div style="font-size:11px;color:var(--T2);">Your exact mobile design — native Android app</div></div></div>
+    </div>
+  </div>
+</div>
+
+    </div><!-- end dpc -->
+  </div><!-- end dmw -->
+</div><!-- end dapp -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CREDENTIALS ──
+// Change these before deploying!
+var DEV_ID='dev@saturdayerp';
+var DEV_KEY='saturday#dev2025!';
+
+function devLogin(){
+  var id=document.getElementById('did').value.trim();
+  var key=document.getElementById('dkey').value.trim();
+  if(id===DEV_ID&&key===DEV_KEY){
+    document.getElementById('pg-login').style.display='none';
+    document.getElementById('pg-dev').style.display='flex';
+    T('Developer portal accessed — full control active','i');
+  } else {
+    document.getElementById('derr').style.display='block';
+    setTimeout(()=>document.getElementById('derr').style.display='none',3000);
+  }
+}
+document.getElementById('dkey').addEventListener('keydown',e=>{if(e.key==='Enter')devLogin();});
+
+function devLogout(){
+  document.getElementById('pg-login').style.display='flex';
+  document.getElementById('pg-dev').style.display='none';
+  document.getElementById('did').value='';
+  document.getElementById('dkey').value='';
+}
+
+// ── NAV ──
+var BCTITLES={overview:'System Overview',theme:'Theme & Colors',typography:'Typography',content:'Content Editor',logo:'Logo & Branding',modules:'Module Manager',navigation:'Navigation Editor',users:'User Manager',roles:'Roles & Permissions',data:'Data Manager',settings:'System Settings',logs:'Activity Logs',deploy:'Deploy & Export'};
+function nav(id,el){
+  document.querySelectorAll('.dni').forEach(n=>n.classList.remove('on'));
+  el.classList.add('on');
+  document.querySelectorAll('.dmod').forEach(m=>m.classList.remove('on'));
+  document.getElementById('mod-'+id).classList.add('on');
+  document.getElementById('bc-text').textContent=BCTITLES[id]||id;
+}
+
+// ── SECTION TABS ──
+function sec(mod,id,el){
+  var par=el.parentElement;
+  par.querySelectorAll('.st').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  var next=par.nextElementSibling;
+  while(next&&next.classList.contains('sec')){next.classList.remove('on');next=next.nextElementSibling;}
+  var t=document.getElementById(mod+'-'+id)||document.getElementById(id);
+  if(t)t.classList.add('on');
+}
+
+// ── THEME ──
+function updateColor(name,val){
+  document.getElementById('cv-'+name).textContent=val;
+  document.getElementById('cp-'+name).style.background=val;
+  document.getElementById('css-'+name).textContent=val;
+}
+
+function copyCss(){
+  var vars=['C1','C2','AM','GR','RD','B0','B1','T0'];
+  var css=':root {\n';
+  vars.forEach(v=>{
+    var el=document.getElementById('cv-'+v);
+    if(el) css+='  --'+v+': '+el.textContent+';\n';
+  });
+  css+='}';
+  navigator.clipboard?navigator.clipboard.writeText(css).then(()=>T('CSS copied — paste into :root in app.html','s')):T('Select and copy the CSS manually','i');
+}
+
+// ── TYPOGRAPHY ──
+function genFontCode(){
+  var h=document.getElementById('font-h').value||'Syne';
+  var hw=document.getElementById('font-hw').value||'400;600;700;800';
+  var b=document.getElementById('font-b').value||'DM Sans';
+  var bw=document.getElementById('font-bw').value||'300;400;500';
+  var hq=h.replace(/ /g,'+');
+  var bq=b.replace(/ /g,'+');
+  var code='<link href="https://fonts.googleapis.com/css2?family='+hq+':wght@'+hw+'&family='+bq+':wght@'+bw+'&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">';
+  document.getElementById('font-code').textContent=code;
+  T('Font import generated — copy and replace in both files','s');
+}
+
+// ── FIND & REPLACE ──
+function prefillFR(find,rep){
+  document.getElementById('fr-find').value=find;
+  document.getElementById('fr-replace').value=rep;
+}
+function doFR(){
+  var f=document.getElementById('fr-find').value;
+  var r=document.getElementById('fr-replace').value;
+  if(!f){T('Enter text to find','e');return;}
+  var p=document.getElementById('fr-preview');
+  p.style.display='block';
+  p.innerHTML='<strong style="color:var(--T0);">Preview:</strong><br>Find: <span style="color:var(--RD);">'+f+'</span><br>Replace with: <span style="color:var(--GR);">'+r+'</span><br><br>In VS Code use <strong style="color:var(--T0);">Ctrl+Shift+H</strong> (Find & Replace in Files) to apply this change across all project files at once.';
+}
+
+// ── LOGO ──
+function prevLogo(ev){
+  var f=ev.target.files[0];if(!f)return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    document.getElementById('logo-img').src=e.target.result;
+    document.getElementById('logo-prev').style.display='block';
+    document.getElementById('logo-ico').style.display='none';
+  };reader.readAsDataURL(f);
+  T('Logo loaded. Save file as logo.png in your project folder','s');
+}
+
+// ── USER MANAGER ──
+function showAddUser(){document.getElementById('add-user-card').style.display='block';}
+function hideAddUser(){document.getElementById('add-user-card').style.display='none';}
+
+// ── DATA ──
+function confirmClear(){
+  if(confirm('Are you sure? This will clear ALL data. This cannot be undone.'))T('All data cleared','e');
+}
+function saveApiKey(){
+  var k=document.getElementById('api-key').value;
+  if(k)T('API key saved — SATURDAY will be active on next session','s');
+  else T('Enter a valid API key','e');
+}
+function changeMasterKey(){
+  var k=document.getElementById('new-key').value;
+  if(k&&k.length>=12){DEV_KEY=k;T('Master key updated — note it down, cannot be recovered','s');}
+  else T('Key must be at least 12 characters','e');
+}
+
+// ── TOAST ──
+function T(msg,type){
+  type=type||'s';
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast '+type+' on';
+  setTimeout(()=>t.classList.remove('on'),3200);
+}
+</script>
+</body>
+</html>
