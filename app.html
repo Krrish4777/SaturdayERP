@@ -1,0 +1,1871 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Saturday ERP+</title>
+<style>
+/* ══ FONTS — Segoe UI / Calibri ══ */
+:root{
+  --font:"Segoe UI","Calibri","Helvetica Neue",Arial,sans-serif;
+  --font-mono:"Consolas","Courier New",monospace;
+  --font-roman:Georgia,serif; /* limited use */
+}
+
+/* ══ LIGHT MODE (Default) — Apple Liquid Glass ══ */
+:root,[data-theme="light"]{
+  --bg:#f0f2f8;
+  --bg2:rgba(255,255,255,0.85);
+  --bg3:rgba(255,255,255,0.55);
+  --bghov:rgba(0,0,0,0.04);
+  --bgact:rgba(79,70,229,0.09);
+  --bginp:rgba(0,0,0,0.05);
+  --C1:#4f46e5;--C1l:#818cf8;--C1d:rgba(79,70,229,0.1);
+  --GR:#16a34a;--GRb:#f0fdf4;
+  --RD:#dc2626;--RDb:#fef2f2;
+  --AM:#d97706;--AMb:#fffbeb;
+  --BL:#2563eb;--BLb:#eff6ff;
+  --T0:#0a0a14;--T1:#44465c;--T2:#8b8fa8;
+  --BR:rgba(0,0,0,0.08);--BR2:rgba(0,0,0,0.13);
+  --sh:0 1px 3px rgba(0,0,0,0.06),0 0 0 0.5px rgba(0,0,0,0.04);
+  --shl:0 8px 32px rgba(0,0,0,0.10),0 1px 4px rgba(0,0,0,0.05);
+  --shg:0 8px 32px rgba(0,0,0,0.07),inset 0 0.5px 0 rgba(255,255,255,0.9);
+  --sw:252px;
+}
+
+/* ══ DARK MODE ══ */
+[data-theme="dark"]{
+  --bg:#0c0c16;
+  --bg2:rgba(20,20,34,0.92);
+  --bg3:rgba(28,28,44,0.7);
+  --bghov:rgba(255,255,255,0.05);
+  --bgact:rgba(99,102,241,0.14);
+  --bginp:rgba(255,255,255,0.06);
+  --C1:#6366f1;--C1l:#818cf8;--C1d:rgba(99,102,241,0.15);
+  --GR:#22c55e;--GRb:rgba(34,197,94,0.12);
+  --RD:#f87171;--RDb:rgba(239,68,68,0.12);
+  --AM:#fbbf24;--AMb:rgba(245,158,11,0.12);
+  --BL:#60a5fa;--BLb:rgba(96,165,250,0.12);
+  --T0:#e8e8ff;--T1:rgba(232,232,255,0.6);--T2:rgba(232,232,255,0.3);
+  --BR:rgba(255,255,255,0.08);--BR2:rgba(255,255,255,0.14);
+  --sh:0 1px 3px rgba(0,0,0,0.4);
+  --shl:0 8px 32px rgba(0,0,0,0.5);
+  --shg:0 8px 32px rgba(0,0,0,0.4),inset 0 0.5px 0 rgba(255,255,255,0.05);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--font);background:var(--bg);color:var(--T0);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s;}
+button,input,select,textarea{font-family:var(--font);}
+button{cursor:pointer;}
+a{text-decoration:none;color:inherit;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-thumb{background:var(--BR2);border-radius:10px;}
+::-webkit-scrollbar-track{background:transparent;}
+.page{display:none;min-height:100vh;}
+.page.active{display:flex;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes slide-in-auth{from{opacity:0;transform:translateX(10px);}to{opacity:1;transform:none;}}
+
+/* ══ AUTH ══ */
+.abg{
+  flex:1;display:flex;align-items:center;justify-content:center;padding:20px;
+  background:linear-gradient(135deg,#eef2ff 0%,#f5f3ff 50%,#fdf4ff 100%);
+  position:relative;overflow:hidden;
+}
+[data-theme="dark"] .abg{background:linear-gradient(135deg,#0e0e1c,#0c0c1a);}
+.abg::before{content:'';position:absolute;top:-20%;right:-5%;width:500px;height:500px;background:radial-gradient(circle,rgba(99,102,241,.1),transparent 70%);}
+.acard{
+  background:var(--bg2);backdrop-filter:blur(24px) saturate(180%);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);
+  border:0.5px solid var(--BR);border-radius:22px;padding:36px 32px;
+  width:100%;max-width:420px;z-index:1;
+  box-shadow:var(--shl),inset 0 0.5px 0 rgba(255,255,255,.8);
+}
+[data-theme="dark"] .acard{box-shadow:var(--shl),inset 0 0.5px 0 rgba(255,255,255,.06);}
+.alogo{font-size:21px;font-weight:700;text-align:center;margin-bottom:4px;letter-spacing:-.3px;}
+.alogo span{color:var(--C1);}
+.asub{font-size:12px;color:var(--T2);text-align:center;margin-bottom:24px;}
+.atabs{display:flex;background:var(--bginp);border-radius:10px;padding:3px;margin-bottom:22px;}
+.atab{flex:1;padding:8px;text-align:center;font-size:13px;border-radius:7px;border:none;background:transparent;color:var(--T1);transition:all .2s;}
+.atab.on{background:var(--C1);color:#fff;font-weight:600;box-shadow:0 2px 8px rgba(79,70,229,.3);}
+.fl{margin-bottom:13px;}
+.fl label{display:block;font-size:11px;color:var(--T2);letter-spacing:.5px;margin-bottom:5px;font-weight:500;}
+.fl input,.fl select,.fl textarea{width:100%;background:var(--bginp);border:0.5px solid var(--BR2);border-radius:9px;padding:10px 13px;color:var(--T0);font-size:13px;outline:none;transition:all .2s;}
+.fl input:focus,.fl select:focus{border-color:var(--C1);box-shadow:0 0 0 3px var(--C1d);}
+.fl input::placeholder{color:var(--T2);}
+.fl select option{background:#fff;color:#000;}
+[data-theme="dark"] .fl select option{background:#1a1a2e;}
+.fl textarea{resize:vertical;min-height:70px;color:var(--T0);}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+.errbox{background:var(--RDb);border:0.5px solid rgba(220,38,38,.22);border-radius:8px;padding:9px 12px;font-size:12px;color:var(--RD);margin-bottom:12px;display:none;}
+.bprimary{background:var(--C1);color:#fff;border:none;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;transition:all .2s;box-shadow:0 2px 8px rgba(79,70,229,.25);}
+.bprimary:hover{background:#4338ca;transform:translateY(-1px);box-shadow:0 4px 14px rgba(79,70,229,.35);}
+.bprimary.fw{width:100%;padding:13px;font-size:14px;}
+.bsec{background:var(--bginp);color:var(--T1);border:0.5px solid var(--BR2);padding:10px 16px;border-radius:9px;font-size:13px;transition:all .2s;}
+.bsec:hover{background:var(--bghov);}
+.bghost{background:transparent;border:none;color:var(--C1);font-size:13px;padding:7px;cursor:pointer;}
+
+/* ══ IMPROVED AUTH LAYOUT ══ */
+.abg{
+  flex:1;display:flex;align-items:stretch;justify-content:center;
+  background:linear-gradient(135deg,#eef2ff 0%,#f5f3ff 50%,#fdf4ff 100%);
+  position:relative;overflow:hidden;
+}
+[data-theme="dark"] .abg{background:linear-gradient(135deg,#0e0e1c,#0c0c1a);}
+.abg::before{content:'';position:absolute;top:-20%;right:-5%;width:500px;height:500px;background:radial-gradient(circle,rgba(99,102,241,.1),transparent 70%);}
+
+/* Left branding panel */
+.auth-brand-panel{
+  flex:0 0 42%;display:flex;align-items:center;justify-content:center;padding:40px;
+  background:linear-gradient(155deg,#1e1b4b 0%,#312e81 30%,#4c1d95 65%,#6d28d9 100%);
+  position:relative;overflow:hidden;
+}
+.auth-brand-panel::before{content:'';position:absolute;top:-80px;right:-80px;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.04);}
+.auth-brand-panel::after{content:'';position:absolute;bottom:-60px;left:-40px;width:250px;height:250px;border-radius:50%;background:rgba(255,255,255,.03);}
+@media(max-width:768px){.auth-brand-panel{display:none;}}
+.auth-brand-inner{max-width:340px;position:relative;z-index:1;}
+.auth-logo-mark{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.auth-orb{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#818cf8,#c084fc,#f472b6);box-shadow:0 0 30px rgba(129,140,248,.4);flex-shrink:0;}
+.auth-tagline{font-size:28px;font-weight:800;color:#fff;letter-spacing:-.5px;line-height:1.2;margin-bottom:8px;}
+.auth-by{font-size:12px;color:rgba(255,255,255,.45);margin-bottom:32px;letter-spacing:.3px;}
+.auth-by strong{color:rgba(255,255,255,.7);}
+.auth-features{display:flex;flex-direction:column;gap:11px;margin-bottom:32px;}
+.auth-feat{display:flex;align-items:center;gap:10px;}
+.af-dot{width:7px;height:7px;border-radius:50%;background:#818cf8;flex-shrink:0;}
+.auth-feat span{font-size:13px;color:rgba(255,255,255,.7);}
+.auth-demo-pill{
+  display:flex;align-items:center;gap:12px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  border-radius:14px;padding:13px 16px;cursor:pointer;transition:all .2s;
+}
+.auth-demo-pill:hover{background:rgba(255,255,255,.14);transform:translateY(-1px);}
+.demo-pulse{width:10px;height:10px;border-radius:50%;background:#4ade80;flex-shrink:0;box-shadow:0 0 0 3px rgba(74,222,128,.2);animation:pulse 2s infinite;}
+
+/* Right form panel */
+.auth-form-panel{
+  flex:1;display:flex;align-items:center;justify-content:center;padding:32px 20px;
+}
+.acard{
+  background:var(--bg2);backdrop-filter:blur(24px) saturate(180%);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);
+  border:0.5px solid var(--BR);border-radius:22px;padding:32px 30px;
+  width:100%;max-width:400px;z-index:1;
+  box-shadow:var(--shl),inset 0 0.5px 0 rgba(255,255,255,.8);
+}
+[data-theme="dark"] .acard{box-shadow:var(--shl),inset 0 0.5px 0 rgba(255,255,255,.06);}
+.auth-mobile-logo{text-align:center;margin-bottom:20px;display:none;}
+@media(max-width:768px){.auth-mobile-logo{display:block;}}
+
+/* Divider */
+.auth-divider{position:relative;text-align:center;margin:14px 0;}
+.auth-divider::before{content:'';position:absolute;top:50%;left:0;right:0;height:.5px;background:var(--BR);}
+.auth-divider span{position:relative;background:var(--bg2);padding:0 10px;font-size:11px;color:var(--T2);}
+
+/* Demo login button */
+.demo-login-btn{
+  width:100%;display:flex;align-items:center;justify-content:space-between;
+  background:var(--C1d);border:1px solid rgba(79,70,229,.18);
+  border-radius:11px;padding:11px 14px;cursor:pointer;
+  transition:all .2s;gap:10px;
+}
+.demo-login-btn:hover{background:rgba(79,70,229,.14);border-color:rgba(79,70,229,.28);transform:translateY(-1px);}
+.demo-login-left{display:flex;align-items:center;gap:10px;}
+.demo-icon{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#4f46e5,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+
+/* ══ SETUP WIZARD ══ */
+.swbg{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(135deg,#f8f9ff,#f3f0ff);overflow:hidden;}
+[data-theme="dark"] .swbg{background:linear-gradient(135deg,#0c0c18,#0f0c1a);}
+.swcard{background:var(--bg2);backdrop-filter:blur(24px);border:0.5px solid var(--BR);border-radius:22px;padding:36px;width:100%;max-width:530px;z-index:1;box-shadow:var(--shl);}
+.wsteps{display:flex;margin-bottom:30px;}
+.wsi{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;}
+.wsi:not(:last-child)::after{content:'';position:absolute;top:13px;left:50%;width:100%;height:.5px;background:var(--BR2);}
+.wn{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--BR2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--T2);background:var(--bg);z-index:1;transition:all .3s;}
+.wn.dn{background:var(--C1);border-color:var(--C1);color:#fff;}
+.wn.ac2{border-color:var(--C1l);color:var(--C1);}
+.wlb{font-size:10px;color:var(--T2);margin-top:4px;}
+.wlb.ac2{color:var(--C1);}
+.wstep{display:none;}
+.wstep.on{display:block;}
+.wt{font-size:19px;font-weight:700;margin-bottom:6px;letter-spacing:-.3px;}
+.ws2{font-size:13px;color:var(--T1);margin-bottom:20px;line-height:1.6;}
+.ldrop{border:1.5px dashed var(--BR2);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:13px;}
+.ldrop:hover{border-color:var(--C1);background:var(--C1d);}
+.pcards{display:flex;flex-direction:column;gap:8px;margin-bottom:10px;}
+.pcard{background:var(--bg);border:1.5px solid var(--BR);border-radius:11px;padding:12px 14px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:space-between;}
+.pcard.sp{border-color:var(--C1);}
+.pcard.sm{border-color:var(--AM);}
+.pradio{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--BR2);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
+.pradio.on{background:var(--C1);border-color:var(--C1);}
+.prdot{width:6px;height:6px;border-radius:50%;background:#fff;}
+.brow{display:flex;gap:9px;margin-top:22px;}
+.wbb{flex:1;background:var(--bginp);border:0.5px solid var(--BR2);color:var(--T1);padding:11px;border-radius:9px;font-size:13px;font-weight:500;}
+.wbn{flex:2;background:var(--C1);color:#fff;border:none;padding:11px;border-radius:9px;font-size:13px;font-weight:600;}
+
+/* ══ APP SHELL ══ */
+.alayout{flex:1;display:flex;}
+
+/* SIDEBAR */
+.sidebar{
+  width:var(--sw);
+  background:var(--bg2);
+  backdrop-filter:blur(24px) saturate(180%);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);
+  border-right:0.5px solid var(--BR);
+  box-shadow:2px 0 16px rgba(0,0,0,.04);
+  display:flex;flex-direction:column;
+  position:fixed;top:0;left:0;height:100vh;z-index:50;overflow-y:auto;
+  transition:background .3s;
+}
+.sbhead{padding:16px 14px 12px;border-bottom:0.5px solid var(--BR);}
+.sblogo{font-size:15px;font-weight:700;letter-spacing:-.3px;margin-bottom:12px;}
+.sblogo span{color:var(--C1);}
+
+/* Company block in sidebar */
+.sbco{background:var(--C1d);border:0.5px solid rgba(79,70,229,.15);border-radius:10px;padding:9px 11px;display:flex;align-items:center;gap:9px;margin-bottom:8px;}
+.sbco-logo{width:30px;height:30px;border-radius:7px;background:var(--C1);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;flex-shrink:0;overflow:hidden;}
+.sbco-logo img{width:100%;height:100%;object-fit:cover;}
+.sbco-name{font-size:12px;font-weight:600;color:var(--T0);}
+.sbco-type{font-size:10px;color:var(--T2);}
+
+/* Project selector */
+.sbproj{background:var(--bghov);border:0.5px solid var(--BR);border-radius:9px;padding:7px 10px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:all .18s;}
+.sbproj:hover{background:var(--bgact);border-color:rgba(79,70,229,.2);}
+.sbproj-lbl{font-size:10px;color:var(--T2);margin-bottom:2px;}
+.sbproj-name{font-size:12px;font-weight:600;color:var(--T0);}
+
+/* Nav items */
+.sbnav{flex:1;padding:10px 8px;}
+.ng{font-size:9px;font-weight:700;color:var(--T2);text-transform:uppercase;letter-spacing:1px;padding:10px 8px 4px;}
+.ni{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:9px;font-size:13px;color:var(--T1);cursor:pointer;transition:all .18s;margin-bottom:1px;border:none;background:transparent;width:100%;text-align:left;font-family:var(--font);font-weight:400;}
+.ni:hover{background:var(--bghov);color:var(--T0);}
+.ni.on{background:var(--C1d);color:var(--C1);font-weight:600;}
+.ni svg{width:15px;height:15px;flex-shrink:0;opacity:.6;}
+.ni.on svg{opacity:1;}
+.nibadge{margin-left:auto;background:var(--RD);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;}
+
+/* Sidebar footer */
+.sbfoot{padding:10px 12px;border-top:0.5px solid var(--BR);margin-top:auto;}
+.urow{display:flex;align-items:center;gap:8px;cursor:pointer;padding:7px 8px;border-radius:9px;transition:all .18s;}
+.urow:hover{background:var(--bghov);}
+.uav{width:32px;height:32px;border-radius:50%;background:var(--C1);border:2px solid var(--bg2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;overflow:hidden;box-shadow:0 2px 8px rgba(79,70,229,.3);}
+.uav img{width:100%;height:100%;object-fit:cover;}
+.unm{font-size:12px;font-weight:600;color:var(--T0);}
+.url{font-size:10px;color:var(--T2);}
+.ulogout{margin-left:auto;background:transparent;border:none;color:var(--T2);padding:4px;border-radius:5px;transition:color .2s;}
+.ulogout:hover{color:var(--RD);}
+
+/* MAIN WRAP */
+.mainwrap{flex:1;margin-left:var(--sw);min-width:0;display:flex;flex-direction:column;}
+
+/* TOPBAR */
+.topbar{
+  position:sticky;top:0;
+  background:rgba(240,242,248,.88);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border-bottom:0.5px solid var(--BR);
+  padding:0 22px;height:52px;
+  display:flex;align-items:center;justify-content:space-between;
+  z-index:40;box-shadow:0 1px 4px rgba(0,0,0,.04);
+  transition:background .3s;
+}
+[data-theme="dark"] .topbar{background:rgba(12,12,22,.88);}
+.breadcrumb{font-size:13px;color:var(--T2);}
+.breadcrumb span{color:var(--T1);font-weight:500;}
+.tbrright{display:flex;align-items:center;gap:10px;}
+.notifbtn{width:32px;height:32px;background:var(--bginp);border:0.5px solid var(--BR2);border-radius:9px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;color:var(--T1);transition:all .18s;}
+.notifbtn:hover{background:var(--bghov);}
+.notifdot{position:absolute;top:7px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--RD);border:1.5px solid var(--bg2);}
+.tbuser{display:flex;align-items:center;gap:8px;cursor:pointer;padding:4px 10px 4px 4px;border-radius:22px;border:0.5px solid var(--BR2);background:var(--bg2);transition:all .18s;}
+.tbuser:hover{background:var(--bghov);}
+.tbav{width:28px;height:28px;border-radius:50%;background:var(--C1);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;overflow:hidden;}
+.tbav img{width:100%;height:100%;object-fit:cover;}
+.tbnm{font-size:12px;font-weight:600;color:var(--T0);}
+
+/* PAGE CONTENT */
+.pc{padding:20px;flex:1;}
+
+/* ══ MODULES ══ */
+.mod{display:none;}
+.mod.on{display:block;}
+.mhdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px;padding-bottom:16px;border-bottom:0.5px solid var(--BR);}
+.mhdr-t{font-size:20px;font-weight:700;letter-spacing:-.3px;}
+.mhdr-s{font-size:12px;color:var(--T2);margin-top:3px;}
+.mhdr-a{display:flex;gap:8px;align-items:center;}
+.stabs{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap;border-bottom:0.5px solid var(--BR);padding-bottom:10px;}
+.stab{padding:5px 16px;border-radius:8px;font-size:13px;font-weight:500;color:var(--T1);cursor:pointer;background:transparent;border:none;transition:all .18s;font-family:var(--font);}
+.stab:hover{background:var(--bghov);color:var(--T0);}
+.stab.on{background:var(--C1d);color:var(--C1);font-weight:600;}
+.sec{display:none;}
+.sec.on{display:block;}
+
+/* ══ STAT CARDS ══ */
+.srow{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:18px;}
+.sk{background:var(--bg2);border:0.5px solid var(--BR);border-radius:13px;padding:14px 16px;box-shadow:var(--sh);transition:all .2s;}
+.sk:hover{box-shadow:var(--shl);transform:translateY(-1px);}
+.sklbl{font-size:10px;color:var(--T2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px;font-weight:500;}
+.skval{font-size:20px;font-weight:700;margin-bottom:3px;}
+.skd{font-size:11px;color:var(--T2);}
+
+/* ══ TABLE ══ */
+.tw{background:var(--bg2);border:0.5px solid var(--BR);border-radius:14px;overflow:hidden;margin-bottom:14px;box-shadow:var(--sh);}
+.tbar{padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid var(--BR);flex-wrap:wrap;gap:8px;}
+.ttl{font-size:13px;font-weight:600;color:var(--T0);}
+.ttools{display:flex;gap:7px;align-items:center;}
+.si{background:var(--bginp);border:0.5px solid var(--BR2);border-radius:8px;padding:6px 11px;color:var(--T0);font-size:12px;outline:none;width:170px;font-family:var(--font);}
+.si::placeholder{color:var(--T2);}
+table{width:100%;border-collapse:collapse;}
+th{padding:9px 14px;text-align:left;font-size:10px;color:var(--T2);text-transform:uppercase;letter-spacing:.6px;border-bottom:0.5px solid var(--BR);background:rgba(0,0,0,.02);font-weight:600;}
+[data-theme="dark"] th{background:rgba(255,255,255,.02);}
+td{padding:11px 14px;font-size:13px;color:var(--T1);border-bottom:0.5px solid var(--BR);}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:var(--bghov);color:var(--T0);}
+.tbold{font-weight:600;color:var(--T0);}
+.tmono{font-family:var(--font-mono);font-size:12px;}
+
+/* ══ BADGES ══ */
+.bd{display:inline-block;padding:3px 9px;border-radius:6px;font-size:10px;font-weight:600;letter-spacing:.2px;}
+.bg{background:var(--GRb);color:var(--GR);}
+.br{background:var(--RDb);color:var(--RD);}
+.ba{background:var(--AMb);color:var(--AM);}
+.bb{background:var(--BLb);color:var(--BL);}
+.bgr{background:var(--bginp);color:var(--T2);}
+
+/* ══ LINKS / ACTIONS ══ */
+.al{color:var(--C1);font-size:12px;cursor:pointer;background:none;border:none;padding:0;font-family:var(--font);}
+.al:hover{text-decoration:underline;}
+
+/* ══ FORM PANELS ══ */
+.fp{background:var(--bg2);border:0.5px solid var(--BR2);border-radius:13px;padding:18px;margin-top:12px;display:none;box-shadow:var(--sh);}
+.fp.on{display:block;}
+.fph{font-size:13px;font-weight:600;margin-bottom:14px;color:var(--T0);display:flex;align-items:center;justify-content:space-between;}
+.fpcl{background:transparent;border:none;color:var(--T2);font-size:17px;cursor:pointer;line-height:1;padding:2px 4px;border-radius:4px;}
+.fpcl:hover{color:var(--RD);background:var(--RDb);}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:11px;}
+.ffoot{display:flex;gap:8px;margin-top:14px;}
+.div{height:.5px;background:var(--BR);margin:14px 0;}
+
+/* ══ ALERTS ══ */
+.alr{background:var(--RDb);border:0.5px solid rgba(220,38,38,.22);border-radius:10px;padding:12px 15px;margin-bottom:9px;}
+.ala{background:var(--AMb);border:0.5px solid rgba(217,119,6,.22);border-radius:10px;padding:12px 15px;margin-bottom:9px;}
+.alb{background:var(--BLb);border:0.5px solid rgba(37,99,235,.18);border-radius:10px;padding:12px 15px;margin-bottom:9px;}
+.alg{background:var(--GRb);border:0.5px solid rgba(22,163,74,.18);border-radius:10px;padding:12px 15px;margin-bottom:9px;}
+.alt{font-size:12px;font-weight:600;margin-bottom:4px;}
+.alb2{font-size:12px;color:var(--T1);line-height:1.5;}
+
+/* ══ PROFILE PANEL ══ */
+.profpanel{
+  position:fixed;top:60px;right:16px;width:296px;
+  background:var(--bg2);backdrop-filter:blur(24px);
+  border:0.5px solid var(--BR);border-radius:16px;
+  box-shadow:var(--shl);z-index:200;display:none;overflow:hidden;
+}
+.profpanel.open{display:block;}
+.profhdr{background:linear-gradient(135deg,var(--C1),#7c3aed);padding:20px;display:flex;align-items:center;gap:13px;}
+.profav{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.25);border:2px solid rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff;flex-shrink:0;overflow:hidden;}
+.profav img{width:100%;height:100%;object-fit:cover;}
+.profname{font-size:15px;font-weight:700;color:#fff;}
+.profrole{font-size:11px;color:rgba(255,255,255,.7);margin-top:1px;}
+.profco{font-size:11px;color:rgba(255,255,255,.55);}
+.profinfo{padding:12px 16px;}
+.profrow{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--BR);font-size:12px;}
+.profrow:last-child{border-bottom:none;}
+.profkey{color:var(--T2);font-weight:500;}
+.profval{color:var(--T0);font-weight:600;}
+.profacts{padding:8px 14px 14px;display:flex;flex-direction:column;gap:5px;}
+.profbtn{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:8px;font-size:13px;color:var(--T1);cursor:pointer;transition:all .18s;border:none;background:transparent;width:100%;text-align:left;font-family:var(--font);}
+.profbtn:hover{background:var(--bghov);color:var(--T0);}
+.profbtn.danger:hover{background:var(--RDb);color:var(--RD);}
+
+/* ══ THEME TOGGLE ══ */
+.tglrow{display:flex;align-items:center;justify-content:space-between;padding:9px 0;}
+.tgllbl{font-size:13px;color:var(--T1);}
+.tgl{position:relative;width:44px;height:24px;}
+.tgl input{opacity:0;width:0;height:0;}
+.tgls{position:absolute;inset:0;background:var(--bginp);border:0.5px solid var(--BR2);border-radius:24px;cursor:pointer;transition:all .3s;}
+.tgls::before{content:'';position:absolute;width:18px;height:18px;left:2px;top:2px;background:#fff;border-radius:50%;transition:all .3s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
+.tgl input:checked+.tgls{background:var(--C1);border-color:var(--C1);}
+.tgl input:checked+.tgls::before{transform:translateX(20px);}
+
+/* ══ TOAST ══ */
+.toast{position:fixed;bottom:20px;right:20px;padding:11px 18px;border-radius:11px;font-size:13px;font-weight:500;z-index:9999;transform:translateY(50px);opacity:0;transition:all .3s;pointer-events:none;box-shadow:var(--shl);}
+.toast.on{transform:translateY(0);opacity:1;}
+.toast.s{background:var(--GRb);border:0.5px solid rgba(22,163,74,.3);color:var(--GR);}
+.toast.e{background:var(--RDb);border:0.5px solid rgba(220,38,38,.3);color:var(--RD);}
+.toast.i{background:var(--BLb);border:0.5px solid rgba(37,99,235,.2);color:var(--BL);}
+</style>
+
+<!-- ══ SUPABASE — Add these 2 lines before </head> when ready ══ -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script> -->
+<!-- <script src="supabase.js"></script> -->
+
+</head>
+<body>
+
+<!-- ══════════ LOGIN ══════════ -->
+<div class="page active" id="pg-login">
+<div class="abg">
+
+  <!-- ── Left panel: branding (hidden on mobile) ── -->
+  <div class="auth-brand-panel">
+    <div class="auth-brand-inner">
+      <div class="auth-logo-mark">
+        <div class="auth-orb"></div>
+        <span style="font-size:26px;font-weight:800;letter-spacing:-.5px;color:#fff;">saturday<span style="color:#a5b4fc;">ERP+</span></span>
+      </div>
+      <div class="auth-tagline">Construction Intelligence<br/>Platform</div>
+      <div class="auth-by">by <strong>The Deal Global</strong> · Besting Businesses</div>
+      <div class="auth-features">
+        <div class="auth-feat"><div class="af-dot"></div><span>SATURDAY AI — autonomous finance</span></div>
+        <div class="auth-feat"><div class="af-dot"></div><span>Mini AI by MONDAE — QS & drawings</span></div>
+        <div class="auth-feat"><div class="af-dot"></div><span>GST/TDS auto-compliance</span></div>
+        <div class="auth-feat"><div class="af-dot"></div><span>Real-time store & procurement</span></div>
+        <div class="auth-feat"><div class="af-dot"></div><span>TGEWIDC, NHAI, CPWD norms</span></div>
+      </div>
+      <div class="auth-demo-pill" onclick="demoLogin()">
+        <div class="demo-pulse"></div>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:#fff;">Try Demo — Instant Access</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.55);">YIIRS Package 05 · TTIPL data pre-loaded</div>
+        </div>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2.5"><polyline points="9,18 15,12 9,6"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Right panel: auth card ── -->
+  <div class="auth-form-panel">
+    <div class="acard">
+
+      <!-- Mobile logo only -->
+      <div class="auth-mobile-logo">
+        <div style="font-size:20px;font-weight:800;letter-spacing:-.3px;">saturday<span style="color:var(--C1);">ERP+</span></div>
+        <div style="font-size:11px;color:var(--T2);margin-top:2px;">Construction Intelligence Platform</div>
+      </div>
+
+      <div class="atabs">
+        <button class="atab on" id="tab-login" onclick="atab('lf',this)">Sign In</button>
+        <button class="atab" id="tab-signup" onclick="atab('sf',this)">Create Account</button>
+      </div>
+
+      <!-- ══ LOGIN FORM ══ -->
+      <div id="lf">
+        <div class="errbox" id="lerr"></div>
+
+        <div class="fl">
+          <label>Email Address</label>
+          <input type="email" id="lem" placeholder="you@company.com" autocomplete="email"
+                 oninput="clearErr('lerr')" onkeydown="if(event.key==='Enter')document.getElementById('lpw').focus()"/>
+        </div>
+
+        <div class="fl">
+          <label style="display:flex;justify-content:space-between;align-items:center;">
+            Password
+            <button class="bghost" style="font-size:11px;padding:0;color:var(--T2);" onclick="showForgot()" type="button">Forgot password?</button>
+          </label>
+          <div style="position:relative;">
+            <input type="password" id="lpw" placeholder="Your password" autocomplete="current-password"
+                   style="padding-right:42px;" oninput="clearErr('lerr')"
+                   onkeydown="if(event.key==='Enter')doLogin()"/>
+            <button type="button" onclick="togglePW('lpw','eye-login')"
+                    style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--T2);cursor:pointer;padding:2px;">
+              <svg id="eye-login" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;margin-top:-4px;">
+          <input type="checkbox" id="rem-me" style="width:14px;height:14px;accent-color:var(--C1);cursor:pointer;"/>
+          <label for="rem-me" style="font-size:12px;color:var(--T2);cursor:pointer;">Remember me on this device</label>
+        </div>
+
+        <button class="bprimary fw" id="btn-login" onclick="doLogin()">
+          <span id="btn-login-text">Sign In to ERP+</span>
+          <svg id="btn-login-spin" style="display:none;animation:spin .7s linear infinite;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+        </button>
+
+        <div class="auth-divider"><span>or</span></div>
+
+        <!-- Demo login — prominent -->
+        <button class="demo-login-btn" onclick="demoLogin()">
+          <div class="demo-login-left">
+            <div class="demo-icon">🚀</div>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:var(--T0);">Demo — Instant Access</div>
+              <div style="font-size:11px;color:var(--T2);">YIIRS Pkg 05 · TTIPL · All modules live</div>
+            </div>
+          </div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--C1)" stroke-width="2.5"><polyline points="9,18 15,12 9,6"/></svg>
+        </button>
+      </div>
+
+      <!-- ══ SIGNUP FORM ══ -->
+      <div id="sf" style="display:none;">
+        <div class="errbox" id="serr"></div>
+
+        <div class="g2">
+          <div class="fl">
+            <label>First Name *</label>
+            <input type="text" id="sfn" placeholder="Krishna" oninput="clearErr('serr')"/>
+          </div>
+          <div class="fl">
+            <label>Last Name</label>
+            <input type="text" id="sln" placeholder="Teja"/>
+          </div>
+        </div>
+
+        <div class="fl">
+          <label>Work Email *</label>
+          <input type="email" id="sem" placeholder="you@company.com" oninput="clearErr('serr')"/>
+        </div>
+
+        <div class="fl">
+          <label>Mobile *</label>
+          <input type="tel" id="smb" placeholder="+91 98765 43210"/>
+        </div>
+
+        <div class="fl">
+          <label>Password * <span style="font-size:10px;color:var(--T2);font-weight:400;">(min 8 chars)</span></label>
+          <div style="position:relative;">
+            <input type="password" id="spw" placeholder="Create a strong password"
+                   style="padding-right:42px;" oninput="clearErr('serr');checkPWStrength(this.value)"/>
+            <button type="button" onclick="togglePW('spw','eye-signup')"
+                    style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--T2);cursor:pointer;padding:2px;">
+              <svg id="eye-signup" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+          <div id="pw-strength-bar" style="margin-top:5px;height:3px;border-radius:3px;background:var(--BR);overflow:hidden;display:none;">
+            <div id="pw-strength-fill" style="height:3px;border-radius:3px;transition:width .3s,background .3s;"></div>
+          </div>
+          <div id="pw-strength-text" style="font-size:10px;margin-top:3px;display:none;"></div>
+        </div>
+
+        <button class="bprimary fw" id="btn-signup" onclick="doSignup()">
+          <span id="btn-signup-text">Create Account & Setup Company</span>
+          <svg id="btn-signup-spin" style="display:none;animation:spin .7s linear infinite;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+        </button>
+
+        <div style="font-size:11px;color:var(--T2);text-align:center;margin-top:10px;line-height:1.6;">
+          By creating an account you agree to our<br/>
+          <a href="index.html" style="color:var(--C1);">Terms of Service</a> &amp;
+          <a href="index.html" style="color:var(--C1);">Privacy Policy</a>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin-top:16px;">
+        <a href="index.html" style="font-size:12px;color:var(--T2);">← Back to saturdayerp.com</a>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════ SETUP WIZARD ══════════ -->
+<div class="page" id="pg-setup">
+<div class="swbg">
+  <div class="swcard">
+    <div class="wsteps">
+      <div class="wsi"><div class="wn ac2" id="wn1">1</div><div class="wlb ac2" id="wl1">Company</div></div>
+      <div class="wsi"><div class="wn" id="wn2">2</div><div class="wlb" id="wl2">Details</div></div>
+      <div class="wsi"><div class="wn" id="wn3">3</div><div class="wlb" id="wl3">Plan</div></div>
+      <div class="wsi"><div class="wn" id="wn4">4</div><div class="wlb" id="wl4">Launch</div></div>
+    </div>
+    <div class="wstep on" id="ws1">
+      <div class="wt">Set Up Your Company</div>
+      <div class="ws2">Your identity across all dashboards, bills, and client communications.</div>
+      <div class="ldrop" onclick="document.getElementById('lfi').click()">
+        <div id="lpr" style="display:none;margin-bottom:8px;"><img id="lim" style="height:48px;object-fit:contain;"/></div>
+        <div id="lic" style="font-size:24px;margin-bottom:7px;">🏢</div>
+        <div style="font-size:13px;color:var(--T1);">Click to upload company logo</div>
+        <div style="font-size:11px;color:var(--T2);margin-top:3px;">PNG, JPG, SVG · Max 2MB</div>
+      </div>
+      <input type="file" id="lfi" accept="image/*" style="display:none" onchange="prevLogo(event)">
+      <div class="fl"><label>Company Full Name *</label><input type="text" id="s1n" placeholder="e.g. TTIPL Construction Pvt. Ltd."/></div>
+      <div class="g2">
+        <div class="fl"><label>Short Name *</label><input type="text" id="s1s" placeholder="TTIPL"/></div>
+        <div class="fl"><label>Industry</label><select id="s1i"><option>Civil Construction</option><option>Infrastructure / EPC</option><option>Real Estate</option><option>Roads & Highways</option><option>Industrial</option></select></div>
+      </div>
+      <div class="fl"><label>Company Type</label><select id="s1t"><option>Private Limited</option><option>Proprietorship</option><option>Partnership</option><option>LLP</option></select></div>
+      <div class="brow"><button class="wbn" onclick="wgo(2)">Continue →</button></div>
+    </div>
+    <div class="wstep" id="ws2">
+      <div class="wt">Statutory Details</div>
+      <div class="ws2">Used in RA bills, GST returns, and official documents auto-generated by SATURDAY.</div>
+      <div class="g2">
+        <div class="fl"><label>GSTIN</label><input type="text" id="s2g" placeholder="36XXXXXXXXXXXXX" maxlength="15"/></div>
+        <div class="fl"><label>PAN</label><input type="text" id="s2p" placeholder="AAAAA0000A" maxlength="10"/></div>
+      </div>
+      <div class="fl"><label>Registered Address</label><input type="text" id="s2a"/></div>
+      <div class="g2">
+        <div class="fl"><label>City</label><input type="text" id="s2c" placeholder="Hyderabad"/></div>
+        <div class="fl"><label>State</label><select id="s2st"><option>Telangana</option><option>Andhra Pradesh</option><option>Maharashtra</option><option>Karnataka</option></select></div>
+      </div>
+      <div class="g2">
+        <div class="fl"><label>Phone</label><input type="tel" id="s2ph"/></div>
+        <div class="fl"><label>Company Email</label><input type="email" id="s2em"/></div>
+      </div>
+      <div class="brow"><button class="wbb" onclick="wgo(1)">← Back</button><button class="wbn" onclick="wgo(3)">Continue →</button></div>
+    </div>
+    <div class="wstep" id="ws3">
+      <div class="wt">Choose Your Plan</div>
+      <div class="ws2">14-day free trial. No credit card. Upgrade anytime.</div>
+      <div class="pcards">
+        <div class="pcard" id="pc-basic" onclick="pickPlan('basic')"><div style="display:flex;align-items:center;gap:10px;"><div class="pradio" id="pr-basic"><div class="prdot" style="display:none;"></div></div><div><div style="font-size:13px;font-weight:600;color:var(--T1);">ERP+</div><div style="font-size:11px;color:var(--T2);">Finance · 10 users · 2 projects</div></div></div><div style="font-size:13px;font-weight:700;color:var(--T1);font-family:var(--font-mono);">₹4,999<span style="font-size:10px;font-weight:400;color:var(--T2);">/mo</span></div></div>
+        <div class="pcard sp" id="pc-pro" onclick="pickPlan('pro')"><div style="display:flex;align-items:center;gap:10px;"><div class="pradio on" id="pr-pro"><div class="prdot"></div></div><div><div style="font-size:13px;font-weight:600;color:var(--C1);">ERP+ Pro</div><div style="font-size:11px;color:var(--T2);">Full automation · GST · 25 users · 10 projects</div></div></div><div style="font-size:13px;font-weight:700;color:var(--C1);font-family:var(--font-mono);">₹12,999<span style="font-size:10px;font-weight:400;color:var(--T2);">/mo</span></div></div>
+        <div class="pcard" id="pc-max" onclick="pickPlan('max')"><div style="display:flex;align-items:center;gap:10px;"><div class="pradio" id="pr-max"><div class="prdot" style="display:none;"></div></div><div><div style="font-size:13px;font-weight:600;color:var(--AM);">ERP+ Max</div><div style="font-size:11px;color:var(--T2);">BBS · Client portal · Unlimited</div></div></div><div style="font-size:13px;font-weight:700;color:var(--AM);font-family:var(--font-mono);">₹24,999<span style="font-size:10px;font-weight:400;color:var(--T2);">/mo</span></div></div>
+      </div>
+      <div style="background:var(--GRb);border:0.5px solid rgba(22,163,74,.2);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--GR);margin-top:8px;">✓ 14-day free trial · No credit card · Cancel anytime</div>
+      <div class="brow"><button class="wbb" onclick="wgo(2)">← Back</button><button class="wbn" onclick="wgo(4)">Launch ERP+ →</button></div>
+    </div>
+    <div class="wstep" id="ws4">
+      <div style="text-align:center;padding:12px 0;">
+        <div style="width:56px;height:56px;background:var(--GRb);border:2px solid rgba(22,163,74,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><polyline points="20,6 9,17 4,12" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="wt" id="done-name" style="text-align:center;">Company is Ready!</div>
+        <div style="font-size:13px;color:var(--T1);margin:9px auto 22px;max-width:300px;line-height:1.6;">ERP+ configured · SATURDAY initialising · All modules active</div>
+        <button class="wbn" style="max-width:240px;margin:0 auto;display:block;" onclick="launch()">Open ERP+ Dashboard →</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ══════════ MAIN APP ══════════ -->
+<div class="page" id="pg-app">
+<div class="alayout">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sbhead">
+      <!-- 1. App brand -->
+      <div class="sblogo">saturday<span>ERP+</span></div>
+
+      <!-- 2. Company block -->
+      <div class="sbco">
+        <div class="sbco-logo" id="sb-co-logo">T</div>
+        <div>
+          <div class="sbco-name" id="sb-co-name">TTIPL Construction</div>
+          <div class="sbco-type">Private Limited · Pro Plan</div>
+        </div>
+      </div>
+
+      <!-- 3. Active project -->
+      <div class="sbproj" onclick="T('Project list — Admin → Projects','i')">
+        <div>
+          <div class="sbproj-lbl">Active Project</div>
+          <div class="sbproj-name" id="sb-proj">YIIRS Package 05</div>
+        </div>
+        <span style="font-size:11px;color:var(--T2);">⌄</span>
+      </div>
+    </div>
+
+    <!-- 4. Nav modules -->
+    <div class="sbnav">
+      <div class="ng">Command</div>
+      <button class="ni on" onclick="nav('chiefs',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Chiefs / CMD</button>
+      <button class="ni" onclick="nav('managers',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>Managers</button>
+      <div class="ng">Operations</div>
+      <button class="ni" onclick="nav('store',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>Store</button>
+      <button class="ni" onclick="window.location.href='qs.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 17h7M17 14v7"/></svg>QS & Billing</button>
+      <button class="ni" onclick="nav('planning',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Planning</button>
+      <button class="ni" onclick="window.location.href='finance.html'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Finance<span class="nibadge">3</span></button>
+      <button class="ni" onclick="nav('hr',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>HR</button>
+      <div class="ng">System</div>
+      <button class="ni" onclick="nav('saturday',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>SATURDAY AI</button>
+      <button class="ni" onclick="nav('admin',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Admin</button>
+    </div>
+
+    <!-- User footer -->
+    <div class="sbfoot">
+      <div class="urow" onclick="toggleProf()">
+        <div class="uav" id="sb-av">K</div>
+        <div><div class="unm" id="sb-nm">Krishna Teja</div><div class="url" id="sb-rl">CMD / Proprietor</div></div>
+        <button class="ulogout" onclick="event.stopPropagation();showPage('pg-login')" title="Logout"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="mainwrap">
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="breadcrumb" id="bc">saturdayERP+ / <span>Chiefs</span></div>
+      <div class="tbrright">
+        <div class="notifbtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><div class="notifdot"></div></div>
+        <div style="font-size:11px;color:var(--T2);" id="tbdate">Tue, 25 Mar 2025</div>
+        <!-- User avatar pill — top right -->
+        <div class="tbuser" onclick="toggleProf()">
+          <div class="tbav" id="tb-av">K</div>
+          <span class="tbnm" id="tb-nm">Krishna Teja</span>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:var(--T2);margin-left:2px;"><polyline points="6,9 12,15 18,9"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE CONTENT -->
+    <div class="pc">
+
+<!-- ════════════ CHIEFS ════════════ -->
+<div class="mod on" id="mod-chiefs">
+  <div class="mhdr"><div><div class="mhdr-t">Chiefs Command Centre</div><div class="mhdr-s">CMD · CEO · CFO — strategic overview, approvals, and financial intelligence</div></div><div class="mhdr-a"><button class="bprimary" onclick="T('Report generated by SATURDAY','s')">Generate Report</button></div></div>
+  <div class="srow">
+    <div class="sk"><div class="sklbl">Today Net P&L</div><div class="skval" style="color:var(--GR);">+₹1,74,150</div><div class="skd" style="color:var(--GR);">↑ 32.7% vs yesterday</div></div>
+    <div class="sk"><div class="sklbl">Work Done (unbilled)</div><div class="skval">₹47.8L</div><div class="skd">Day 23 of cycle</div></div>
+    <div class="sk"><div class="sklbl">Pending Approvals</div><div class="skval" style="color:var(--AM);">7</div><div class="skd">₹32.45L value</div></div>
+    <div class="sk"><div class="sklbl">Cash Balance</div><div class="skval">₹38.4L</div><div class="skd" style="color:var(--AM);">Shortfall risk Apr 15</div></div>
+    <div class="sk"><div class="sklbl">Active Projects</div><div class="skval">3</div><div class="skd">₹13.03 Cr total</div></div>
+  </div>
+  <div class="stabs">
+    <button class="stab on" onclick="sec('chiefs','overview',this)">Overview</button>
+    <button class="stab" onclick="sec('chiefs','approvals',this)">Approvals</button>
+    <button class="stab" onclick="sec('chiefs','financial',this)">Financial Intel</button>
+    <button class="stab" onclick="sec('chiefs','strategic',this)">Strategic</button>
+    <button class="stab" onclick="sec('chiefs','alerts',this)">Alerts</button>
+  </div>
+  <div class="sec on" id="chiefs-overview">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+      <div class="tw"><div class="tbar"><div class="ttl">Project Health</div></div><table><thead><tr><th>Project</th><th>P&L Today</th><th>Balance</th><th>Status</th></tr></thead><tbody>
+        <tr><td class="tbold">YIIRS Pkg 05</td><td class="tmono" style="color:var(--GR);font-weight:600;">+₹1,24,000</td><td class="tmono">₹8.23Cr</td><td><span class="bd bg">On Track</span></td></tr>
+        <tr><td class="tbold">Residential</td><td class="tmono" style="color:var(--RD);font-weight:600;">-₹18,200</td><td class="tmono">₹1.45Cr</td><td><span class="bd ba">Watch</span></td></tr>
+        <tr><td class="tbold">Industrial Shed</td><td class="tmono" style="color:var(--GR);font-weight:600;">+₹67,800</td><td class="tmono">₹3.87Cr</td><td><span class="bd bg">On Track</span></td></tr>
+      </tbody></table></div>
+      <div class="tw"><div class="tbar"><div class="ttl">Top Pending Approvals</div></div><table><thead><tr><th>Item</th><th>Amount</th><th>Priority</th></tr></thead><tbody>
+        <tr><td class="tbold">Steel Indent Pkg 05</td><td class="tmono">₹4,94,000</td><td><span class="bd br">High</span></td></tr>
+        <tr><td class="tbold">RA Bill #5</td><td class="tmono">₹18,50,000</td><td><span class="bd br">High</span></td></tr>
+        <tr><td class="tbold">Masonry Bill</td><td class="tmono">₹3,10,000</td><td><span class="bd ba">Medium</span></td></tr>
+      </tbody></table></div>
+    </div>
+  </div>
+  <div class="sec" id="chiefs-approvals">
+    <div class="tw"><div class="tbar"><div class="ttl">All Pending Approvals</div><div class="ttools"><input class="si" placeholder="Search..."/></div></div>
+    <table><thead><tr><th>Type</th><th>Description</th><th>Project</th><th>Amount</th><th>Raised By</th><th>Action</th></tr></thead><tbody>
+      <tr><td><span class="bd bb">Indent</span></td><td class="tbold">Steel Fe 500D 12mm 5.2MT</td><td>YIIRS Pkg 05</td><td class="tmono">₹4,94,000</td><td>Store Mgr</td><td><button class="al" onclick="T('Approved','s')">Approve</button> · <button class="al" style="color:var(--RD);">Reject</button></td></tr>
+      <tr><td><span class="bd bg">RA Bill</span></td><td class="tbold">RA Bill #5 — TGEWIDC</td><td>YIIRS Pkg 05</td><td class="tmono">₹18,50,000</td><td>PM Suresh</td><td><button class="al" onclick="T('RA Bill approved — SATURDAY processing','s')">Approve</button> · <button class="al" style="color:var(--RD);">Reject</button></td></tr>
+      <tr><td><span class="bd ba">Subcon</span></td><td class="tbold">Masonry — M/s Ravi</td><td>YIIRS Pkg 05</td><td class="tmono">₹3,10,000</td><td>AGM Ravi</td><td><button class="al" onclick="T('Approved','s')">Approve</button> · <button class="al" style="color:var(--RD);">Reject</button></td></tr>
+      <tr><td><span class="bd bgr">PO</span></td><td class="tbold">Cement 500 bags</td><td>YIIRS Pkg 05</td><td class="tmono">₹1,80,000</td><td>PM Suresh</td><td><button class="al" onclick="T('PO approved','s')">Approve</button> · <button class="al" style="color:var(--RD);">Reject</button></td></tr>
+    </tbody></table></div>
+  </div>
+  <div class="sec" id="chiefs-financial">
+    <div class="srow"><div class="sk"><div class="sklbl">Monthly Revenue</div><div class="skval" style="color:var(--GR);">₹74.5L</div></div><div class="sk"><div class="sklbl">Monthly Expenses</div><div class="skval" style="color:var(--RD);">₹62.2L</div></div><div class="sk"><div class="sklbl">Net Margin</div><div class="skval" style="color:var(--AM);">16.4%</div></div><div class="sk"><div class="sklbl">Receivables</div><div class="skval">₹56.7L</div><div class="skd" style="color:var(--RD);">₹18.5L overdue</div></div></div>
+    <div class="tw"><div class="tbar"><div class="ttl">Project P&L Summary</div></div><table><thead><tr><th>Project</th><th>Contract</th><th>Revenue MTD</th><th>Cost MTD</th><th>Margin</th></tr></thead><tbody>
+      <tr><td class="tbold">YIIRS Package 05</td><td class="tmono">₹8.71Cr</td><td class="tmono" style="color:var(--GR);">₹52.3L</td><td class="tmono">₹43.1L</td><td class="tmono" style="color:var(--GR);font-weight:600;">17.6%</td></tr>
+      <tr><td class="tbold">Residential Complex</td><td class="tmono">₹1.45Cr</td><td class="tmono">₹6.2L</td><td class="tmono">₹5.8L</td><td class="tmono" style="color:var(--AM);font-weight:600;">6.5%</td></tr>
+      <tr><td class="tbold">Industrial Shed</td><td class="tmono">₹3.87Cr</td><td class="tmono" style="color:var(--GR);">₹16.0L</td><td class="tmono">₹13.3L</td><td class="tmono" style="color:var(--GR);font-weight:600;">16.9%</td></tr>
+    </tbody></table></div>
+  </div>
+  <div class="sec" id="chiefs-strategic">
+    <div class="tw"><div class="tbar"><div class="ttl">Tender Pipeline</div><div class="ttools"><button class="bprimary" style="padding:6px 14px;font-size:12px;" onclick="FP('fp-tender')">+ Add Tender</button></div></div>
+    <table><thead><tr><th>Tender</th><th>Client</th><th>Est. Value</th><th>Submission</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="tbold">YIIRS Package 06</td><td>TGEWIDC</td><td class="tmono">₹12.4Cr</td><td>15 Apr 2025</td><td><span class="bd ba">Preparing</span></td></tr>
+      <tr><td class="tbold">District Hospital</td><td>TGMSC</td><td class="tmono">₹8.7Cr</td><td>02 May 2025</td><td><span class="bd bgr">Evaluating</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-tender"><div class="fph">Add New Tender <button class="fpcl" onclick="CF('fp-tender')">×</button></div>
+    <div class="fgrid"><div class="fl"><label>Tender Name</label><input type="text"/></div><div class="fl"><label>Client</label><input type="text"/></div><div class="fl"><label>Est. Value (₹)</label><input type="number"/></div><div class="fl"><label>Submission Date</label><input type="date"/></div><div class="fl"><label>EMD Amount (₹)</label><input type="number"/></div><div class="fl"><label>Status</label><select><option>Evaluating</option><option>Preparing</option><option>Submitted</option><option>Won</option></select></div></div>
+    <div class="ffoot"><button class="bprimary" onclick="SF('fp-tender','Tender added to pipeline')">Save</button><button class="bsec" onclick="CF('fp-tender')">Cancel</button></div></div></div>
+  </div>
+  <div class="sec" id="chiefs-alerts">
+    <div class="alr"><div class="alt" style="color:var(--RD);">Cement over-consumption — YIIRS Pkg 05</div><div class="alb2">64 bags/cum actual vs 48 theoretical. 34% excess. Site inspection needed.</div></div>
+    <div class="ala"><div class="alt" style="color:var(--AM);">RA Bill #4 overdue — TGEWIDC</div><div class="alb2">₹38,20,000 outstanding. 5 days overdue. Cash flow impact if not received by Apr 5.</div></div>
+    <div class="alb"><div class="alt" style="color:var(--BL);">Cash shortfall predicted — Apr 15</div><div class="alb2">SATURDAY predicts ₹23L shortfall. Submit RA Bill #5 by Mar 28 to avoid it.</div></div>
+  </div>
+</div>
+
+<!-- ════════════ MANAGERS ════════════ -->
+<div class="mod" id="mod-managers">
+  <div class="mhdr"><div><div class="mhdr-t">Managers</div><div class="mhdr-s">PD · GM · AGM · SPM · PM — coordination and execution oversight</div></div></div>
+  <div class="stabs">
+    <button class="stab on" onclick="sec('managers','ov',this)">Overview</button>
+    <button class="stab" onclick="sec('managers','dpr',this)">DPR & Reports</button>
+    <button class="stab" onclick="sec('managers','teams',this)">Teams</button>
+    <button class="stab" onclick="sec('managers','myappr',this)">My Approvals</button>
+  </div>
+  <div class="sec on" id="managers-ov">
+    <div class="srow"><div class="sk"><div class="sklbl">Projects Assigned</div><div class="skval">2</div></div><div class="sk"><div class="sklbl">DPR Pending</div><div class="skval" style="color:var(--AM);">1</div></div><div class="sk"><div class="sklbl">Pending Approvals</div><div class="skval" style="color:var(--RD);">4</div></div><div class="sk"><div class="sklbl">Team Headcount</div><div class="skval">18</div></div></div>
+    <div class="tw"><div class="tbar"><div class="ttl">My Projects</div></div><table><thead><tr><th>Project</th><th>Progress</th><th>Today Value</th><th>Milestone</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="tbold">YIIRS Package 05</td><td>38%</td><td class="tmono">₹1,24,000</td><td>Superstructure Floor 2</td><td><span class="bd bg">On Track</span></td></tr>
+      <tr><td class="tbold">Industrial Shed</td><td>62%</td><td class="tmono">₹67,800</td><td>Roofing in progress</td><td><span class="bd bg">On Track</span></td></tr>
+    </tbody></table></div>
+  </div>
+  <div class="sec" id="managers-dpr">
+    <div class="tw"><div class="tbar"><div class="ttl">Daily Progress Reports</div><div class="ttools"><button class="bprimary" style="padding:6px 14px;font-size:12px;" onclick="FP('fp-dpr')">+ New DPR</button></div></div>
+    <table><thead><tr><th>Date</th><th>Project</th><th>Activities</th><th>Work Value</th><th>Labour</th><th>Issues</th></tr></thead><tbody>
+      <tr><td>25 Mar</td><td>YIIRS Pkg 05</td><td>Column casting F2 · Masonry 3rd floor</td><td class="tmono">₹1,24,000</td><td>48</td><td><span class="bd bg">None</span></td></tr>
+      <tr><td>24 Mar</td><td>YIIRS Pkg 05</td><td>Shuttering beam · Steel fixing slab</td><td class="tmono">₹98,500</td><td>52</td><td><span class="bd ba">1 NCR</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-dpr"><div class="fph">New DPR <button class="fpcl" onclick="CF('fp-dpr')">×</button></div>
+    <div class="fgrid"><div class="fl"><label>Date</label><input type="date"/></div><div class="fl"><label>Project</label><select><option>YIIRS Package 05</option><option>Industrial Shed</option></select></div><div class="fl" style="grid-column:span 2"><label>Work Done</label><textarea placeholder="Activities, quantities, locations..."></textarea></div><div class="fl"><label>Work Value (₹)</label><input type="number"/></div><div class="fl"><label>Labour Deployed</label><input type="number"/></div><div class="fl"><label>Photos</label><input type="file" accept="image/*" multiple/></div></div>
+    <div class="ffoot"><button class="bprimary" onclick="SF('fp-dpr','DPR submitted')">Submit</button><button class="bsec" onclick="CF('fp-dpr')">Cancel</button></div></div></div>
+  </div>
+  <div class="sec" id="managers-teams">
+    <div class="srow"><div class="sk"><div class="sklbl">Team Size</div><div class="skval">18</div></div><div class="sk"><div class="sklbl">On Site Today</div><div class="skval" style="color:var(--GR);">16</div></div><div class="sk"><div class="sklbl">On Leave</div><div class="skval" style="color:var(--AM);">2</div></div></div>
+    <div class="tw"><div class="tbar"><div class="ttl">Team Members</div><div class="ttools"><button class="bprimary" style="padding:6px 14px;font-size:12px;" onclick="FP('fp-team')">+ Add Member</button></div></div>
+    <table><thead><tr><th>Name</th><th>Role</th><th>Mobile</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="tbold">Ravi Kumar</td><td>Project Director</td><td class="tmono">+91 98765 00011</td><td><span class="bd bg">On Site</span></td></tr>
+      <tr><td class="tbold">Suresh PM</td><td>Project Manager</td><td class="tmono">+91 98765 00012</td><td><span class="bd bg">On Site</span></td></tr>
+      <tr><td class="tbold">Anil Engineer</td><td>Site Engineer</td><td class="tmono">+91 98765 00013</td><td><span class="bd ba">Leave</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-team"><div class="fph">Add Team Member <button class="fpcl" onclick="CF('fp-team')">×</button></div>
+    <div class="fgrid"><div class="fl"><label>Full Name</label><input type="text"/></div><div class="fl"><label>Role</label><select><option>Site Engineer</option><option>APM</option><option>QS Manager</option><option>Store Manager</option><option>Supervisor</option></select></div><div class="fl"><label>Mobile</label><input type="tel"/></div><div class="fl"><label>Project</label><select><option>YIIRS Package 05</option><option>Industrial Shed</option></select></div></div>
+    <div class="ffoot"><button class="bprimary" onclick="SF('fp-team','Member added')">Add</button><button class="bsec" onclick="CF('fp-team')">Cancel</button></div></div></div>
+  </div>
+  <div class="sec" id="managers-myappr">
+    <div class="tw"><div class="tbar"><div class="ttl">My Approval Queue</div></div>
+    <table><thead><tr><th>Item</th><th>Amount</th><th>Raised By</th><th>Action</th></tr></thead><tbody>
+      <tr><td class="tbold">Cement Indent — 200 bags</td><td class="tmono">₹98,000</td><td>Site Engineer</td><td><button class="al" onclick="T('Approved','s')">Approve</button> · <button class="al" style="color:var(--RD);">Reject</button></td></tr>
+      <tr><td class="tbold">Diesel purchase</td><td class="tmono">₹18,400</td><td>Supervisor</td><td><button class="al" onclick="T('Approved','s')">Approve</button> · <button class="al" style="color:var(--RD);">Reject</button></td></tr>
+    </tbody></table></div>
+  </div>
+</div>
+
+<!-- ════════════ STORE ════════════ -->
+<div class="mod" id="mod-store">
+  <div class="mhdr"><div><div class="mhdr-t">Store</div><div class="mhdr-s">Procurement and Inventory — materials, GRN, stock control</div></div></div>
+  <div class="stabs">
+    <button class="stab on" onclick="sec('store','proc',this)">Procurement</button>
+    <button class="stab" onclick="sec('store','inv',this)">Inventory</button>
+  </div>
+  <div class="sec on" id="store-proc">
+    <div class="srow"><div class="sk"><div class="sklbl">Open Indents</div><div class="skval" style="color:var(--AM);">8</div></div><div class="sk"><div class="sklbl">POs This Month</div><div class="skval">14</div></div><div class="sk"><div class="sklbl">GRN Pending</div><div class="skval" style="color:var(--AM);">3</div></div><div class="sk"><div class="sklbl">Vendor Payments Due</div><div class="skval" style="color:var(--RD);">₹12.1L</div></div></div>
+    <div class="stabs" style="border:none;padding-bottom:0;margin-bottom:13px;">
+      <button class="stab on" onclick="sec('proc','indents',this)">Indents</button>
+      <button class="stab" onclick="sec('proc','po',this)">Purchase Orders</button>
+      <button class="stab" onclick="sec('proc','grn',this)">GRN</button>
+      <button class="stab" onclick="sec('proc','vendors',this)">Vendors</button>
+    </div>
+    <div class="sec on" id="proc-indents">
+      <div class="tw"><div class="tbar"><div class="ttl">Material Indents</div><div class="ttools"><input class="si" placeholder="Search..."/><button class="bprimary" style="padding:6px 14px;font-size:12px;" onclick="FP('fp-indent')">+ New Indent</button></div></div>
+      <table><thead><tr><th>No.</th><th>Material</th><th>Qty</th><th>Unit</th><th>Project</th><th>Status</th><th>Action</th></tr></thead><tbody>
+        <tr><td class="tmono">IND-047</td><td class="tbold">Steel Fe 500D 12mm</td><td>5.2</td><td>MT</td><td>YIIRS Pkg 05</td><td><span class="bd ba">Pending Approval</span></td><td><button class="al">View</button></td></tr>
+        <tr><td class="tmono">IND-046</td><td class="tbold">Cement OPC 53</td><td>200</td><td>Bags</td><td>YIIRS Pkg 05</td><td><span class="bd bb">PO Raised</span></td><td><button class="al">View</button></td></tr>
+        <tr><td class="tmono">IND-045</td><td class="tbold">River Sand</td><td>50</td><td>CUM</td><td>YIIRS Pkg 05</td><td><span class="bd bg">Delivered</span></td><td><button class="al">View</button></td></tr>
+      </tbody></table>
+      <div class="fp" id="fp-indent"><div class="fph">New Material Indent <button class="fpcl" onclick="CF('fp-indent')">×</button></div>
+      <div class="fgrid"><div class="fl"><label>Material Name *</label><input type="text" placeholder="e.g. Steel Fe 500D 16mm"/></div><div class="fl"><label>Quantity *</label><input type="number"/></div><div class="fl"><label>Unit</label><select><option>MT</option><option>Bags</option><option>CUM</option><option>Nos</option><option>SQM</option><option>Kg</option></select></div><div class="fl"><label>Project</label><select><option>YIIRS Package 05</option><option>Industrial Shed</option><option>Residential Complex</option></select></div><div class="fl"><label>Required By</label><input type="date"/></div><div class="fl"><label>Purpose</label><input type="text" placeholder="For column casting 3rd floor"/></div><div class="fl"><label>Est. Rate (₹/unit)</label><input type="number"/></div><div class="fl"><label>Specification / IS Code</label><input type="text"/></div></div>
+      <div class="ffoot"><button class="bprimary" onclick="SF('fp-indent','Indent raised successfully')">Raise Indent</button><button class="bsec" onclick="CF('fp-indent')">Cancel</button></div></div>
+    </div>
+    <div class="sec" id="proc-po">
+      <div class="tw"><div class="tbar"><div class="ttl">Purchase Orders</div><div class="ttools"><button class="bprimary" style="padding:6px 14px;font-size:12px;" onclick="FP('fp-po')">+ Create PO</button></div></div>
+      <table><thead><tr><th>PO No.</th><th>Vendor</th><th>Material</th><th>Qty</th><th>Amount</th><th>Expected</th><th>Status</th></tr></thead><tbody>
+        <tr><td class="tmono">PO-0128</td><td>M/s Vizag Steel</td><td class="tbold">Steel Fe 500D 12mm</td><td>5.2 MT</td><td class="tmono">₹4,94,000</td><td>28 Mar</td><td><span class="bd ba">Pending Delivery</span></td></tr>
+        <tr><td class="tmono">PO-0127</td><td>M/s Prism Cement</td><td class="tbold">OPC 53 Grade</td><td>200 Bags</td><td class="tmono">₹98,000</td><td>27 Mar</td><td><span class="bd bb">In Transit</span></td></tr>
+        <tr><td class="tmono">PO-0126</td><td>M/s Kumar Sand</td><td class="tbold">River Sand</td><td>50 CUM</td><td class="tmono">₹62,500</td><td>26 Mar</td><td><span class="bd bg">Delivered</span></td></tr>
+      </tbody></table>
+      <div class="fp" id="fp-po"><div class="fph">Create Purchase Order <button class="fpcl" onclick="CF('fp-po')">×</button></div>
+      <div class="fgrid"><div class="fl"><label>Vendor Name *</label><input type="text"/></div><div class="fl"><label>Material *</label><input type="text"/></div><div class="fl"><label>Quantity</label><input type="number"/></div><div class="fl"><label>Unit</label><select><option>MT</option><option>Bags</option><option>CUM</option><option>Nos</option></select></div><div class="fl"><label>Rate (₹/unit)</label><input type="number"/></div><div class="fl"><label>Expected Delivery</label><input type="date"/></div><div class="fl"><label>Delivery Location</label><input type="text"/></div><div class="fl"><label>Payment Terms</label><select><option>Immediate</option><option>7 days</option><option>15 days</option><option>30 days</option></select></div></div>
+      <div class="ffoot"><button class="bprimary" onclick="SF('fp-po','PO created')">Create PO</button><button class="bsec" onclick="CF('fp-po')">Cancel</button></div></div>
+    </div>
+    <div class="sec" id="proc-grn">
+      <div class="tw"><div class="tbar"><div class="ttl">Goods Receipt Notes</div><div class="ttools"><button class="bprimary" style="padding:6px 14px;font-size:12px;" onclick="FP('fp-grn')">+ New GRN</button></div></div>
+      <table><thead><tr><th>GRN No.</th><th>PO Ref.</th><th>Material</th><th>Ordered</th><th>Received</th><th>Quality</th><th>Date</th></tr></thead><tbody>
+        <tr><td class="tmono">GRN-089</td><td class="tmono">PO-0126</td><td class="tbold">River Sand</td><td>50 CUM</td><td>50 CUM</td><td><span class="bd bg">Passed</span></td><td>26 Mar</td></tr>
+        <tr><td class="tmono">GRN-088</td><td class="tmono">PO-0124</td><td class="tbold">Fly Ash Blocks 200mm</td><td>2000 Nos</td><td>1980 Nos</td><td><span class="bd ba">Short</span></td><td>24 Mar</td></tr>
+      </tbody></table>
+      <div class="fp" id="fp-grn"><div class="fph">New GRN Entry <button class="fpcl" onclick="CF('fp-grn')">×</button></div>
+      <div class="fgrid"><div class="fl"><label>PO Reference</label><select><option>PO-0128 — Steel 5.2MT</option><option>PO-0127 — Cement 200 bags</option></select></div><div class="fl"><label>Received Quantity</label><input type="number"/></div><div class="fl"><label>Receipt Date</label><input type="date"/></div><div class="fl"><label>Challan No.</label><input type="text"/></div><div class="fl"><label>Quality Status</label><select><option>Passed</option><option>Failed — Rejected</option><option>Short Delivery</option><option>Pending Lab Test</option></select></div><div class="fl"><label>Received By</label><input type="text"/></div></div>
+      <div class="ffoot"><button class="bprimary" onclick="SF('fp-grn','GRN recorded')">Save GRN</button><button class="bsec" onclick="CF('fp-grn')">Cancel</button></div></div>
+    </div>
+    <div class="sec" id="proc-vendors">
+      <div class="tw"><div class="tbar"><div class="ttl">Approved Vendors</div><div class="ttools"><button class="bprimary" style="padding:6px 14px;font-size:12px;" onclick="FP('fp-vendor')">+ Add Vendor</button></div></div>
+      <table><thead><tr><th>Vendor Name</th><th>Category</th><th>GSTIN</th><th>Contact</th><th>Outstanding</th></tr></thead><tbody>
+        <tr><td class="tbold">M/s Vizag Steel Corp</td><td>Steel / TMT</td><td class="tmono">36XXXXXXX</td><td>+91 98765 00001</td><td class="tmono" style="color:var(--RD);">₹4,94,000</td></tr>
+        <tr><td class="tbold">M/s Prism Cement</td><td>Cement</td><td class="tmono">36XXXXXXX</td><td>+91 98765 00002</td><td class="tmono">₹98,000</td></tr>
+        <tr><td class="tbold">M/s Kumar Sand</td><td>Sand / Aggregates</td><td class="tmono">36XXXXXXX</td><td>+91 98765 00003</td><td class="tmono" style="color:var(--GR);">₹0</td></tr>
+      </tbody></table>
+      <div class="fp" id="fp-vendor"><div class="fph">Add Vendor <button class="fpcl" onclick="CF('fp-vendor')">×</button></div>
+      <div class="fgrid"><div class="fl"><label>Vendor Name *</label><input type="text"/></div><div class="fl"><label>Category</label><input type="text" placeholder="Steel, Cement, Sand..."/></div><div class="fl"><label>GSTIN</label><input type="text" maxlength="15"/></div><div class="fl"><label>PAN</label><input type="text" maxlength="10"/></div><div class="fl"><label>Contact Person</label><input type="text"/></div><div class="fl"><label>Mobile</label><input type="tel"/></div><div class="fl"><label>Bank Account No.</label><input type="text"/></div><div class="fl"><label>IFSC Code</label><input type="text"/></div></div>
+      <div class="ffoot"><button class="bprimary" onclick="SF('fp-vendor','Vendor added')">Save Vendor</button><button class="bsec" onclick="CF('fp-vendor')">Cancel</button></div></div>
+    </div>
+  </div>
+  <div class="sec" id="store-inv">
+    <div class="srow"><div class="sk"><div class="sklbl">Total Stock Value</div><div class="skval">₹18.4L</div></div><div class="sk"><div class="sklbl">Low Stock Alerts</div><div class="skval" style="color:var(--RD);">4</div></div><div class="sk"><div class="sklbl">Items in Store</div><div class="skval">32</div></div><div class="sk"><div class="sklbl">Wastage This Month</div><div class="skval" style="color:var(--AM);">2.8%</div><div class="skd">vs norm 2.0%</div></div></div>
+    <div class="tw"><div class="tbar"><div class="ttl">Stock Register</div><div class="ttools"><input class="si" placeholder="Search material..."/><button class="bprimary" style="padding:6px 14px;font-size:12px;" onclick="FP('fp-issue')">Issue Material</button></div></div>
+    <table><thead><tr><th>Material</th><th>Unit</th><th>Opening</th><th>Received</th><th>Issued</th><th>Balance</th><th>Min Stock</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="tbold">Steel Fe 500D 12mm</td><td>MT</td><td class="tmono">3.2</td><td class="tmono">5.2</td><td class="tmono">7.8</td><td class="tmono" style="color:var(--RD);font-weight:600;">0.6</td><td class="tmono">2.0</td><td><span class="bd br">Low Stock</span></td></tr>
+      <tr><td class="tbold">Steel Fe 500D 16mm</td><td>MT</td><td class="tmono">4.5</td><td class="tmono">8.0</td><td class="tmono">9.1</td><td class="tmono" style="color:var(--GR);font-weight:600;">3.4</td><td class="tmono">2.0</td><td><span class="bd bg">OK</span></td></tr>
+      <tr><td class="tbold">OPC 53 Cement</td><td>Bags</td><td class="tmono">120</td><td class="tmono">200</td><td class="tmono">298</td><td class="tmono" style="color:var(--RD);font-weight:600;">22</td><td class="tmono">100</td><td><span class="bd br">Low Stock</span></td></tr>
+      <tr><td class="tbold">River Sand</td><td>CUM</td><td class="tmono">80</td><td class="tmono">50</td><td class="tmono">95</td><td class="tmono">35</td><td class="tmono">30</td><td><span class="bd ba">Watch</span></td></tr>
+      <tr><td class="tbold">20mm Aggregate</td><td>CUM</td><td class="tmono">60</td><td class="tmono">40</td><td class="tmono">72</td><td class="tmono" style="color:var(--GR);">28</td><td class="tmono">20</td><td><span class="bd bg">OK</span></td></tr>
+      <tr><td class="tbold">Fly Ash Blocks 200mm</td><td>Nos</td><td class="tmono">5000</td><td class="tmono">2000</td><td class="tmono">6200</td><td class="tmono">800</td><td class="tmono">500</td><td><span class="bd ba">Watch</span></td></tr>
+      <tr><td class="tbold">Fly Ash Blocks 100mm</td><td>Nos</td><td class="tmono">2000</td><td class="tmono">1000</td><td class="tmono">2400</td><td class="tmono" style="color:var(--RD);">600</td><td class="tmono">800</td><td><span class="bd br">Low Stock</span></td></tr>
+      <tr><td class="tbold">Binding Wire</td><td>Kg</td><td class="tmono">150</td><td class="tmono">100</td><td class="tmono">190</td><td class="tmono" style="color:var(--GR);">60</td><td class="tmono">50</td><td><span class="bd bg">OK</span></td></tr>
+      <tr><td class="tbold">Cover Blocks 40mm</td><td>Nos</td><td class="tmono">2000</td><td class="tmono">1500</td><td class="tmono">2800</td><td class="tmono" style="color:var(--RD);">700</td><td class="tmono">1000</td><td><span class="bd br">Low Stock</span></td></tr>
+    </tbody></table>
+    <div class="ala" style="margin-top:12px;"><div class="alt" style="color:var(--AM);">⚠️ Low Stock — Action Required</div><div class="alb2">Steel 12mm: 0.6 MT (min 2 MT) · Cement: 22 bags (min 100) · Cover Blocks: 700 (min 1000) · Fly Ash 100mm: 600 (min 800). Raise indents immediately.</div></div>
+    <div class="fp" id="fp-issue"><div class="fph">Issue Material from Store <button class="fpcl" onclick="CF('fp-issue')">×</button></div>
+    <div class="fgrid"><div class="fl"><label>Material</label><select><option>Steel Fe 500D 12mm</option><option>Steel Fe 500D 16mm</option><option>OPC 53 Cement</option><option>River Sand</option><option>20mm Aggregate</option></select></div><div class="fl"><label>Quantity to Issue</label><input type="number"/></div><div class="fl"><label>Issued For (Location / Work)</label><input type="text" placeholder="Column casting Floor 3"/></div><div class="fl"><label>Issued By</label><input type="text"/></div><div class="fl"><label>Date</label><input type="date"/></div></div>
+    <div class="ffoot"><button class="bprimary" onclick="SF('fp-issue','Material issued — stock balance updated')">Issue</button><button class="bsec" onclick="CF('fp-issue')">Cancel</button></div></div>
+  </div>
+</div>
+
+<!-- ════════════ QS ════════════ -->
+<div class="mod" id="mod-qs">
+  <div class="mhdr"><div><div class="mhdr-t">QS & Billing</div><div class="mhdr-s">Quantities · Client Billings · Vendor Billing · Contractor Billing · Compliance</div></div><div class="mhdr-a"><button class="bprimary" onclick="T('BOQ AI upload — next brick','i')">Upload BOQ / Drawings</button></div></div>
+  <div class="stabs">
+    <button class="stab on" onclick="sec('qs','qty',this)">Quantities</button>
+    <button class="stab" onclick="sec('qs','cbill',this)">Client Billings</button>
+    <button class="stab" onclick="sec('qs','vbill',this)">Vendor Billing</button>
+    <button class="stab" onclick="sec('qs','cobill',this)">Contractor Billing</button>
+    <button class="stab" onclick="sec('qs','qsc',this)">Compliance</button>
+  </div>
+  <div class="sec on" id="qs-qty">
+    <div class="tw"><div class="tbar"><div class="ttl">BOQ — Abstract of Quantities</div><div class="ttools"><input class="si" placeholder="Search..."/><button class="bprimary" style="padding:6px 14px;font-size:12px;" onclick="FP('fp-boq')">+ Add Item</button></div></div>
+    <table><thead><tr><th>Item No.</th><th>Description</th><th>Unit</th><th>BOQ Qty</th><th>Done Qty</th><th>Balance</th><th>Rate (₹)</th><th>Balance Value</th><th>%</th></tr></thead><tbody>
+      <tr><td>1.1</td><td class="tbold">Earthwork excavation</td><td>CUM</td><td class="tmono">1,840</td><td class="tmono">1,840</td><td class="tmono">0</td><td class="tmono">180</td><td class="tmono" style="color:var(--GR);">₹0</td><td><span class="bd bg">100%</span></td></tr>
+      <tr><td>2.1</td><td class="tbold">PCC M7.5 in foundation</td><td>CUM</td><td class="tmono">420</td><td class="tmono">420</td><td class="tmono">0</td><td class="tmono">4,800</td><td class="tmono" style="color:var(--GR);">₹0</td><td><span class="bd bg">100%</span></td></tr>
+      <tr><td>3.1</td><td class="tbold">RCC M30 in columns</td><td>CUM</td><td class="tmono">285</td><td class="tmono">142</td><td class="tmono">143</td><td class="tmono">12,400</td><td class="tmono">₹17,73,200</td><td><span class="bd bb">50%</span></td></tr>
+      <tr><td>3.2</td><td class="tbold">RCC M30 in beams & slabs</td><td>CUM</td><td class="tmono">420</td><td class="tmono">168</td><td class="tmono">252</td><td class="tmono">11,800</td><td class="tmono">₹29,73,600</td><td><span class="bd bb">40%</span></td></tr>
+      <tr><td>4.1</td><td class="tbold">Fly Ash Block masonry 200mm</td><td>CUM</td><td class="tmono">840</td><td class="tmono">310</td><td class="tmono">530</td><td class="tmono">3,200</td><td class="tmono">₹16,96,000</td><td><span class="bd bb">37%</span></td></tr>
+      <tr><td>5.1</td><td class="tbold">Steel Fe 500D reinforcement</td><td>MT</td><td class="tmono">128</td><td class="tmono">52</td><td class="tmono">76</td><td class="tmono">68,500</td><td class="tmono">₹52,06,000</td><td><span class="bd bb">41%</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-boq"><div class="fph">Add BOQ Item <button class="fpcl" onclick="CF('fp-boq')">×</button></div>
+    <div class="fgrid"><div class="fl"><label>Item No.</label><input type="text" placeholder="e.g. 3.3"/></div><div class="fl"><label>Description *</label><input type="text"/></div><div class="fl"><label>Unit</label><select><option>CUM</option><option>SQM</option><option>MT</option><option>Nos</option><option>RMT</option><option>LS</option></select></div><div class="fl"><label>BOQ Quantity</label><input type="number"/></div><div class="fl"><label>Rate (₹/unit)</label><input type="number"/></div><div class="fl"><label>SOR / APSS Code</label><input type="text" placeholder="Telangana R&B SOR 2025-26"/></div></div>
+    <div class="ffoot"><button class="bprimary" onclick="SF('fp-boq','BOQ item added')">Add Item</button><button class="bsec" onclick="CF('fp-boq')">Cancel</button></div></div>
+  </div>
+  <div class="sec" id="qs-cbill">
+    <div class="srow"><div class="sk"><div class="sklbl">Contract Value</div><div class="skval">₹8.71Cr</div></div><div class="sk"><div class="sklbl">Total Billed</div><div class="skval">₹1.53Cr</div><div class="skd">17.6% of contract</div></div><div class="sk"><div class="sklbl">Retention Held</div><div class="skval" style="color:var(--RD);">₹7.64L</div></div><div class="sk"><div class="sklbl">Next Bill Projection</div><div class="skval" style="color:var(--C1);">~₹52L</div></div></div>
+    <div class="tw"><div class="tbar"><div class="ttl">RA Bills — YIIRS Pkg 05</div><div class="ttools"><button class="bprimary" style="padding:6px 14px;font-size:12px;" onclick="FP('fp-ra')">+ Prepare RA Bill</button></div></div>
+    <table><thead><tr><th>Bill No.</th><th>Period</th><th>Gross Amount</th><th>Retention 5%</th><th>Net Amount</th><th>Submitted</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="tmono">RA-005</td><td>Mar 1–25</td><td class="tmono">₹40,21,000</td><td class="tmono" style="color:var(--RD);">₹2,01,050</td><td class="tmono">₹38,19,950</td><td>25 Mar 2025</td><td><span class="bd ba">Submitted</span></td></tr>
+      <tr><td class="tmono">RA-004</td><td>Feb 1–28</td><td class="tmono">₹40,21,050</td><td class="tmono" style="color:var(--RD);">₹2,01,053</td><td class="tmono">₹38,19,997</td><td>28 Feb 2025</td><td><span class="bd br">Overdue</span></td></tr>
+      <tr><td class="tmono">RA-003</td><td>Jan 1–31</td><td class="tmono">₹38,45,200</td><td class="tmono">₹1,92,260</td><td class="tmono">₹36,52,940</td><td>31 Jan 2025</td><td><span class="bd bg">Paid</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-ra"><div class="fph">Prepare RA Bill <button class="fpcl" onclick="CF('fp-ra')">×</button></div>
+    <div class="fgrid"><div class="fl"><label>Project</label><select><option>YIIRS Package 05 — TGEWIDC</option><option>Industrial Shed — TSIIC</option></select></div><div class="fl"><label>Period From</label><input type="date"/></div><div class="fl"><label>Period To</label><input type="date"/></div><div class="fl"><label>Previous Cumulative (₹)</label><input type="number"/></div><div class="fl"><label>This Period Gross (₹)</label><input type="number"/></div><div class="fl"><label>Retention %</label><input type="number" value="5"/></div></div>
+    <div style="background:var(--BLb);border:.5px solid rgba(37,99,235,.2);border-radius:8px;padding:9px 12px;margin-top:10px;font-size:12px;color:var(--BL);">💡 SATURDAY auto-verifies quantities, applies retention, and generates the RA bill document.</div>
+    <div class="ffoot"><button class="bprimary" onclick="SF('fp-ra','RA Bill sent to SATURDAY')">Prepare Bill</button><button class="bsec" onclick="CF('fp-ra')">Cancel</button></div></div>
+  </div>
+  <div class="sec" id="qs-vbill">
+    <div class="tw"><div class="tbar"><div class="ttl">Vendor Bills</div><div class="ttools"><button class="bprimary" style="padding:6px 14px;font-size:12px;" onclick="FP('fp-vb')">+ Add Bill</button></div></div>
+    <table><thead><tr><th>Bill No.</th><th>Vendor</th><th>PO Ref.</th><th>Invoice Amt</th><th>TDS</th><th>Net Payable</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="tmono">VB-201</td><td>M/s Kumar Sand</td><td class="tmono">PO-0126</td><td class="tmono">₹62,500</td><td class="tmono">₹1,250</td><td class="tmono" style="color:var(--GR);">₹61,250</td><td><span class="bd bg">Paid</span></td></tr>
+      <tr><td class="tmono">VB-200</td><td>M/s Vizag Steel</td><td class="tmono">PO-0128</td><td class="tmono">₹4,94,000</td><td class="tmono">₹9,880</td><td class="tmono">₹4,84,120</td><td><span class="bd ba">Due</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-vb"><div class="fph">Add Vendor Bill <button class="fpcl" onclick="CF('fp-vb')">×</button></div>
+    <div class="fgrid"><div class="fl"><label>Vendor</label><select><option>M/s Vizag Steel Corp</option><option>M/s Prism Cement</option><option>M/s Kumar Sand</option></select></div><div class="fl"><label>PO Reference</label><input type="text"/></div><div class="fl"><label>Invoice No.</label><input type="text"/></div><div class="fl"><label>Invoice Amount (₹)</label><input type="number"/></div><div class="fl"><label>TDS Rate %</label><input type="number" value="2"/></div><div class="fl"><label>Invoice Date</label><input type="date"/></div><div class="fl"><label>Upload Invoice</label><input type="file" accept=".pdf,image/*"/></div></div>
+    <div class="ffoot"><button class="bprimary" onclick="SF('fp-vb','Vendor bill recorded')">Save Bill</button><button class="bsec" onclick="CF('fp-vb')">Cancel</button></div></div>
+  </div>
+  <div class="sec" id="qs-cobill">
+    <div class="tw"><div class="tbar"><div class="ttl">Subcontractor Bills</div><div class="ttools"><button class="bprimary" style="padding:6px 14px;font-size:12px;" onclick="FP('fp-scb')">+ Record Bill</button></div></div>
+    <table><thead><tr><th>Bill No.</th><th>Contractor</th><th>Work</th><th>Bill Amount</th><th>TDS 194C</th><th>Net Payable</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="tmono">SCB-041</td><td>M/s Ravi Masonry</td><td>Masonry 3rd floor</td><td class="tmono">₹3,20,000</td><td class="tmono" style="color:var(--RD);">₹6,400</td><td class="tmono">₹3,13,600</td><td><span class="bd ba">Pending</span></td></tr>
+      <tr><td class="tmono">SCB-040</td><td>M/s Vijay Plastering</td><td>Internal plaster 2nd floor</td><td class="tmono">₹1,85,000</td><td class="tmono" style="color:var(--RD);">₹3,700</td><td class="tmono" style="color:var(--GR);">₹1,81,300</td><td><span class="bd bg">Paid</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-scb"><div class="fph">Record Contractor Bill <button class="fpcl" onclick="CF('fp-scb')">×</button></div>
+    <div class="fgrid"><div class="fl"><label>Contractor Name</label><input type="text"/></div><div class="fl"><label>Work Order Ref.</label><input type="text" placeholder="WO-XXX"/></div><div class="fl"><label>Work Description</label><input type="text"/></div><div class="fl"><label>Bill Amount (₹)</label><input type="number"/></div><div class="fl"><label>TDS 194C %</label><select><option value="1">1% — Ind / HUF</option><option value="2" selected>2% — Company</option></select></div><div class="fl"><label>Bill Date</label><input type="date"/></div></div>
+    <div class="ffoot"><button class="bprimary" onclick="SF('fp-scb','Bill recorded — TDS auto-deducted by SATURDAY')">Record</button><button class="bsec" onclick="CF('fp-scb')">Cancel</button></div></div>
+  </div>
+  <div class="sec" id="qs-qsc">
+    <div class="tw"><div class="tbar"><div class="ttl">QS Compliance Register</div><div class="ttools"><button class="bprimary" style="padding:6px 14px;font-size:12px;" onclick="FP('fp-qsc')">+ Add Item</button></div></div>
+    <table><thead><tr><th>Item</th><th>Frequency</th><th>Due Date</th><th>Responsible</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="tbold">Measurement Book update</td><td>Weekly</td><td style="color:var(--RD);">25 Mar 2025</td><td>QS Manager</td><td><span class="bd ba">Pending</span></td></tr>
+      <tr><td class="tbold">RA Bill #5 certification</td><td>Monthly</td><td>25 Mar 2025</td><td>QS Manager</td><td><span class="bd bg">Done</span></td></tr>
+      <tr><td class="tbold">Abstract statement update</td><td>Monthly</td><td>31 Mar 2025</td><td>QS Manager</td><td><span class="bd bgr">Not Started</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-qsc"><div class="fph">Add Compliance Item <button class="fpcl" onclick="CF('fp-qsc')">×</button></div>
+    <div class="fgrid"><div class="fl"><label>Item</label><input type="text"/></div><div class="fl"><label>Frequency</label><select><option>Daily</option><option>Weekly</option><option>Monthly</option><option>Quarterly</option></select></div><div class="fl"><label>Due Date</label><input type="date"/></div><div class="fl"><label>Responsible</label><input type="text"/></div></div>
+    <div class="ffoot"><button class="bprimary" onclick="SF('fp-qsc','Item added')">Add</button><button class="bsec" onclick="CF('fp-qsc')">Cancel</button></div></div>
+  </div>
+</div>
+
+<!-- ════════════ PLANNING ════════════ -->
+<div class="mod" id="mod-planning">
+  <div class="mhdr"><div><div class="mhdr-t">Planning</div><div class="mhdr-s">Estimates · Targets · Progress · Manpower</div></div></div>
+  <div class="stabs">
+    <button class="stab on" onclick="sec('planning','est',this)">Estimates</button>
+    <button class="stab" onclick="sec('planning','tgt',this)">Targets</button>
+    <button class="stab" onclick="sec('planning','prog',this)">Progress</button>
+    <button class="stab" onclick="sec('planning','mp',this)">Manpower</button>
+  </div>
+  <div class="sec on" id="planning-est">
+    <div class="tw"><div class="tbar"><div class="ttl">Cost Estimates vs Actuals</div><div class="ttools"><button class="bprimary" style="padding:6px 14px;font-size:12px;" onclick="FP('fp-est')">+ Add Estimate</button></div></div>
+    <table><thead><tr><th>Work Head</th><th>Est. Cost</th><th>Actual Cost</th><th>Variance</th><th>% Complete</th></tr></thead><tbody>
+      <tr><td class="tbold">Earthwork & PCC</td><td class="tmono">₹18,40,000</td><td class="tmono">₹17,92,000</td><td class="tmono" style="color:var(--GR);">-₹48,000</td><td><span class="bd bg">100%</span></td></tr>
+      <tr><td class="tbold">RCC Work (Structural)</td><td class="tmono">₹1,24,00,000</td><td class="tmono">₹48,80,000</td><td class="tmono" style="color:var(--GR);">On Track</td><td><span class="bd bb">39%</span></td></tr>
+      <tr><td class="tbold">Masonry</td><td class="tmono">₹26,88,000</td><td class="tmono">₹9,92,000</td><td class="tmono" style="color:var(--GR);">On Track</td><td><span class="bd bb">37%</span></td></tr>
+      <tr><td class="tbold">Steel / Reinforcement</td><td class="tmono">₹87,68,000</td><td class="tmono">₹35,62,000</td><td class="tmono" style="color:var(--AM);">+₹2,400</td><td><span class="bd bb">40%</span></td></tr>
+      <tr><td class="tbold">Plastering & Finishing</td><td class="tmono">₹42,00,000</td><td class="tmono">₹0</td><td class="tmono">—</td><td><span class="bd bgr">0%</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-est"><div class="fph">Add Estimate Head <button class="fpcl" onclick="CF('fp-est')">×</button></div>
+    <div class="fgrid"><div class="fl"><label>Work Head</label><input type="text" placeholder="e.g. RCC Work — Structural"/></div><div class="fl"><label>Est. Cost (₹)</label><input type="number"/></div><div class="fl"><label>Duration (days)</label><input type="number"/></div><div class="fl"><label>Responsible</label><input type="text"/></div></div>
+    <div class="ffoot"><button class="bprimary" onclick="SF('fp-est','Estimate added')">Add</button><button class="bsec" onclick="CF('fp-est')">Cancel</button></div></div>
+  </div>
+  <div class="sec" id="planning-tgt">
+    <div class="tw"><div class="tbar"><div class="ttl">Monthly Targets vs Achievement</div><div class="ttools"><button class="bprimary" style="padding:6px 14px;font-size:12px;" onclick="FP('fp-target')">+ Set Target</button></div></div>
+    <table><thead><tr><th>Month</th><th>Target Value</th><th>Achieved</th><th>Achievement %</th><th>Status</th></tr></thead><tbody>
+      <tr><td>Jan 2025</td><td class="tmono">₹35,00,000</td><td class="tmono">₹38,45,200</td><td style="color:var(--GR);font-weight:600;">109.9%</td><td><span class="bd bg">Exceeded</span></td></tr>
+      <tr><td>Feb 2025</td><td class="tmono">₹38,00,000</td><td class="tmono">₹40,21,000</td><td style="color:var(--GR);font-weight:600;">105.8%</td><td><span class="bd bg">Exceeded</span></td></tr>
+      <tr><td>Mar 2025</td><td class="tmono">₹42,00,000</td><td class="tmono">₹27,84,000</td><td style="color:var(--AM);font-weight:600;">66.3%</td><td><span class="bd ba">In Progress</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-target"><div class="fph">Set Monthly Target <button class="fpcl" onclick="CF('fp-target')">×</button></div>
+    <div class="fgrid"><div class="fl"><label>Month</label><input type="month"/></div><div class="fl"><label>Project</label><select><option>YIIRS Package 05</option><option>Industrial Shed</option><option>All Projects</option></select></div><div class="fl"><label>Target Value (₹)</label><input type="number"/></div><div class="fl"><label>Key Milestone</label><input type="text"/></div></div>
+    <div class="ffoot"><button class="bprimary" onclick="SF('fp-target','Target set')">Save</button><button class="bsec" onclick="CF('fp-target')">Cancel</button></div></div>
+  </div>
+  <div class="sec" id="planning-prog">
+    <div class="srow"><div class="sk"><div class="sklbl">Overall Progress</div><div class="skval">38%</div></div><div class="sk"><div class="sklbl">Days Elapsed</div><div class="skval">185</div><div class="skd">of 900 total</div></div><div class="sk"><div class="sklbl">Days Remaining</div><div class="skval">715</div><div class="skd" style="color:var(--GR);">On Schedule</div></div><div class="sk"><div class="sklbl">Milestones Done</div><div class="skval">4 / 12</div></div></div>
+    <div class="tw"><div class="tbar"><div class="ttl">Milestone Tracker</div><div class="ttools"><button class="bprimary" style="padding:6px 14px;font-size:12px;" onclick="FP('fp-mile')">+ Add Milestone</button></div></div>
+    <table><thead><tr><th>Milestone</th><th>Target Date</th><th>Actual Date</th><th>Delay</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="tbold">Foundation complete</td><td>Sep 2024</td><td>Sep 2024</td><td>—</td><td><span class="bd bg">Done</span></td></tr>
+      <tr><td class="tbold">Ground floor structural</td><td>Nov 2024</td><td>Dec 2024</td><td style="color:var(--AM);">+30 days</td><td><span class="bd bg">Done</span></td></tr>
+      <tr><td class="tbold">First floor structural</td><td>Jan 2025</td><td>Feb 2025</td><td style="color:var(--AM);">+28 days</td><td><span class="bd bg">Done</span></td></tr>
+      <tr><td class="tbold">Second floor structural</td><td>Mar 2025</td><td>—</td><td style="color:var(--RD);">At Risk</td><td><span class="bd bb">In Progress</span></td></tr>
+      <tr><td class="tbold">Full structural complete</td><td>Jun 2025</td><td>—</td><td>—</td><td><span class="bd bgr">Upcoming</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-mile"><div class="fph">Add Milestone <button class="fpcl" onclick="CF('fp-mile')">×</button></div>
+    <div class="fgrid"><div class="fl"><label>Milestone Name</label><input type="text"/></div><div class="fl"><label>Target Date</label><input type="date"/></div><div class="fl"><label>Project</label><select><option>YIIRS Package 05</option><option>Industrial Shed</option></select></div><div class="fl"><label>Description</label><input type="text"/></div></div>
+    <div class="ffoot"><button class="bprimary" onclick="SF('fp-mile','Milestone added')">Add</button><button class="bsec" onclick="CF('fp-mile')">Cancel</button></div></div>
+  </div>
+  <div class="sec" id="planning-mp">
+    <div class="srow"><div class="sk"><div class="sklbl">Planned Strength</div><div class="skval">81</div></div><div class="sk"><div class="sklbl">Deployed Today</div><div class="skval" style="color:var(--GR);">79</div></div><div class="sk"><div class="sklbl">Shortage</div><div class="skval" style="color:var(--RD);">-4</div></div><div class="sk"><div class="sklbl">Avg Productivity</div><div class="skval">96%</div></div></div>
+    <div class="tw"><div class="tbar"><div class="ttl">Manpower Plan vs Deployment</div><div class="ttools"><button class="bprimary" style="padding:6px 14px;font-size:12px;" onclick="FP('fp-mp')">+ Update</button></div></div>
+    <table><thead><tr><th>Category</th><th>Planned</th><th>Deployed</th><th>Variance</th><th>Productivity</th><th>Wages/Day</th></tr></thead><tbody>
+      <tr><td class="tbold">Mason (Skilled)</td><td>20</td><td>18</td><td style="color:var(--AM);">-2</td><td>94%</td><td class="tmono">₹750</td></tr>
+      <tr><td class="tbold">Bar Bender</td><td>15</td><td>15</td><td style="color:var(--GR);">0</td><td>98%</td><td class="tmono">₹700</td></tr>
+      <tr><td class="tbold">Carpenter</td><td>12</td><td>10</td><td style="color:var(--RD);">-2</td><td>88%</td><td class="tmono">₹700</td></tr>
+      <tr><td class="tbold">Helper (Unskilled)</td><td>30</td><td>32</td><td style="color:var(--GR);">+2</td><td>100%</td><td class="tmono">₹450</td></tr>
+      <tr><td class="tbold">Supervisor</td><td>4</td><td>4</td><td style="color:var(--GR);">0</td><td>100%</td><td class="tmono">₹1,200</td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-mp"><div class="fph">Update Manpower <button class="fpcl" onclick="CF('fp-mp')">×</button></div>
+    <div class="fgrid"><div class="fl"><label>Date</label><input type="date"/></div><div class="fl"><label>Category</label><select><option>Mason</option><option>Bar Bender</option><option>Carpenter</option><option>Helper</option><option>Supervisor</option></select></div><div class="fl"><label>Planned Strength</label><input type="number"/></div><div class="fl"><label>Deployed Today</label><input type="number"/></div></div>
+    <div class="ffoot"><button class="bprimary" onclick="SF('fp-mp','Manpower updated')">Update</button><button class="bsec" onclick="CF('fp-mp')">Cancel</button></div></div>
+  </div>
+</div>
+
+<!-- ════════════ FINANCE ════════════ -->
+<div class="mod" id="mod-finance">
+  <div class="mhdr"><div><div class="mhdr-t">Finance</div><div class="mhdr-s">Accounts · Vendor Payments · Agency Payments · Project Expenses · Compliance</div></div><div class="mhdr-a"><div style="display:flex;align-items:center;gap:6px;background:var(--GRb);border:.5px solid rgba(22,163,74,.2);border-radius:7px;padding:5px 10px;font-size:12px;color:var(--GR);"><div style="width:5px;height:5px;border-radius:50%;background:var(--GR);animation:pulse 2s infinite;"></div>SATURDAY Active</div></div></div>
+  <div class="stabs">
+    <button class="stab on" onclick="sec('finance','acc',this)">Accounts</button>
+    <button class="stab" onclick="sec('finance','vpay',this)">Vendor Payments</button>
+    <button class="stab" onclick="sec('finance','apay',this)">Agency Payments</button>
+    <button class="stab" onclick="sec('finance','exp',this)">Project Expenses</button>
+    <button class="stab" onclick="sec('finance','fcomp',this)">Compliance</button>
+  </div>
+  <div class="sec on" id="finance-acc">
+    <div class="srow"><div class="sk"><div class="sklbl">Bank Balance</div><div class="skval">₹38,45,200</div></div><div class="sk"><div class="sklbl">Total Receivables</div><div class="skval" style="color:var(--AM);">₹56,70,000</div></div><div class="sk"><div class="sklbl">Total Payables</div><div class="skval" style="color:var(--RD);">₹29,14,000</div></div><div class="sk"><div class="sklbl">Net P&L Month</div><div class="skval" style="color:var(--GR);">+₹12,30,000</div></div></div>
+    <div class="tw"><div class="tbar"><div class="ttl">Accounts Ledger</div><div class="ttools"><input class="si" placeholder="Search ledger..."/><button class="bprimary" style="padding:6px 14px;font-size:12px;" onclick="FP('fp-vch')">+ Voucher Entry</button></div></div>
+    <table><thead><tr><th>Date</th><th>Narration</th><th>Debit (₹)</th><th>Credit (₹)</th><th>Type</th><th>Project</th></tr></thead><tbody>
+      <tr><td>25 Mar</td><td class="tbold">TGEWIDC RA Bill #4 receipt</td><td>—</td><td class="tmono" style="color:var(--GR);font-weight:600;">₹38,19,997</td><td><span class="bd bg">Receipt</span></td><td>YIIRS Pkg 05</td></tr>
+      <tr><td>24 Mar</td><td class="tbold">M/s Vizag Steel payment</td><td class="tmono" style="color:var(--RD);font-weight:600;">₹4,94,000</td><td>—</td><td><span class="bd br">Payment</span></td><td>YIIRS Pkg 05</td></tr>
+      <tr><td>23 Mar</td><td class="tbold">Labour wages March advance</td><td class="tmono" style="color:var(--RD);font-weight:600;">₹3,20,000</td><td>—</td><td><span class="bd ba">Wages</span></td><td>YIIRS Pkg 05</td></tr>
+      <tr><td>22 Mar</td><td class="tbold">M/s Ravi Masonry — TDS</td><td>—</td><td class="tmono">₹6,400</td><td><span class="bd bb">TDS</span></td><td>YIIRS Pkg 05</td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-vch"><div class="fph">Voucher Entry <button class="fpcl" onclick="CF('fp-vch')">×</button></div>
+    <div class="fgrid"><div class="fl"><label>Voucher Type</label><select><option>Payment Voucher</option><option>Receipt Voucher</option><option>Journal Entry</option><option>Contra Entry</option></select></div><div class="fl"><label>Date</label><input type="date"/></div><div class="fl"><label>Account (Debit)</label><input type="text" placeholder="Account head"/></div><div class="fl"><label>Account (Credit)</label><input type="text" placeholder="Account head"/></div><div class="fl"><label>Amount (₹)</label><input type="number"/></div><div class="fl"><label>Narration</label><input type="text"/></div><div class="fl"><label>Project</label><select><option>YIIRS Package 05</option><option>Industrial Shed</option><option>General</option></select></div><div class="fl"><label>Reference (NEFT / Cheque / UPI)</label><input type="text"/></div></div>
+    <div class="ffoot"><button class="bprimary" onclick="SF('fp-vch','Voucher posted to ledger')">Post Voucher</button><button class="bsec" onclick="CF('fp-vch')">Cancel</button></div></div>
+  </div>
+  <div class="sec" id="finance-vpay">
+    <div class="tw"><div class="tbar"><div class="ttl">Vendor Payments</div><div class="ttools"><button class="bprimary" style="padding:6px 14px;font-size:12px;" onclick="FP('fp-vpay')">+ Record Payment</button></div></div>
+    <table><thead><tr><th>Vendor</th><th>Invoice No.</th><th>Invoice Amt</th><th>TDS</th><th>Net Paid</th><th>Date</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="tbold">M/s Kumar Sand</td><td class="tmono">INV-2025-234</td><td class="tmono">₹62,500</td><td class="tmono">₹1,250</td><td class="tmono" style="color:var(--GR);">₹61,250</td><td>26 Mar</td><td><span class="bd bg">Paid</span></td></tr>
+      <tr><td class="tbold">M/s Vizag Steel</td><td class="tmono">INV-2025-412</td><td class="tmono">₹4,94,000</td><td class="tmono">₹9,880</td><td class="tmono">₹4,84,120</td><td>—</td><td><span class="bd ba">Pending</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-vpay"><div class="fph">Record Vendor Payment <button class="fpcl" onclick="CF('fp-vpay')">×</button></div>
+    <div class="fgrid"><div class="fl"><label>Vendor</label><select><option>M/s Vizag Steel Corp</option><option>M/s Prism Cement</option><option>M/s Kumar Sand</option></select></div><div class="fl"><label>Invoice No.</label><input type="text"/></div><div class="fl"><label>Invoice Amount (₹)</label><input type="number"/></div><div class="fl"><label>TDS Rate %</label><input type="number" value="2"/></div><div class="fl"><label>Payment Mode</label><select><option>NEFT</option><option>RTGS</option><option>UPI</option><option>Cheque</option></select></div><div class="fl"><label>Payment Date</label><input type="date"/></div></div>
+    <div class="ffoot"><button class="bprimary" onclick="SF('fp-vpay','Payment recorded — SATURDAY updating ledger')">Record</button><button class="bsec" onclick="CF('fp-vpay')">Cancel</button></div></div>
+  </div>
+  <div class="sec" id="finance-apay">
+    <div class="tw"><div class="tbar"><div class="ttl">Agency / Subcontractor Payments</div><div class="ttools"><button class="bprimary" style="padding:6px 14px;font-size:12px;" onclick="FP('fp-apay')">+ Record Payment</button></div></div>
+    <table><thead><tr><th>Agency</th><th>Work Order</th><th>Bill Amt</th><th>TDS 194C</th><th>Net Paid</th><th>Date</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="tbold">M/s Ravi Masonry</td><td class="tmono">WO-038</td><td class="tmono">₹3,20,000</td><td class="tmono" style="color:var(--RD);">₹6,400</td><td class="tmono">₹3,13,600</td><td>—</td><td><span class="bd ba">Due</span></td></tr>
+      <tr><td class="tbold">M/s Vijay Labour</td><td class="tmono">WO-035</td><td class="tmono">₹1,85,000</td><td class="tmono" style="color:var(--RD);">₹3,700</td><td class="tmono" style="color:var(--GR);">₹1,81,300</td><td>22 Mar</td><td><span class="bd bg">Paid</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-apay"><div class="fph">Record Agency Payment <button class="fpcl" onclick="CF('fp-apay')">×</button></div>
+    <div class="fgrid"><div class="fl"><label>Contractor / Agency</label><input type="text"/></div><div class="fl"><label>Work Order Ref.</label><input type="text" placeholder="WO-XXX"/></div><div class="fl"><label>Bill Amount (₹)</label><input type="number"/></div><div class="fl"><label>TDS 194C %</label><select><option value="1">1% — Ind / HUF</option><option value="2" selected>2% — Company</option></select></div><div class="fl"><label>Payment Date</label><input type="date"/></div><div class="fl"><label>Payment Mode</label><select><option>NEFT</option><option>RTGS</option><option>Cheque</option></select></div></div>
+    <div class="ffoot"><button class="bprimary" onclick="SF('fp-apay','Payment recorded')">Record</button><button class="bsec" onclick="CF('fp-apay')">Cancel</button></div></div>
+  </div>
+  <div class="sec" id="finance-exp">
+    <div class="tw"><div class="tbar"><div class="ttl">Project Expenses</div><div class="ttools"><input class="si" placeholder="Search..."/><button class="bprimary" style="padding:6px 14px;font-size:12px;" onclick="FP('fp-exp')">+ Add Expense</button></div></div>
+    <table><thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount</th><th>Project</th><th>Approved By</th></tr></thead><tbody>
+      <tr><td>25 Mar</td><td><span class="bd bb">Site</span></td><td>Diesel for generator</td><td class="tmono">₹18,400</td><td>YIIRS Pkg 05</td><td>PM Suresh</td></tr>
+      <tr><td>24 Mar</td><td><span class="bd ba">Transport</span></td><td>Material shifting charges</td><td class="tmono">₹8,500</td><td>YIIRS Pkg 05</td><td>PM Suresh</td></tr>
+      <tr><td>23 Mar</td><td><span class="bd bgr">Admin</span></td><td>Stationery and printing</td><td class="tmono">₹2,100</td><td>General</td><td>Accountant</td></tr>
+      <tr><td>22 Mar</td><td><span class="bd bb">Site</span></td><td>Safety equipment</td><td class="tmono">₹12,800</td><td>YIIRS Pkg 05</td><td>PM Suresh</td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-exp"><div class="fph">Add Project Expense <button class="fpcl" onclick="CF('fp-exp')">×</button></div>
+    <div class="fgrid"><div class="fl"><label>Date</label><input type="date"/></div><div class="fl"><label>Category</label><select><option>Site Expense</option><option>Transport</option><option>Equipment Hire</option><option>Admin / Office</option><option>Testing & QC</option><option>Safety</option><option>Miscellaneous</option></select></div><div class="fl"><label>Description</label><input type="text"/></div><div class="fl"><label>Amount (₹)</label><input type="number"/></div><div class="fl"><label>Project</label><select><option>YIIRS Package 05</option><option>Industrial Shed</option><option>General</option></select></div><div class="fl"><label>Receipt No.</label><input type="text"/></div><div class="fl"><label>Upload Receipt</label><input type="file" accept=".pdf,image/*"/></div></div>
+    <div class="ffoot"><button class="bprimary" onclick="SF('fp-exp','Expense recorded')">Save</button><button class="bsec" onclick="CF('fp-exp')">Cancel</button></div></div>
+  </div>
+  <div class="sec" id="finance-fcomp">
+    <div class="tw"><div class="tbar"><div class="ttl">Financial Compliance Calendar</div></div>
+    <table><thead><tr><th>Compliance</th><th>Frequency</th><th>Next Due</th><th>Responsible</th><th>SATURDAY Status</th></tr></thead><tbody>
+      <tr><td class="tbold">GSTR-1 Filing</td><td>Monthly</td><td style="color:var(--RD);">11 Apr 2025</td><td>CFO / SATURDAY</td><td><span class="bd bb">Auto-preparing</span></td></tr>
+      <tr><td class="tbold">GSTR-3B Filing</td><td>Monthly</td><td>20 Apr 2025</td><td>CFO / SATURDAY</td><td><span class="bd bgr">Not Started</span></td></tr>
+      <tr><td class="tbold">TDS Deposit 194C</td><td>Monthly</td><td>7 Apr 2025</td><td>SATURDAY</td><td><span class="bd ba">Challan Ready</span></td></tr>
+      <tr><td class="tbold">Form 26Q TDS Return</td><td>Quarterly</td><td>30 Apr 2025</td><td>SATURDAY</td><td><span class="bd bg">Auto-prepared</span></td></tr>
+      <tr><td class="tbold">Advance Tax</td><td>Quarterly</td><td>15 Jun 2025</td><td>CFO</td><td><span class="bd bgr">Upcoming</span></td></tr>
+    </tbody></table></div>
+  </div>
+</div>
+
+<!-- ════════════ HR ════════════ -->
+<div class="mod" id="mod-hr">
+  <div class="mhdr"><div><div class="mhdr-t">HR</div><div class="mhdr-s">Staff management and agency / subcontractor workforce</div></div></div>
+  <div class="stabs">
+    <button class="stab on" onclick="sec('hr','staff',this)">Staff</button>
+    <button class="stab" onclick="sec('hr','agencies',this)">Agencies</button>
+  </div>
+  <div class="sec on" id="hr-staff">
+    <div class="srow"><div class="sk"><div class="sklbl">Total Staff</div><div class="skval">12</div></div><div class="sk"><div class="sklbl">On-Site Today</div><div class="skval" style="color:var(--GR);">9</div></div><div class="sk"><div class="sklbl">On Leave</div><div class="skval" style="color:var(--AM);">2</div></div><div class="sk"><div class="sklbl">Monthly Payroll</div><div class="skval">₹8.4L</div></div></div>
+    <div class="tw"><div class="tbar"><div class="ttl">Staff Register</div><div class="ttools"><input class="si" placeholder="Search staff..."/><button class="bprimary" style="padding:6px 14px;font-size:12px;" onclick="FP('fp-staff')">+ Add Staff</button></div></div>
+    <table><thead><tr><th>Name</th><th>Designation</th><th>Project</th><th>Join Date</th><th>Mobile</th><th>Salary</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="tbold">Krishna Teja</td><td>CMD / Proprietor</td><td>All Projects</td><td>—</td><td>—</td><td>—</td><td><span class="bd bg">Active</span></td></tr>
+      <tr><td class="tbold">Ravi Kumar</td><td>Project Director</td><td>YIIRS Pkg 05</td><td>Jan 2024</td><td class="tmono">+91 98765 00011</td><td class="tmono">₹85,000</td><td><span class="bd bg">Active</span></td></tr>
+      <tr><td class="tbold">Suresh PM</td><td>Project Manager</td><td>YIIRS Pkg 05</td><td>Mar 2024</td><td class="tmono">+91 98765 00012</td><td class="tmono">₹55,000</td><td><span class="bd bg">Active</span></td></tr>
+      <tr><td class="tbold">Anil Site Engineer</td><td>Site Engineer</td><td>YIIRS Pkg 05</td><td>Apr 2024</td><td class="tmono">+91 98765 00013</td><td class="tmono">₹38,000</td><td><span class="bd ba">Leave</span></td></tr>
+      <tr><td class="tbold">Priya Accountant</td><td>Accountant</td><td>All Projects</td><td>Jun 2024</td><td class="tmono">+91 98765 00014</td><td class="tmono">₹32,000</td><td><span class="bd bg">Active</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-staff"><div class="fph">Add Staff Member <button class="fpcl" onclick="CF('fp-staff')">×</button></div>
+    <div class="fgrid"><div class="fl"><label>Full Name *</label><input type="text"/></div><div class="fl"><label>Designation</label><select><option>Project Director</option><option>General Manager</option><option>AGM</option><option>SPM</option><option>Project Manager</option><option>APM</option><option>Site Engineer</option><option>QS Manager</option><option>Store Manager</option><option>Accountant</option></select></div><div class="fl"><label>Assigned Project</label><select><option>YIIRS Package 05</option><option>Industrial Shed</option><option>All Projects</option></select></div><div class="fl"><label>Join Date</label><input type="date"/></div><div class="fl"><label>Mobile *</label><input type="tel"/></div><div class="fl"><label>Email</label><input type="email"/></div><div class="fl"><label>Monthly Salary (₹)</label><input type="number"/></div><div class="fl"><label>PF Account No.</label><input type="text"/></div><div class="fl"><label>Aadhaar No.</label><input type="text" maxlength="12"/></div><div class="fl"><label>PAN</label><input type="text" maxlength="10"/></div><div class="fl"><label>Bank Account No.</label><input type="text"/></div><div class="fl"><label>IFSC Code</label><input type="text"/></div></div>
+    <div class="ffoot"><button class="bprimary" onclick="SF('fp-staff','Staff member added')">Add Staff</button><button class="bsec" onclick="CF('fp-staff')">Cancel</button></div></div>
+  </div>
+  <div class="sec" id="hr-agencies">
+    <div class="srow"><div class="sk"><div class="sklbl">Active Agencies</div><div class="skval">6</div></div><div class="sk"><div class="sklbl">Labour Deployed</div><div class="skval">84</div><div class="skd">All sites today</div></div><div class="sk"><div class="sklbl">Pending Wages</div><div class="skval" style="color:var(--AM);">₹4.2L</div></div><div class="sk"><div class="sklbl">PF / ESI Status</div><div class="skval" style="color:var(--GR);">✓ Compliant</div></div></div>
+    <div class="tw"><div class="tbar"><div class="ttl">Labour Agencies Register</div><div class="ttools"><button class="bprimary" style="padding:6px 14px;font-size:12px;" onclick="FP('fp-agency')">+ Add Agency</button></div></div>
+    <table><thead><tr><th>Agency Name</th><th>Work Type</th><th>Workers</th><th>Work Order</th><th>PF Registered</th><th>Wages Due</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="tbold">M/s Ravi Masonry Works</td><td>Masonry</td><td>22</td><td class="tmono">WO-038</td><td><span class="bd bg">Yes</span></td><td class="tmono" style="color:var(--AM);">₹1,82,000</td><td><span class="bd bg">Active</span></td></tr>
+      <tr><td class="tbold">M/s Vijay Labour Contractor</td><td>General Labour</td><td>35</td><td class="tmono">WO-032</td><td><span class="bd bg">Yes</span></td><td class="tmono" style="color:var(--AM);">₹2,38,000</td><td><span class="bd bg">Active</span></td></tr>
+      <tr><td class="tbold">M/s SK Bar Benders</td><td>Bar Bending / Steel</td><td>18</td><td class="tmono">WO-041</td><td><span class="bd ba">Pending</span></td><td class="tmono" style="color:var(--GR);">₹0</td><td><span class="bd bg">Active</span></td></tr>
+      <tr><td class="tbold">M/s Reddy Carpentry</td><td>Shuttering / Formwork</td><td>9</td><td class="tmono">WO-039</td><td><span class="bd bg">Yes</span></td><td class="tmono" style="color:var(--GR);">₹0</td><td><span class="bd bg">Active</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-agency"><div class="fph">Add Labour Agency <button class="fpcl" onclick="CF('fp-agency')">×</button></div>
+    <div class="fgrid"><div class="fl"><label>Agency / Firm Name *</label><input type="text"/></div><div class="fl"><label>Type of Work</label><select><option>Masonry</option><option>Bar Bending & Steel</option><option>Carpentry / Shuttering</option><option>General Labour</option><option>Plastering</option><option>Painting</option><option>MEP</option></select></div><div class="fl"><label>Contact Person</label><input type="text"/></div><div class="fl"><label>Mobile</label><input type="tel"/></div><div class="fl"><label>PF Registration No.</label><input type="text"/></div><div class="fl"><label>ESI Registration No.</label><input type="text"/></div><div class="fl"><label>No. of Workers</label><input type="number"/></div><div class="fl"><label>Work Order Ref.</label><input type="text" placeholder="WO-XXX"/></div></div>
+    <div class="ffoot"><button class="bprimary" onclick="SF('fp-agency','Agency added')">Add Agency</button><button class="bsec" onclick="CF('fp-agency')">Cancel</button></div></div>
+  </div>
+</div>
+
+<!-- ════════════ SATURDAY AI ════════════ -->
+<div class="mod" id="mod-saturday">
+  <div class="mhdr"><div><div class="mhdr-t">SATURDAY AI Engine</div><div class="mhdr-s">Autonomous financial intelligence — running 24/7</div></div><div class="mhdr-a"><div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--GR);"><div style="width:6px;height:6px;border-radius:50%;background:var(--GR);animation:pulse 2s infinite;"></div>All Systems Online</div></div></div>
+  <div class="srow"><div class="sk"><div class="sklbl">Tasks Today</div><div class="skval" style="color:var(--GR);">18</div></div><div class="sk"><div class="sklbl">Anomalies</div><div class="skval" style="color:var(--RD);">2</div></div><div class="sk"><div class="sklbl">Auto-filings Ready</div><div class="skval" style="color:var(--C1);">3</div></div><div class="sk"><div class="sklbl">P&L Last Updated</div><div class="skval" style="color:var(--T2);">14 min ago</div></div></div>
+  <div style="background:var(--bg2);border:.5px solid var(--BR);border-radius:13px;padding:18px;margin-bottom:16px;box-shadow:var(--sh);">
+    <div style="font-size:13px;font-weight:600;margin-bottom:12px;color:var(--C1);">Ask SATURDAY Anything Financial</div>
+    <div style="display:flex;gap:9px;"><input class="si" style="flex:1;width:auto;" id="sq" placeholder="e.g. What is our cash position for April?" onkeydown="if(event.key==='Enter')askSAT()"/><button class="bprimary" style="padding:9px 16px;" onclick="askSAT()">Ask →</button></div>
+    <div id="sa" style="margin-top:12px;font-size:13px;color:var(--T1);line-height:1.6;display:none;background:var(--BLb);border:.5px solid rgba(37,99,235,.18);border-radius:8px;padding:12px;"></div>
+  </div>
+  <div class="alr"><div class="alt" style="color:var(--RD);">Anomaly — Cement over-consumption</div><div class="alb2">64 bags/cum actual vs 48 theoretical for M30 concrete. 34% excess. Possible wastage or incorrect mix. Site inspection recommended.</div></div>
+  <div class="alb"><div class="alt" style="color:var(--BL);">Cash flow alert — Apr 15 shortfall predicted</div><div class="alb2">₹23L shortfall projected on April 15. Recommend submitting RA Bill #5 (₹52L) by March 28 to ensure receipt before April 10.</div></div>
+  <div class="alg"><div class="alt" style="color:var(--GR);">GSTR-1 auto-preparation complete — March 2025</div><div class="alb2">47 outward supplies aggregated. Works contract GST @12% applied. Ready for one-click filing. Due: April 11, 2025.</div></div>
+  <div class="alg"><div class="alt" style="color:var(--GR);">TDS challan ready — Section 194C</div><div class="alb2">₹4,78,700 TDS across 194C, 194I, 194J. Challan auto-generated. Due for deposit: April 7. Form 26Q also prepared.</div></div>
+</div>
+
+<!-- ════════════ ADMIN ════════════ -->
+<div class="mod" id="mod-admin">
+  <div class="mhdr"><div><div class="mhdr-t">Admin</div><div class="mhdr-s">Company · Users & Roles · Projects · Subscription · Integrations</div></div></div>
+  <div class="stabs">
+    <button class="stab on" onclick="sec('admin','co',this)">Company</button>
+    <button class="stab" onclick="sec('admin','users',this)">Users & Roles</button>
+    <button class="stab" onclick="sec('admin','projects',this)">Projects</button>
+    <button class="stab" onclick="sec('admin','sub',this)">Subscription</button>
+    <button class="stab" onclick="sec('admin','settings',this)">Settings</button>
+  </div>
+  <div class="sec on" id="admin-co">
+    <div style="background:var(--bg2);border:.5px solid var(--BR);border-radius:13px;padding:20px;max-width:580px;box-shadow:var(--sh);">
+      <div style="font-size:13px;font-weight:600;margin-bottom:16px;color:var(--T0);">Company Profile</div>
+      <div class="fgrid" style="grid-template-columns:repeat(auto-fit,minmax(185px,1fr));">
+        <div class="fl"><label>Company Full Name</label><input type="text" value="TTIPL Construction Pvt. Ltd."/></div>
+        <div class="fl"><label>Short Name</label><input type="text" value="TTIPL"/></div>
+        <div class="fl"><label>GSTIN</label><input type="text" value="36AAAAA0000A1Z5"/></div>
+        <div class="fl"><label>PAN</label><input type="text" value="AAAAA0000A"/></div>
+        <div class="fl"><label>City</label><input type="text" value="Hyderabad"/></div>
+        <div class="fl"><label>State</label><select><option selected>Telangana</option><option>Andhra Pradesh</option></select></div>
+        <div class="fl"><label>Phone</label><input type="tel" value="+91 40 XXXX XXXX"/></div>
+        <div class="fl"><label>Email</label><input type="email" value="info@ttipl.in"/></div>
+      </div>
+      <!-- Upload company logo -->
+      <div style="margin-top:10px;"><label style="font-size:11px;color:var(--T2);font-weight:500;letter-spacing:.5px;display:block;margin-bottom:6px;">COMPANY LOGO</label>
+      <div style="display:flex;align-items:center;gap:10px;"><div class="sbco-logo" id="co-logo-prev" style="width:44px;height:44px;border-radius:9px;font-size:17px;">T</div><button class="bsec" onclick="document.getElementById('co-logo-up').click()" style="font-size:12px;padding:7px 13px;">Upload Logo</button><input type="file" id="co-logo-up" accept="image/*" style="display:none" onchange="updateCoLogo(event)"/></div></div>
+      <button class="bprimary" style="margin-top:16px;" onclick="T('Company profile saved','s')">Save Changes</button>
+    </div>
+  </div>
+  <div class="sec" id="admin-users">
+    <div class="tw"><div class="tbar"><div class="ttl">Platform Users</div><div class="ttools"><button class="bprimary" style="padding:6px 14px;font-size:12px;" onclick="FP('fp-adduser')">+ Add User</button></div></div>
+    <table><thead><tr><th>Name</th><th>Role</th><th>Email</th><th>Last Login</th><th>Status</th><th>Action</th></tr></thead><tbody>
+      <tr><td class="tbold">Krishna Teja</td><td>CMD / Proprietor</td><td class="tmono"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="bcd7ced5cfd4d2ddfcc8c8d5ccd092d5d2">[email&#160;protected]</a></td><td>Today</td><td><span class="bd bg">Active</span></td><td><button class="al">Edit</button></td></tr>
+      <tr><td class="tbold">Ravi Kumar</td><td>Project Director</td><td class="tmono"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="453724332c0531312c35296b2c2b">[email&#160;protected]</a></td><td>Today</td><td><span class="bd bg">Active</span></td><td><button class="al">Edit</button></td></tr>
+      <tr><td class="tbold">Suresh PM</td><td>Project Manager</td><td class="tmono"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0271777067716a4276766b726e2c6b6c">[email&#160;protected]</a></td><td>Yesterday</td><td><span class="bd bg">Active</span></td><td><button class="al">Edit</button></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-adduser"><div class="fph">Add New User <button class="fpcl" onclick="CF('fp-adduser')">×</button></div>
+    <div class="fgrid"><div class="fl"><label>Full Name *</label><input type="text"/></div><div class="fl"><label>Work Email *</label><input type="email"/></div><div class="fl"><label>Mobile</label><input type="tel"/></div><div class="fl"><label>Role Level</label><select><option>CMD / CEO</option><option>CFO</option><option>Project Director</option><option>General Manager</option><option>AGM</option><option>SPM</option><option>Project Manager</option><option>APM</option><option>QS Manager</option><option>Store Manager</option><option>Accountant</option><option>Site Engineer</option></select></div><div class="fl"><label>Assigned Project</label><select><option>All Projects</option><option>YIIRS Package 05</option><option>Industrial Shed</option></select></div><div class="fl"><label>Temporary Password</label><input type="text" placeholder="User changes on first login"/></div></div>
+    <div class="ffoot"><button class="bprimary" onclick="SF('fp-adduser','User added — credentials sent by email')">Add User</button><button class="bsec" onclick="CF('fp-adduser')">Cancel</button></div></div>
+  </div>
+  <div class="sec" id="admin-projects">
+    <div class="tw"><div class="tbar"><div class="ttl">Projects Register</div><div class="ttools"><button class="bprimary" style="padding:6px 14px;font-size:12px;" onclick="FP('fp-proj')">+ Add Project</button></div></div>
+    <table><thead><tr><th>Project Name</th><th>Client</th><th>Contract Value</th><th>Start Date</th><th>Completion</th><th>Status</th></tr></thead><tbody>
+      <tr><td class="tbold">YIIRS Package 05</td><td>TGEWIDC</td><td class="tmono">₹8,71,00,000</td><td>Sep 2024</td><td>Mar 2027</td><td><span class="bd bg">Active</span></td></tr>
+      <tr><td class="tbold">Industrial Shed Package</td><td>TSIIC Kamareddy</td><td class="tmono">₹3,87,00,000</td><td>Nov 2024</td><td>Nov 2026</td><td><span class="bd bg">Active</span></td></tr>
+      <tr><td class="tbold">Residential Complex</td><td>Private Client</td><td class="tmono">₹1,45,00,000</td><td>Jan 2025</td><td>Dec 2025</td><td><span class="bd ba">Watch</span></td></tr>
+    </tbody></table>
+    <div class="fp" id="fp-proj"><div class="fph">Add New Project <button class="fpcl" onclick="CF('fp-proj')">×</button></div>
+    <div class="fgrid"><div class="fl"><label>Project Name *</label><input type="text" placeholder="e.g. YIIRS Package 06"/></div><div class="fl"><label>Client / Owner</label><input type="text" placeholder="TGEWIDC / TSIIC / Private"/></div><div class="fl"><label>Agreement No.</label><input type="text" placeholder="e.g. 16/SE(P)/2025-26"/></div><div class="fl"><label>Contract Value (₹)</label><input type="number"/></div><div class="fl"><label>Start Date</label><input type="date"/></div><div class="fl"><label>Completion (months)</label><input type="number" placeholder="30"/></div><div class="fl"><label>Project Location</label><input type="text" placeholder="District, Telangana"/></div><div class="fl"><label>Supervising Authority</label><input type="text" placeholder="EE, TGEWIDC Nizamabad"/></div><div class="fl"><label>Retention %</label><input type="number" value="5"/></div><div class="fl"><label>Mobilisation Advance (₹)</label><input type="number" value="0"/></div></div>
+    <div class="ffoot"><button class="bprimary" onclick="SF('fp-proj','Project added — SATURDAY initialising tracking')">Add Project</button><button class="bsec" onclick="CF('fp-proj')">Cancel</button></div></div>
+  </div>
+  <div class="sec" id="admin-sub">
+    <div style="background:var(--bg2);border:1.5px solid var(--C1);border-radius:14px;padding:22px;max-width:440px;box-shadow:var(--sh);">
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px;"><div style="font-size:14px;font-weight:700;color:var(--C1);">ERP+ Pro Plan</div><span class="bd bb">Active</span></div>
+      <div style="font-size:12px;color:var(--T1);display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;justify-content:space-between;border-bottom:.5px solid var(--BR);padding-bottom:8px;"><span>Monthly Cost</span><span style="font-family:var(--font-mono);font-weight:600;color:var(--T0);">₹12,999</span></div>
+        <div style="display:flex;justify-content:space-between;border-bottom:.5px solid var(--BR);padding-bottom:8px;"><span>Free Trial Ends</span><span style="color:var(--AM);font-weight:600;">8 Apr 2025 (14 days)</span></div>
+        <div style="display:flex;justify-content:space-between;border-bottom:.5px solid var(--BR);padding-bottom:8px;"><span>Users</span><span style="color:var(--T0);font-weight:600;">3 / 25</span></div>
+        <div style="display:flex;justify-content:space-between;"><span>Projects</span><span style="color:var(--T0);font-weight:600;">3 / 10</span></div>
+      </div>
+      <div style="height:.5px;background:var(--BR);margin:14px 0;"></div>
+      <button class="bprimary" onclick="T('Upgrade to ERP+ Max — contact support@saturdayerp.com','i')">Upgrade to ERP+ Max</button>
+    </div>
+  </div>
+  <!-- SETTINGS — with Dark/Light Mode Toggle -->
+  <div class="sec" id="admin-settings">
+    <div style="background:var(--bg2);border:.5px solid var(--BR);border-radius:13px;padding:20px;max-width:540px;box-shadow:var(--sh);">
+      <div style="font-size:13px;font-weight:600;color:var(--T0);margin-bottom:16px;">Application Settings</div>
+      <!-- DARK / LIGHT MODE TOGGLE -->
+      <div style="background:var(--C1d);border:.5px solid rgba(79,70,229,.15);border-radius:10px;padding:12px 14px;margin-bottom:12px;">
+        <div style="font-size:12px;font-weight:600;color:var(--T0);margin-bottom:10px;">Display Theme</div>
+        <div class="tglrow">
+          <div>
+            <div class="tgllbl">Dark Mode</div>
+            <div style="font-size:11px;color:var(--T2);margin-top:2px;">Switch between light and dark interface</div>
+          </div>
+          <label class="tgl">
+            <input type="checkbox" id="theme-toggle" onchange="toggleTheme(this.checked)"/>
+            <div class="tgls"></div>
+          </label>
+        </div>
+      </div>
+      <div style="font-size:12px;font-weight:600;color:var(--T0);margin:14px 0 10px;">Notification Preferences</div>
+      <div class="tglrow"><span class="tgllbl">Low stock alerts</span><label class="tgl"><input type="checkbox" checked/><div class="tgls"></div></label></div>
+      <div class="tglrow"><span class="tgllbl">Pending approval reminders</span><label class="tgl"><input type="checkbox" checked/><div class="tgls"></div></label></div>
+      <div class="tglrow"><span class="tgllbl">Cash flow alerts from SATURDAY</span><label class="tgl"><input type="checkbox" checked/><div class="tgls"></div></label></div>
+      <div class="tglrow"><span class="tgllbl">DPR submission reminders</span><label class="tgl"><input type="checkbox" checked/><div class="tgls"></div></label></div>
+      <div class="tglrow"><span class="tgllbl">GST and TDS compliance alerts</span><label class="tgl"><input type="checkbox" checked/><div class="tgls"></div></label></div>
+      <button class="bprimary" style="margin-top:16px;" onclick="T('Settings saved','s')">Save Settings</button>
+    </div>
+  </div>
+</div>
+
+    </div><!-- end pc -->
+  </div><!-- end mainwrap -->
+</div><!-- end alayout -->
+</div><!-- end pg-app -->
+
+<!-- PROFILE PANEL -->
+<div class="profpanel" id="profpanel">
+  <div class="profhdr">
+    <div class="profav" id="pf-av">K</div>
+    <div>
+      <div class="profname" id="pf-name">Krishna Teja</div>
+      <div class="profrole" id="pf-role">CMD / Proprietor</div>
+      <div class="profco" id="pf-co">TTIPL Construction Pvt. Ltd.</div>
+    </div>
+  </div>
+  <div class="profinfo">
+    <div class="profrow"><span class="profkey">Employee ID</span><span class="profval">TTIPL-001</span></div>
+    <div class="profrow"><span class="profkey">Join Date</span><span class="profval">Jan 2020</span></div>
+    <div class="profrow"><span class="profkey">Mobile</span><span class="profval">+91 98765 43210</span></div>
+    <div class="profrow"><span class="profkey">Email</span><span class="profval"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="442f362d372c2a250430302d34286a2d2a">[email&#160;protected]</a></span></div>
+    <div class="profrow"><span class="profkey">Plan</span><span class="profval" style="color:var(--C1);">ERP+ Pro</span></div>
+  </div>
+  <!-- Upload profile photo -->
+  <div style="padding:0 14px 8px;">
+    <button class="bsec" style="width:100%;font-size:12px;padding:8px;display:flex;align-items:center;justify-content:center;gap:7px;" onclick="document.getElementById('prof-photo').click()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+      Upload Photo
+    </button>
+    <input type="file" id="prof-photo" accept="image/*" style="display:none" onchange="updateProfilePhoto(event)">
+  </div>
+  <div class="profacts">
+    <button class="profbtn" onclick="T('Profile edit — coming with Supabase','i')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit Profile</button>
+    <button class="profbtn" onclick="T('Password change — coming with Supabase','i')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Change Password</button>
+    <button class="profbtn" onclick="nav('admin',document.querySelector('.ni:last-child'));sec('admin','settings',document.querySelectorAll('.stab')[4]);toggleProf()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> App Settings</button>
+    <div style="height:.5px;background:var(--BR);margin:4px 0;"></div>
+    <button class="profbtn danger" onclick="showPage('pg-login')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Sign Out</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+var APP={co:'TTIPL',nm:'Krishna Teja',rl:'CMD / Proprietor',plan:'pro'};
+
+/* ══ AUTH HELPERS ══ */
+function togglePW(inputId, eyeId){
+  var inp=document.getElementById(inputId);
+  var eye=document.getElementById(eyeId);
+  if(inp.type==='password'){
+    inp.type='text';
+    eye.innerHTML='<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+  } else {
+    inp.type='password';
+    eye.innerHTML='<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+  }
+}
+function clearErr(id){
+  var el=document.getElementById(id);
+  if(el){el.style.display='none';el.textContent='';}
+}
+function showErr(id,msg){
+  var el=document.getElementById(id);
+  if(el){el.textContent=msg;el.style.display='block';}
+}
+function setLoginLoading(on){
+  document.getElementById('btn-login-text').style.display=on?'none':'inline';
+  document.getElementById('btn-login-spin').style.display=on?'inline':'none';
+  document.getElementById('btn-login').disabled=on;
+}
+function setSignupLoading(on){
+  document.getElementById('btn-signup-text').style.display=on?'none':'inline';
+  document.getElementById('btn-signup-spin').style.display=on?'inline':'none';
+  document.getElementById('btn-signup').disabled=on;
+}
+function checkPWStrength(pw){
+  var bar=document.getElementById('pw-strength-bar');
+  var fill=document.getElementById('pw-strength-fill');
+  var txt=document.getElementById('pw-strength-text');
+  if(!pw){bar.style.display='none';txt.style.display='none';return;}
+  bar.style.display='block';txt.style.display='block';
+  var score=0;
+  if(pw.length>=8)score++;
+  if(pw.length>=12)score++;
+  if(/[A-Z]/.test(pw))score++;
+  if(/[0-9]/.test(pw))score++;
+  if(/[^A-Za-z0-9]/.test(pw))score++;
+  var pct=[0,25,50,75,90,100][score];
+  var col=['#ef4444','#f97316','#eab308','#22c55e','#16a34a'][score-1]||'#ef4444';
+  var lbl=['','Weak','Fair','Good','Strong','Very strong'][score]||'Too short';
+  fill.style.width=pct+'%';fill.style.background=col;
+  txt.style.color=col;txt.textContent=lbl;
+}
+function showForgot(){
+  T('Password reset link will be sent to your email. Feature coming soon.','i');
+}
+/* AUTH TABS */
+function atab(t,el){
+  document.querySelectorAll('.atab').forEach(function(b){b.classList.remove('on');});
+  el.classList.add('on');
+  var lf=document.getElementById('lf');
+  var sf=document.getElementById('sf');
+  if(t==='lf'){
+    lf.style.cssText='display:block;animation:slide-in-auth .25s ease';
+    sf.style.display='none';
+  } else {
+    sf.style.cssText='display:block;animation:slide-in-auth .25s ease';
+    lf.style.display='none';
+  }
+}
+
+/* LOGO UPLOAD */
+function prevLogo(ev){
+  var r=new FileReader();
+  r.onload=function(e){
+    document.getElementById('lim').src=e.target.result;
+    document.getElementById('lpr').style.display='block';
+    document.getElementById('lic').style.display='none';
+  };
+  r.readAsDataURL(ev.target.files[0]);
+}
+function updateCoLogo(ev){
+  var r=new FileReader();
+  r.onload=function(e){
+    var p=document.getElementById('co-logo-prev');
+    p.innerHTML='<img src="'+e.target.result+'" style="width:100%;height:100%;object-fit:cover;border-radius:7px;">';
+    document.getElementById('sb-co-logo').innerHTML='<img src="'+e.target.result+'" style="width:100%;height:100%;object-fit:cover;">';
+    T('Company logo updated','s');
+  };
+  r.readAsDataURL(ev.target.files[0]);
+}
+function updateProfilePhoto(ev){
+  var r=new FileReader();
+  r.onload=function(e){
+    var src=e.target.result;
+    var avs=['sb-av','tb-av','pf-av'];
+    avs.forEach(function(id){
+      var el=document.getElementById(id);
+      if(el)el.innerHTML='<img src="'+src+'" style="width:100%;height:100%;object-fit:cover;">';
+    });
+    T('Profile photo updated','s');toggleProf();
+  };
+  r.readAsDataURL(ev.target.files[0]);
+}
+
+/* WIZARD */
+var WS=1;
+function wgo(n){
+  document.getElementById('ws'+WS).classList.remove('on');
+  var c=document.getElementById('wn'+WS);c.classList.remove('ac2','dn');c.classList.add('dn');c.textContent='✓';
+  document.getElementById('wl'+WS).classList.remove('ac2');
+  WS=n;
+  document.getElementById('ws'+WS).classList.add('on');
+  document.getElementById('wn'+WS).classList.add('ac2');
+  document.getElementById('wl'+WS).classList.add('ac2');
+  if(n===4){
+    var nm=document.getElementById('s1s').value||document.getElementById('s1n').value||'Company';
+    document.getElementById('done-name').textContent=nm+' is Ready!';
+    APP.co=nm;
+  }
+}
+function pickPlan(p){
+  APP.plan=p;
+  ['basic','pro','max'].forEach(function(k){
+    var c=document.getElementById('pc-'+k);
+    var r=document.getElementById('pr-'+k);
+    c.className='pcard';
+    if(k===p){
+      c.classList.add(p==='pro'?'sp':p==='max'?'sm':'');
+      r.classList.add('on');r.querySelector('.prdot').style.display='block';
+    } else {
+      r.classList.remove('on');r.querySelector('.prdot').style.display='none';
+    }
+  });
+}
+
+/* LAUNCH */
+function launch(){
+  var nm=APP.nm;
+  document.getElementById('sb-co-logo').textContent=(APP.co||'T')[0].toUpperCase();
+  document.getElementById('sb-co-name').textContent=APP.co+' Construction';
+  document.getElementById('sb-proj').textContent='YIIRS Package 05';
+  document.getElementById('sb-av').textContent=(nm||'K')[0].toUpperCase();
+  document.getElementById('sb-nm').textContent=nm;
+  document.getElementById('sb-rl').textContent=APP.rl;
+  document.getElementById('tb-av').textContent=(nm||'K')[0].toUpperCase();
+  document.getElementById('tb-nm').textContent=nm;
+  document.getElementById('pf-av').textContent=(nm||'K')[0].toUpperCase();
+  document.getElementById('pf-name').textContent=nm;
+  document.getElementById('pf-role').textContent=APP.rl;
+  document.getElementById('pf-co').textContent=(APP.co||'TTIPL')+' Construction Pvt. Ltd.';
+  document.getElementById('tbdate').textContent=new Date().toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+  showPage('pg-app');
+}
+
+/* PAGES */
+function showPage(id){document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});document.getElementById(id).classList.add('active');}
+
+/* NAV */
+var MNAMES={chiefs:'Chiefs / CMD',managers:'Managers',store:'Store',qs:'QS & Billing',planning:'Planning',finance:'Finance',hr:'HR',saturday:'SATURDAY AI',admin:'Admin'};
+function nav(id,el){
+  document.querySelectorAll('.ni').forEach(function(n){n.classList.remove('on');});
+  el.classList.add('on');
+  document.querySelectorAll('.mod').forEach(function(m){m.classList.remove('on');});
+  document.getElementById('mod-'+id).classList.add('on');
+  document.getElementById('bc').innerHTML='saturdayERP+ / <span>'+(MNAMES[id]||id)+'</span>';
+  // Close profile panel on nav
+  document.getElementById('profpanel').classList.remove('open');
+}
+
+/* SECTIONS */
+function sec(mod,id,el){
+  var par=el.parentElement;
+  par.querySelectorAll('.stab').forEach(function(t){t.classList.remove('on');});
+  el.classList.add('on');
+  var next=par.nextElementSibling;
+  while(next&&next.classList.contains('sec')){next.classList.remove('on');next=next.nextElementSibling;}
+  var t=document.getElementById(mod+'-'+id)||document.getElementById(id);
+  if(t)t.classList.add('on');
+}
+
+/* FORM PANELS */
+function FP(id){var p=document.getElementById(id);if(p){p.classList.add('on');p.scrollIntoView({behavior:'smooth',block:'nearest'});}}
+function CF(id){var p=document.getElementById(id);if(p)p.classList.remove('on');}
+function SF(fid,msg){CF(fid);T('✓ '+msg,'s');}
+
+/* TOAST */
+function T(msg,type){
+  type=type||'s';var t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast '+type+' on';
+  setTimeout(function(){t.classList.remove('on');},3000);
+}
+
+/* PROFILE PANEL */
+function toggleProf(){
+  document.getElementById('profpanel').classList.toggle('open');
+}
+// Close on outside click
+document.addEventListener('click',function(e){
+  var pp=document.getElementById('profpanel');
+  if(pp&&pp.classList.contains('open')){
+    if(!pp.contains(e.target)&&!e.target.closest('.tbuser')&&!e.target.closest('.urow')){
+      pp.classList.remove('open');
+    }
+  }
+});
+
+/* DARK / LIGHT MODE TOGGLE */
+function toggleTheme(isDark){
+  document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  T('Theme changed to '+(isDark?'Dark':'Light')+' mode','i');
+}
+
+/* PROJECT MENU */
+function showProjectMenu(){
+  T('Switch project — Admin → Projects','i');
+}
+
+/* SATURDAY AI */
+var SATS={
+  profit:'Net profit YIIRS Pkg 05 this month: \u20b912,48,000 (23.8% margin). Revenue \u20b952.3L minus costs \u20b939.8L. Trend: improving vs last month 19.2%.',
+  cash:'Bank balance: \u20b938,45,200. Projected inflows 30 days: \u20b974.5L. Committed outflows: \u20b985.2L. April 30 projected: \u20b927.75L. \u26a0\ufe0f Cash shortfall risk \u20b923L on Apr 15.',
+  steel:'Steel YIIRS Pkg 05: 12mm on hand 0.6 MT (LOW). PO-0128 pending delivery 5.2 MT. BBS balance: 76 MT remaining of 128 MT.',
+  gst:'GST March 2025: Outward \u20b91,52,80,000. Works contract @12% = \u20b918,33,600. ITC \u20b98,24,500. Net payable \u20b910,09,100. GSTR-1 ready.',
+  overdue:'Overdue: TGEWIDC RA Bill #4 \u20b938,20,000 (5 days). Private client Residential \u20b96,20,000 (18 days).',
+  tds:'TDS FY 2025-26: 194C \u20b94,18,200 · 194I \u20b948,000 · 194J \u20b912,500. Total \u20b94,78,700. Challan ready Apr 7. Form 26Q done.',
+};
+function askSAT(){
+  var q=document.getElementById('sq').value.toLowerCase().trim();
+  if(!q)return;
+  var ans='SATURDAY is processing your query. Live AI responses active when Claude API is connected. Try: profit, cash, steel, gst, overdue, tds.';
+  if(q.includes('profit')||q.includes('margin'))ans=SATS.profit;
+  else if(q.includes('cash')||q.includes('flow')||q.includes('balance'))ans=SATS.cash;
+  else if(q.includes('steel'))ans=SATS.steel;
+  else if(q.includes('gst'))ans=SATS.gst;
+  else if(q.includes('overdue')||q.includes('receivable'))ans=SATS.overdue;
+  else if(q.includes('tds'))ans=SATS.tds;
+  var r=document.getElementById('sa');r.style.display='block';r.textContent='SATURDAY: '+ans;
+}
+// ── Hash routing: #signup tab ──
+if(location.hash==='#signup'){document.querySelectorAll('.atab')[1].click();}
+
+// ── Pre-fill remembered email ──
+(function(){
+  var rem=localStorage.getItem('erp_remembered_email');
+  if(rem){
+    var el=document.getElementById('lem');
+    if(el){el.value=rem;document.getElementById('rem-me').checked=true;}
+  }
+})();
+</script>
+</body>
+</html>
+<script>
+// ═══════════════════════════════════════════════════════════
+// SATURDAY ERP+ — localStorage DATA LAYER
+// Persists all data in browser. Auto-upgrades when Supabase
+// keys are added to supabase.js
+// ═══════════════════════════════════════════════════════════
+var DB={
+  getUsers:function(){return JSON.parse(localStorage.getItem('erp_users')||'[]');},
+  saveUserRec:function(u){var a=this.getUsers();var i=a.findIndex(function(x){return x.email===u.email;});if(i>-1)a[i]=u;else a.push(u);localStorage.setItem('erp_users',JSON.stringify(a));},
+  findUser:function(e){return this.getUsers().find(function(u){return u.email===e;});},
+  getCurUser:function(){var u=localStorage.getItem('erp_cur');return u?JSON.parse(u):null;},
+  setCurUser:function(u){localStorage.setItem('erp_cur',JSON.stringify(u));},
+  clearCurUser:function(){localStorage.removeItem('erp_cur');},
+  getCompany:function(){return JSON.parse(localStorage.getItem('erp_co')||'null');},
+  saveCompany:function(c){localStorage.setItem('erp_co',JSON.stringify(c));},
+  getTable:function(n){return JSON.parse(localStorage.getItem('erp_t_'+n)||'[]');},
+  saveTable:function(n,a){localStorage.setItem('erp_t_'+n,JSON.stringify(a));},
+  addRow:function(n,r){
+    var a=this.getTable(n);
+    r.id=r.id||'id_'+Date.now()+'_'+Math.random().toString(36).slice(2,5);
+    r.created_at=r.created_at||new Date().toISOString();
+    a.unshift(r);this.saveTable(n,a);return r;
+  },
+  updRow:function(n,id,upd){
+    var a=this.getTable(n),i=a.findIndex(function(r){return r.id===id;});
+    if(i>-1){a[i]=Object.assign(a[i],upd);this.saveTable(n,a);}
+    return a[i];
+  },
+  nextNo:function(n,pfx,pad){return pfx+String(this.getTable(n).length+1).padStart(pad||3,'0');}
+};
+var INR=function(n){return n?Number(n).toLocaleString('en-IN'):'0';};
+var BIG=function(n){if(!n)return '\u20b90';if(n>=10000000)return '\u20b9'+(n/10000000).toFixed(2)+'Cr';if(n>=100000)return '\u20b9'+(n/100000).toFixed(1)+'L';return '\u20b9'+INR(n);};
+
+// ═══ REAL AUTH (improved) ═══
+function doLogin(){
+  var email=document.getElementById('lem').value.trim().toLowerCase();
+  var pw=document.getElementById('lpw').value;
+  if(!email){showErr('lerr','Please enter your email address.');document.getElementById('lem').focus();return;}
+  if(!pw){showErr('lerr','Please enter your password.');document.getElementById('lpw').focus();return;}
+  setLoginLoading(true);
+  // Simulate brief network feel (instant in localStorage)
+  setTimeout(function(){
+    var user=DB.findUser(email);
+    if(!user){
+      setLoginLoading(false);
+      showErr('lerr','No account found with this email. Please sign up or try the demo.');
+      document.getElementById('lem').focus();
+      return;
+    }
+    if(user.pw!==btoa(pw)){
+      setLoginLoading(false);
+      showErr('lerr','Incorrect password. Please try again or use "Forgot password?"');
+      document.getElementById('lpw').focus();
+      document.getElementById('lpw').select();
+      return;
+    }
+    // Remember me — store email in localStorage
+    if(document.getElementById('rem-me').checked){
+      localStorage.setItem('erp_remembered_email', email);
+    } else {
+      localStorage.removeItem('erp_remembered_email');
+    }
+    DB.setCurUser(user);APP.nm=user.nm;APP.rl=user.rl||'CMD / Proprietor';
+    var co=DB.getCompany();if(co)APP.co=co.shortName||co.name||APP.co;
+    setLoginLoading(false);
+    launch();setTimeout(renderAll,300);
+  }, 600);
+}
+function doSignup(){
+  var fn=document.getElementById('sfn').value.trim();
+  var ln=document.getElementById('sln').value.trim();
+  var em=document.getElementById('sem').value.trim().toLowerCase();
+  var mob=document.getElementById('smb').value.trim();
+  var pw=document.getElementById('spw').value;
+  if(!fn){showErr('serr','Please enter your first name.');document.getElementById('sfn').focus();return;}
+  if(!em||!em.includes('@')){showErr('serr','Please enter a valid work email address.');document.getElementById('sem').focus();return;}
+  if(!pw){showErr('serr','Please create a password.');document.getElementById('spw').focus();return;}
+  if(pw.length<8){showErr('serr','Password must be at least 8 characters long.');document.getElementById('spw').focus();return;}
+  if(DB.findUser(em)){showErr('serr','An account with this email already exists. Please sign in.');document.querySelectorAll('.atab')[0].click();return;}
+  setSignupLoading(true);
+  setTimeout(function(){
+    var u={id:'u_'+Date.now(),nm:(fn+' '+ln).trim(),email:em,mob:mob,pw:btoa(pw),rl:'CMD / Proprietor',level:1,empId:'EMP-001',joinDate:new Date().toLocaleDateString('en-IN'),company:'',plan:'pro'};
+    DB.saveUserRec(u);DB.setCurUser(u);
+    APP.nm=u.nm;APP.rl=u.rl;
+    setSignupLoading(false);
+    showPage('pg-setup');
+  }, 500);
+}
+function demoLogin(){
+  var u={id:'demo',nm:'Krishna Teja',email:'demo@ttipl.in',rl:'CMD / Proprietor',level:1,empId:'TTIPL-001',joinDate:'Jan 2020',company:'TTIPL',plan:'pro'};
+  DB.setCurUser(u);APP.nm=u.nm;APP.rl=u.rl;APP.co='TTIPL';
+  if(!DB.getCompany())DB.saveCompany({name:'TTIPL Construction Pvt. Ltd.',shortName:'TTIPL',plan:'pro'});
+  seedDemo();launch();setTimeout(renderAll,300);
+}
+function seedDemo(){
+  if(DB.getTable('projects').length>0)return;
+  DB.addRow('projects',{id:'p1',name:'YIIRS Package 05',client:'TGEWIDC',agreementNo:'16/SE(P)/2025-26',contractValue:87100000,startDate:'2024-09-01',completionMonths:30,location:'Nizamabad',status:'active'});
+  DB.addRow('projects',{id:'p2',name:'Industrial Shed Package',client:'TSIIC Kamareddy',contractValue:38700000,startDate:'2024-11-01',completionMonths:24,status:'active'});
+  DB.addRow('indents',{indentNo:'IND-047',materialName:'Steel Fe 500D 12mm',quantity:5.2,unit:'MT',projectName:'YIIRS Package 05',raisedBy:'PM Suresh',status:'pending',estRate:95000});
+  DB.addRow('indents',{indentNo:'IND-046',materialName:'Cement OPC 53',quantity:200,unit:'Bags',projectName:'YIIRS Package 05',raisedBy:'Site Engineer',status:'po_raised',estRate:490});
+  DB.addRow('indents',{indentNo:'IND-045',materialName:'River Sand',quantity:50,unit:'CUM',projectName:'YIIRS Package 05',raisedBy:'PM Suresh',status:'delivered',estRate:1250});
+  DB.addRow('vendors',{name:'M/s Vizag Steel Corp',category:'Steel / TMT',mobile:'+91 98765 00001',outstanding:494000});
+  DB.addRow('vendors',{name:'M/s Prism Cement',category:'Cement',mobile:'+91 98765 00002',outstanding:98000});
+  DB.addRow('vendors',{name:'M/s Kumar Sand',category:'Sand / Aggregates',mobile:'+91 98765 00003',outstanding:0});
+  DB.addRow('boq',{itemNo:'3.1',description:'RCC M30 in columns',unit:'CUM',boqQty:285,doneQty:142,rate:12400,projectId:'p1'});
+  DB.addRow('boq',{itemNo:'3.2',description:'RCC M30 in beams & slabs',unit:'CUM',boqQty:420,doneQty:168,rate:11800,projectId:'p1'});
+  DB.addRow('boq',{itemNo:'4.1',description:'Fly Ash Block masonry 200mm',unit:'CUM',boqQty:840,doneQty:310,rate:3200,projectId:'p1'});
+  DB.addRow('boq',{itemNo:'5.1',description:'Steel Fe 500D reinforcement',unit:'MT',boqQty:128,doneQty:52,rate:68500,projectId:'p1'});
+  DB.addRow('ra_bills',{billNo:'RA-005',period:'Mar 1-25',grossAmount:4021000,retentionPct:5,submittedDate:'25 Mar 2025',status:'submitted',projectName:'YIIRS Pkg 05'});
+  DB.addRow('ra_bills',{billNo:'RA-004',period:'Feb 1-28',grossAmount:4021050,retentionPct:5,submittedDate:'28 Feb 2025',status:'overdue',projectName:'YIIRS Pkg 05'});
+  DB.addRow('ra_bills',{billNo:'RA-003',period:'Jan 1-31',grossAmount:3845200,retentionPct:5,submittedDate:'31 Jan 2025',status:'paid',projectName:'YIIRS Pkg 05'});
+  DB.addRow('ledger',{date:'25 Mar',narration:'TGEWIDC RA Bill #4 receipt',credit:3819997,type:'Receipt',projectName:'YIIRS Pkg 05'});
+  DB.addRow('ledger',{date:'24 Mar',narration:'M/s Vizag Steel payment',debit:494000,type:'Payment',projectName:'YIIRS Pkg 05'});
+  DB.addRow('ledger',{date:'23 Mar',narration:'Labour wages advance',debit:320000,type:'Wages',projectName:'YIIRS Pkg 05'});
+  DB.addRow('ledger',{date:'22 Mar',narration:'TDS deducted — M/s Ravi Masonry',credit:6400,type:'TDS',projectName:'YIIRS Pkg 05'});
+  DB.addRow('staff',{fullName:'Ravi Kumar',designation:'Project Director',projectName:'YIIRS Package 05',joinDate:'Jan 2024',mobile:'+91 98765 00011',monthlySalary:85000,status:'active'});
+  DB.addRow('staff',{fullName:'Suresh PM',designation:'Project Manager',projectName:'YIIRS Package 05',joinDate:'Mar 2024',mobile:'+91 98765 00012',monthlySalary:55000,status:'active'});
+  DB.addRow('staff',{fullName:'Anil Site Engineer',designation:'Site Engineer',projectName:'YIIRS Package 05',joinDate:'Apr 2024',mobile:'+91 98765 00013',monthlySalary:38000,status:'leave'});
+  DB.addRow('approvals',{type:'Indent',description:'Steel Fe 500D 12mm 5.2MT',projectName:'YIIRS Pkg 05',amount:494000,raisedBy:'Store Mgr',status:'pending',priority:'high'});
+  DB.addRow('approvals',{type:'RA Bill',description:'RA Bill #5 — TGEWIDC',projectName:'YIIRS Pkg 05',amount:1850000,raisedBy:'PM Suresh',status:'pending',priority:'high'});
+  DB.addRow('approvals',{type:'Subcon',description:'Masonry Bill — M/s Ravi',projectName:'YIIRS Pkg 05',amount:310000,raisedBy:'AGM Ravi',status:'pending',priority:'medium'});
+  DB.addRow('agencies',{name:'M/s Ravi Masonry Works',workType:'Masonry',workers:22,workOrder:'WO-038',pfRegistered:'Yes',wagesDue:182000,status:'active'});
+  DB.addRow('agencies',{name:'M/s Vijay Labour Contractor',workType:'General Labour',workers:35,workOrder:'WO-032',pfRegistered:'Yes',wagesDue:238000,status:'active'});
+  DB.addRow('agencies',{name:'M/s SK Bar Benders',workType:'Bar Bending',workers:18,workOrder:'WO-041',pfRegistered:'Pending',wagesDue:0,status:'active'});
+}
+
+// ═══ TABLE RENDERERS ═══
+function rBadge(st,map){var m=map||{pending:'ba',done:'bg',active:'bg',paid:'bg',delivered:'bg',overdue:'br',submitted:'ba',po_raised:'bb',leave:'ba'};return '<span class="bd '+(m[st]||'bgr')+'">'+(st?st.replace(/_/g,' ').replace(/\w/g,function(c){return c.toUpperCase();}):'—')+'</span>';}
+
+function renderIndents(){
+  var rows=DB.getTable('indents');
+  var tb=document.querySelector('#proc-indents table tbody');
+  if(!tb)return;
+  if(!rows.length){tb.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--T2);padding:20px;">No indents yet. Click + New Indent to raise one.</td></tr>';return;}
+  tb.innerHTML=rows.map(function(r){return '<tr><td class="tmono">'+r.indentNo+'</td><td class="tbold">'+r.materialName+'</td><td>'+r.quantity+'</td><td>'+r.unit+'</td><td>'+(r.projectName||'')+'</td><td>'+rBadge(r.status)+'</td><td><button class="al" onclick="viewItem('+JSON.stringify(r)+')">View</button></td></tr>';}).join('');
+}
+function renderRA(){
+  var rows=DB.getTable('ra_bills');
+  var tb=document.querySelector('#qs-cbill table tbody');
+  if(!tb)return;
+  if(!rows.length){tb.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--T2);padding:20px;">No RA bills yet. Click + Prepare RA Bill.</td></tr>';return;}
+  tb.innerHTML=rows.map(function(r){var net=r.grossAmount*(1-r.retentionPct/100);var ret=r.grossAmount*r.retentionPct/100;return '<tr><td class="tmono">'+r.billNo+'</td><td>'+r.period+'</td><td class="tmono">\u20b9'+INR(r.grossAmount)+'</td><td class="tmono" style="color:var(--RD);">\u20b9'+INR(ret)+'</td><td class="tmono">\u20b9'+INR(net)+'</td><td>'+(r.submittedDate||'')+'</td><td>'+rBadge(r.status)+'</td></tr>';}).join('');
+}
+function renderLedger(){
+  var rows=DB.getTable('ledger');
+  var tb=document.querySelector('#finance-acc table tbody');
+  if(!tb)return;
+  if(!rows.length){tb.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--T2);padding:20px;">No entries yet. Click + Voucher Entry.</td></tr>';return;}
+  var typeMap={'Receipt':'bg','Payment':'br','Wages':'ba','TDS':'bb','Expense':'ba'};
+  tb.innerHTML=rows.map(function(r){return '<tr><td>'+(r.date||'')+'</td><td class="tbold">'+r.narration+'</td><td class="tmono" style="color:var(--RD);">'+(r.debit?'\u20b9'+INR(r.debit):'—')+'</td><td class="tmono" style="color:var(--GR);">'+(r.credit?'\u20b9'+INR(r.credit):'—')+'</td><td>'+rBadge(r.type,typeMap)+'</td><td>'+(r.projectName||'')+'</td></tr>';}).join('');
+}
+function renderApprovals(){
+  var rows=DB.getTable('approvals').filter(function(r){return r.status==='pending';});
+  var tb=document.querySelector('#chiefs-approvals table tbody');
+  if(!tb)return;
+  if(!rows.length){tb.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--GR);padding:20px;">\u2713 No pending approvals</td></tr>';return;}
+  tb.innerHTML=rows.map(function(r){return '<tr><td>'+rBadge(r.type,{Indent:'bb','RA Bill':'bg',Subcon:'ba',PO:'bgr'})+'</td><td class="tbold">'+r.description+'</td><td>'+(r.projectName||'')+'</td><td class="tmono">\u20b9'+INR(r.amount)+'</td><td>'+(r.raisedBy||'')+'</td><td><button class="al" onclick="approveItem(\''+r.id+'\')">Approve</button> · <button class="al" style="color:var(--RD);" onclick="rejectItem(\''+r.id+'\')">Reject</button></td></tr>';}).join('');
+  var cnt=rows.length;document.querySelectorAll('.nibadge').forEach(function(b){b.textContent=cnt;});
+}
+function renderProjects(){
+  var rows=DB.getTable('projects');
+  var tb=document.querySelector('#admin-projects table tbody');
+  if(!tb)return;
+  if(!rows.length){tb.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--T2);padding:20px;">No projects yet. Click + Add Project.</td></tr>';return;}
+  tb.innerHTML=rows.map(function(r){return '<tr><td class="tbold">'+r.name+'</td><td>'+(r.client||'')+'</td><td class="tmono">'+BIG(r.contractValue)+'</td><td>'+(r.startDate||'')+'</td><td>'+(r.completionMonths?r.completionMonths+' months':'')+'</td><td>'+rBadge('active')+'</td></tr>';}).join('');
+  if(rows[0]){document.getElementById('sb-proj').textContent=rows[0].name;var sel=document.querySelectorAll('select');sel.forEach(function(s){if(s.options[0]&&s.options[0].text.includes('YIIRS')){while(s.options.length)s.remove(0);rows.forEach(function(p){var o=document.createElement('option');o.value=p.id;o.text=p.name;s.add(o);});}});}
+}
+function renderStaff(){
+  var rows=DB.getTable('staff');
+  var tb=document.querySelector('#hr-staff table tbody');
+  if(!tb)return;
+  var cur=DB.getCurUser();
+  var extra='<tr><td class="tbold">'+(cur?cur.nm:'Krishna Teja')+'</td><td>CMD / Proprietor</td><td>All Projects</td><td>'+(cur?cur.joinDate||'—':'—')+'</td><td>—</td><td>—</td><td>'+rBadge('active')+'</td></tr>';
+  tb.innerHTML=extra+rows.map(function(r){return '<tr><td class="tbold">'+r.fullName+'</td><td>'+r.designation+'</td><td>'+(r.projectName||'All Projects')+'</td><td>'+(r.joinDate||'')+'</td><td class="tmono">'+(r.mobile||'')+'</td><td class="tmono">'+(r.monthlySalary?'\u20b9'+INR(r.monthlySalary):'—')+'</td><td>'+rBadge(r.status||'active')+'</td></tr>';}).join('');
+}
+function renderAgencies(){
+  var rows=DB.getTable('agencies');
+  var tb=document.querySelector('#hr-agencies table tbody');
+  if(!tb)return;
+  if(!rows.length)return;
+  tb.innerHTML=rows.map(function(r){return '<tr><td class="tbold">'+r.name+'</td><td>'+(r.workType||'')+'</td><td>'+(r.workers||0)+'</td><td class="tmono">'+(r.workOrder||'')+'</td><td>'+rBadge(r.pfRegistered==='Yes'?'active':'pending',{active:'bg',pending:'ba'})+'</td><td class="tmono" style="color:'+(r.wagesDue>0?'var(--AM)':'var(--GR)')+';">\u20b9'+INR(r.wagesDue)+'</td><td>'+rBadge('active')+'</td></tr>';}).join('');
+}
+function renderBOQ(){
+  var rows=DB.getTable('boq');
+  var tb=document.querySelector('#qs-qty table tbody');
+  if(!tb)return;
+  if(!rows.length){tb.innerHTML='<tr><td colspan="9" style="text-align:center;color:var(--T2);padding:20px;">No BOQ items yet. Click + Add Item.</td></tr>';return;}
+  tb.innerHTML=rows.map(function(r){var bal=r.boqQty-r.doneQty;var pct=r.boqQty>0?Math.round(r.doneQty/r.boqQty*100):0;var cls=pct>=100?'bg':pct>0?'bb':'bgr';return '<tr><td>'+r.itemNo+'</td><td class="tbold">'+r.description+'</td><td>'+r.unit+'</td><td class="tmono">'+INR(r.boqQty)+'</td><td class="tmono">'+INR(r.doneQty)+'</td><td class="tmono">'+INR(bal)+'</td><td class="tmono">'+INR(r.rate)+'</td><td class="tmono">\u20b9'+INR(bal*r.rate)+'</td><td><span class="bd '+cls+'">'+pct+'%</span></td></tr>';}).join('');
+}
+function renderVendors(){
+  var rows=DB.getTable('vendors');
+  var tb=document.querySelector('#proc-vendors table tbody');
+  if(!tb||!rows.length)return;
+  tb.innerHTML=rows.map(function(r){return '<tr><td class="tbold">'+r.name+'</td><td>'+(r.category||'')+'</td><td class="tmono">'+(r.gstin||'—')+'</td><td>'+(r.mobile||'')+'</td><td class="tmono" style="color:'+(r.outstanding>0?'var(--RD)':'var(--GR)')+';">\u20b9'+INR(r.outstanding||0)+'</td></tr>';}).join('');
+}
+function renderUsers(){
+  var rows=DB.getUsers();
+  var tb=document.querySelector('#admin-users table tbody');
+  if(!tb)return;
+  tb.innerHTML=rows.map(function(u){return '<tr><td class="tbold">'+u.nm+'</td><td>'+u.rl+'</td><td class="tmono">'+u.email+'</td><td>Today</td><td>'+rBadge('active')+'</td><td><button class="al">Edit</button></td></tr>';}).join('');
+}
+
+function renderAll(){
+  renderIndents();renderRA();renderLedger();renderApprovals();renderProjects();
+  renderStaff();renderAgencies();renderBOQ();renderVendors();renderUsers();
+  patchForms();
+  var pend=DB.getTable('approvals').filter(function(r){return r.status==='pending';}).length;
+  document.querySelectorAll('.nibadge').forEach(function(b){b.textContent=pend;});
+}
+
+// ═══ FORM SAVERS ═══
+function patchForms(){
+  patch('#fp-indent',function(){
+    var mat=qv('#fp-indent','input',0);var qty=qv('#fp-indent','input',1);var unit=qs('#fp-indent','select',0);var proj=qs('#fp-indent','select',1);
+    if(!mat||!qty){T('Fill material name and quantity','e');return;}
+    var no=DB.nextNo('indents','IND-');
+    DB.addRow('indents',{indentNo:no,materialName:mat,quantity:parseFloat(qty),unit:unit,projectName:proj,raisedBy:APP.nm,status:'pending'});
+    DB.addRow('approvals',{type:'Indent',description:mat+' '+qty+' '+unit,projectName:proj,amount:0,raisedBy:APP.nm,status:'pending',priority:'medium'});
+    CF('fp-indent');renderIndents();renderApprovals();T('\u2713 '+no+' raised — pending approval','s');
+  });
+  patch('#fp-ra',function(){
+    var gross=parseFloat(qv('#fp-ra','input',4))||0;var ret=parseFloat(qv('#fp-ra','input',5))||5;var proj=qs('#fp-ra','select',0);var from=qv('#fp-ra','input',1);var to=qv('#fp-ra','input',2);
+    if(!gross){T('Enter gross amount','e');return;}
+    var no='RA-00'+String(DB.getTable('ra_bills').length+1);
+    DB.addRow('ra_bills',{billNo:no,period:from+' to '+to,grossAmount:gross,retentionPct:ret,submittedDate:new Date().toLocaleDateString('en-IN'),status:'submitted',projectName:proj});
+    DB.addRow('approvals',{type:'RA Bill',description:no+' — '+proj,projectName:proj,amount:gross*(1-ret/100),raisedBy:APP.nm,status:'pending',priority:'high'});
+    CF('fp-ra');renderRA();renderApprovals();T('\u2713 '+no+' prepared and sent for approval','s');
+  });
+  patch('#fp-vch',function(){
+    var type=qs('#fp-vch','select',0);var narr=qv('#fp-vch','input',4);var amt=parseFloat(qv('#fp-vch','input',4))||0;
+    var inputs=document.querySelectorAll('#fp-vch input');var narration='';var amount=0;
+    inputs.forEach(function(inp,i){var lbl=inp.closest('.fld, .fl');if(lbl){var l=lbl.querySelector('label');if(l&&l.textContent.includes('Narration'))narration=inp.value;if(l&&l.textContent.includes('Amount'))amount=parseFloat(inp.value)||0;}});
+    if(!narration||!amount){T('Fill narration and amount','e');return;}
+    var row={narration:narration,type:type,date:new Date().toLocaleDateString('en-IN')};
+    if(type==='Payment Voucher')row.debit=amount;else row.credit=amount;
+    DB.addRow('ledger',row);CF('fp-vch');renderLedger();T('\u2713 Voucher posted to ledger','s');
+  });
+  patch('#fp-exp',function(){
+    var cat=qs('#fp-exp','select',0);
+    var inputs=document.querySelectorAll('#fp-exp input');var desc='';var amt=0;
+    inputs.forEach(function(inp){var l=inp.closest('.fld,.fl')&&inp.closest('.fld,.fl').querySelector('label');if(l&&l.textContent.includes('Description'))desc=inp.value;if(l&&l.textContent.includes('Amount'))amt=parseFloat(inp.value)||0;});
+    if(!desc||!amt){T('Fill description and amount','e');return;}
+    DB.addRow('ledger',{narration:desc+' ('+cat+')',type:'Expense',debit:amt,date:new Date().toLocaleDateString('en-IN'),projectName:'YIIRS Package 05'});
+    CF('fp-exp');renderLedger();T('\u2713 Expense recorded','s');
+  });
+  patch('#fp-proj',function(){
+    var inputs=document.querySelectorAll('#fp-proj input');var nm='';var cl='';var val=0;
+    inputs.forEach(function(inp){var l=inp.closest('.fld,.fl')&&inp.closest('.fld,.fl').querySelector('label');if(!l)return;if(l.textContent.includes('Name'))nm=inp.value;if(l.textContent.includes('Client'))cl=inp.value;if(l.textContent.includes('Value'))val=parseFloat(inp.value)||0;});
+    if(!nm){T('Enter project name','e');return;}
+    DB.addRow('projects',{name:nm,client:cl,contractValue:val,status:'active'});
+    CF('fp-proj');renderProjects();T('\u2713 Project added — SATURDAY initialising tracking','s');
+  });
+  patch('#fp-staff',function(){
+    var inputs=document.querySelectorAll('#fp-staff input');var nm='';var mob='';var sal=0;
+    inputs.forEach(function(inp){var l=inp.closest('.fld,.fl')&&inp.closest('.fld,.fl').querySelector('label');if(!l)return;if(l.textContent.includes('Name'))nm=inp.value;if(l.textContent.includes('Mobile'))mob=inp.value;if(l.textContent.includes('Salary'))sal=parseFloat(inp.value)||0;});
+    var desig=qs('#fp-staff','select',0);
+    if(!nm){T('Enter staff name','e');return;}
+    DB.addRow('staff',{fullName:nm,designation:desig,mobile:mob,monthlySalary:sal,joinDate:new Date().toLocaleDateString('en-IN'),status:'active',projectName:'YIIRS Package 05'});
+    CF('fp-staff');renderStaff();T('\u2713 Staff member added','s');
+  });
+  patch('#fp-adduser',function(){
+    var inputs=document.querySelectorAll('#fp-adduser input');var nm='';var em='';var mob='';var pw='';
+    inputs.forEach(function(inp){var l=inp.closest('.fld,.fl')&&inp.closest('.fld,.fl').querySelector('label');if(!l)return;if(l.textContent.includes('Name'))nm=inp.value;if(l.textContent.includes('Email'))em=inp.value;if(l.textContent.includes('Mobile'))mob=inp.value;if(l.textContent.includes('Password'))pw=inp.value||'erp2025!';});
+    var rl=qs('#fp-adduser','select',0);
+    if(!nm||!em){T('Enter name and email','e');return;}
+    if(DB.findUser(em)){T('Email already exists','e');return;}
+    DB.saveUserRec({id:'u_'+Date.now(),nm:nm,email:em,mob:mob,pw:btoa(pw),rl:rl,plan:'pro'});
+    CF('fp-adduser');renderUsers();T('\u2713 User added — they can login with '+em,'s');
+  });
+  patch('#fp-boq',function(){
+    var inputs=document.querySelectorAll('#fp-boq input');var no='';var desc='';var qty=0;var rate=0;
+    inputs.forEach(function(inp){var l=inp.closest('.fld,.fl')&&inp.closest('.fld,.fl').querySelector('label');if(!l)return;if(l.textContent.includes('No.'))no=inp.value;if(l.textContent.includes('Description'))desc=inp.value;if(l.textContent.includes('Quantity'))qty=parseFloat(inp.value)||0;if(l.textContent.includes('Rate'))rate=parseFloat(inp.value)||0;});
+    var unit=qs('#fp-boq','select',0);
+    if(!desc){T('Enter description','e');return;}
+    DB.addRow('boq',{itemNo:no,description:desc,unit:unit,boqQty:qty,doneQty:0,rate:rate,projectId:'p1'});
+    CF('fp-boq');renderBOQ();T('\u2713 BOQ item added','s');
+  });
+  patch('#fp-agency',function(){
+    var inputs=document.querySelectorAll('#fp-agency input');var nm='';var mob='';var workers=0;var wo='';
+    inputs.forEach(function(inp){var l=inp.closest('.fld,.fl')&&inp.closest('.fld,.fl').querySelector('label');if(!l)return;if(l.textContent.includes('Name'))nm=inp.value;if(l.textContent.includes('Mobile'))mob=inp.value;if(l.textContent.includes('Workers'))workers=parseInt(inp.value)||0;if(l.textContent.includes('Work Order'))wo=inp.value;});
+    var wt=qs('#fp-agency','select',0);
+    if(!nm){T('Enter agency name','e');return;}
+    DB.addRow('agencies',{name:nm,workType:wt,mobile:mob,workers:workers,workOrder:wo,pfRegistered:'Pending',wagesDue:0,status:'active'});
+    CF('fp-agency');renderAgencies();T('\u2713 Agency added','s');
+  });
+  // Company profile save
+  var coBtn=document.querySelector('#admin-co .bprimary');
+  if(coBtn)coBtn.onclick=function(){
+    var co=DB.getCompany()||{};
+    document.querySelectorAll('#admin-co input').forEach(function(inp){var l=inp.closest('.fld,.fl')&&inp.closest('.fld,.fl').querySelector('label');if(l)co[l.textContent.trim()]=inp.value;});
+    DB.saveCompany(co);document.getElementById('sb-co-name').textContent=co['Short Name']||co['Company Full Name']||APP.co;T('\u2713 Company profile saved','s');
+  };
+}
+function patch(fp,fn){var el=document.querySelector(fp+' .ffoot .bprimary, '+fp+' .form-footer .bprimary');if(el){el.onclick=fn;}}
+function qv(fp,tag,n){var els=document.querySelectorAll(fp+' '+tag);return els[n]?els[n].value.trim():'';}
+function qs(fp,tag,n){var els=document.querySelectorAll(fp+' '+tag);return els[n]?els[n].options[els[n].selectedIndex].text:'';}
+function viewItem(r){var msg=Object.entries(r).map(function(e){return e[0]+': '+e[1];}).filter(function(s){return !s.includes('id_')&&!s.includes('created');}).join('\n');alert(msg);}
+function approveItem(id){DB.updRow('approvals',id,{status:'approved'});renderApprovals();T('\u2713 Approved','s');}
+function rejectItem(id){DB.updRow('approvals',id,{status:'rejected'});renderApprovals();T('Item rejected','e');}
+
+// ═══ AUTO SESSION RESTORE ═══
+(function(){
+  var u=DB.getCurUser();
+  if(u&&document.getElementById('pg-login')&&document.getElementById('pg-login').classList.contains('active')){
+    APP.nm=u.nm;APP.rl=u.rl||'CMD / Proprietor';APP.co=u.company||'TTIPL';
+    var co=DB.getCompany();if(co)APP.co=co.shortName||co.name||APP.co;
+    // Restore all sidebar info
+    var setEl=function(id,v){var el=document.getElementById(id);if(el)el.textContent=v;};
+    setEl('sb-co-name',APP.co);setEl('sb-nm',APP.nm);setEl('sb-rl',APP.rl);setEl('sb-proj','YIIRS Package 05');
+    setEl('sb-av',(APP.nm||'K')[0].toUpperCase());setEl('tb-av',(APP.nm||'K')[0].toUpperCase());setEl('tb-nm',APP.nm);
+    setEl('pf-av',(APP.nm||'K')[0].toUpperCase());setEl('pf-name',APP.nm);setEl('pf-role',APP.rl);setEl('pf-co',APP.co+' Construction Pvt. Ltd.');
+    setEl('tbdate',new Date().toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short',year:'numeric'}));
+    showPage('pg-app');
+    setTimeout(renderAll,200);
+  }
+  // Wire signout
+  document.querySelectorAll('.ulogout,.profbtn.danger').forEach(function(b){b.onclick=function(){DB.clearCurUser();showPage('pg-login');};});
+})();
+
+// Wrap nav to re-render on tab switch
+var _nav=window.nav;window.nav=function(id,el){if(_nav)_nav(id,el);setTimeout(renderAll,80);};
+var _launch=window.launch;window.launch=function(){if(_launch)_launch();setTimeout(renderAll,300);};
+// wizard step with company save
+var _wgo=window.wgo;window.wgo=function(n){if(_wgo)_wgo(n);if(n===4){var co=DB.getCompany()||{};if(!co.shortName){co={name:document.getElementById('s1n').value||'Company',shortName:document.getElementById('s1s').value||'CO',plan:APP.plan||'pro'};DB.saveCompany(co);}var u=DB.getCurUser();if(u){u.company=co.shortName;DB.saveUserRec(u);DB.setCurUser(u);}seedDemo();}};
+</script>
+
+</body>
+</html>
